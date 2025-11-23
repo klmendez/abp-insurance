@@ -7,7 +7,7 @@ export const PrimaryCallToActionSection = () => (
         <span className="text-xs font-semibold uppercase tracking-[0.35em] text-abp-blue/80">
           Decisiones que generan valor
         </span>
-        <h2 className="mt-3 text-3xl font-['Playfair_Display'] leading-snug text-abp-blue">
+        <h2 className="mt-3 text-3xl font-display leading-snug text-abp-blue">
           Acompañamos tu próxima decisión en seguros y gestión de riesgos
         </h2>
         <p className="mt-4 text-sm text-slate-600">

@@ -1,35 +1,37 @@
-import { FadeInWhenVisible } from '@/components/FadeInWhenVisible';
+import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
+import { motion } from "framer-motion";
 
 const steps = [
   {
-    number: '01',
-    title: 'Diagnóstico',
+    number: "01",
+    title: "Diagnóstico",
     description:
-      'Analizamos tu situación actual, identificamos brechas de protección y prioridades de negocio.',
+      "Analizamos tu situación actual, identificamos brechas de protección y prioridades de negocio.",
   },
   {
-    number: '02',
-    title: 'Diseño',
+    number: "02",
+    title: "Diseño",
     description:
-      'Construimos la propuesta integral alineada con el modelo Acompañamiento–Bienestar–Protección.',
+      "Construimos la propuesta integral alineada con el modelo Acompañamiento–Bienestar–Protección.",
   },
   {
-    number: '03',
-    title: 'Implementación',
+    number: "03",
+    title: "Implementación",
     description:
-      'Coordinamos afiliaciones, pólizas y programas con aseguradoras y aliados estratégicos.',
+      "Coordinamos afiliaciones, pólizas y programas con aseguradoras y aliados estratégicos.",
   },
   {
-    number: '04',
-    title: 'Seguimiento',
+    number: "04",
+    title: "Seguimiento",
     description:
-      'Monitoreamos indicadores, siniestralidad y cumplimiento normativo con presencia constante.',
+      "Monitoreamos indicadores, siniestralidad y cumplimiento normativo con presencia constante.",
   },
 ];
 
 export const ProcessSection = () => (
   <section id="proceso" className="bg-white py-24">
     <div className="mx-auto max-w-6xl px-6">
+      {/* HEADER */}
       <FadeInWhenVisible className="text-center">
         <span className="text-sm font-semibold uppercase tracking-[0.35em] text-abp-ink/60">
           Proceso ABP
@@ -38,22 +40,37 @@ export const ProcessSection = () => (
           Te acompañamos de principio a fin
         </h2>
         <p className="mt-4 text-base text-slate-600">
-          Nuestra metodología asegura decisiones informadas, ejecución impecable y soporte permanente
-          para tu empresa y tu familia.
+          Nuestra metodología asegura decisiones informadas, ejecución impecable y soporte permanente.
         </p>
       </FadeInWhenVisible>
 
-      <div className="mt-16 grid gap-8 md:grid-cols-4">
+      {/* STEPS */}
+      <div className="mt-16 grid gap-10 md:grid-cols-4">
         {steps.map((step) => (
-          <FadeInWhenVisible
-            key={step.number}
-            className="flex h-full flex-col border border-abp-blue/15 bg-abp-cream/40 p-8"
-          >
-            <span className="text-sm font-semibold uppercase tracking-[0.25em] text-abp-gold">
-              Paso {step.number}
-            </span>
-            <h3 className="mt-6 text-2xl font-display text-abp-blue">{step.title}</h3>
-            <p className="mt-4 text-sm leading-relaxed text-slate-600">{step.description}</p>
+          <FadeInWhenVisible key={step.number}>
+            <motion.div
+              whileHover={{ y: -6 }}
+              transition={{ duration: 0.25 }}
+              className="group flex h-full flex-col rounded-2xl border border-abp-blue/10 bg-abp-cream/30 p-8 shadow-sm hover:border-abp-blue/30 hover:shadow-md transition-all"
+            >
+              {/* NUMERO */}
+              <div className="flex flex-col items-start">
+                <span className="text-[2.5rem] font-bold leading-none text-abp-blue">
+                  {step.number}
+                </span>
+                <span className="mt-1 h-0.5 w-10 bg-abp-gold rounded-full" />
+              </div>
+
+              {/* TITULO */}
+              <h3 className="mt-6 text-xl font-display text-abp-ink group-hover:text-abp-blue transition-colors">
+                {step.title}
+              </h3>
+
+              {/* DESCRIPCION */}
+              <p className="mt-4 text-sm leading-relaxed text-slate-600">
+                {step.description}
+              </p>
+            </motion.div>
           </FadeInWhenVisible>
         ))}
       </div>

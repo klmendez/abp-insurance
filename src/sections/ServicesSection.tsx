@@ -1,5 +1,15 @@
-import { FadeInWhenVisible } from '@/components/FadeInWhenVisible';
-import { FiBriefcase, FiHome, FiShield } from 'react-icons/fi';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
+import {
+  FiBriefcase,
+  FiHome,
+  FiShield,
+  FiCheck,
+  FiLayers,
+  FiFolder,
+} from "react-icons/fi";
+import type { IconType } from "react-icons";
 
 type ServiceDetail = {
   heading: string;
@@ -7,7 +17,7 @@ type ServiceDetail = {
 };
 
 type Service = {
-  icon: typeof FiHome;
+  icon: IconType;
   title: string;
   quote: string;
   details: ServiceDetail[];
@@ -16,192 +26,245 @@ type Service = {
 const services: Service[] = [
   {
     icon: FiHome,
-    title: 'Acompañamiento',
-    quote: '“No solo te vendo un seguro, camino contigo.”',
+    title: "Acompañamiento",
+    quote: "Caminamos contigo en cada decisión, siempre cerca.",
     details: [
       {
-        heading: 'Servicios clave',
+        heading: "Servicios clave",
         items: [
-          'Acompañamiento en Riesgos Laborales (ARL – Positiva).',
-          'Asesoría en afiliación, clasificación de riesgo y novedades.',
-          'Gestión y orientación en reporte de accidentes y enfermedades laborales.',
+          "Riesgos laborales (ARL – Positiva).",
+          "Afiliación, clasificación de riesgo y novedades.",
+          "Reporte y gestión de accidentes laborales.",
         ],
       },
       {
-        heading: 'Gestión empresarial',
+        heading: "Gestión empresarial",
         items: [
-          'Acompañamiento en implementación y mejora del SG-SST.',
-          'Coordinación de capacitaciones y programas con la ARL.',
-          'Análisis de siniestralidad y recomendaciones de mejora.',
+          "Mejora del SG-SST.",
+          "Capacitaciones y programas con ARL.",
+          "Análisis de siniestralidad.",
         ],
       },
       {
-        heading: 'Relación asegurado–aseguradora',
+        heading: "Asegurado – aseguradora",
         items: [
-          'Acompañamiento en siniestros: vida, ARL y seguros generales.',
-          'Apoyo en reclamaciones, documentación y seguimiento de casos.',
-          'Asesoría consultiva para empresas y personas en decisiones de protección.',
+          "Acompañamiento en siniestros.",
+          "Reclamaciones y seguimiento.",
+          "Asesoría consultiva más completa.",
         ],
       },
     ],
   },
   {
     icon: FiShield,
-    title: 'Bienestar',
-    quote: '“Promovemos tu bienestar y el de quienes dependen de ti.”',
+    title: "Bienestar",
+    quote: "Protegemos tu tranquilidad y la de quienes dependen de ti.",
     details: [
       {
-        heading: 'Seguros de vida',
+        heading: "Vida",
         items: [
-          'Seguros de vida individual (con o sin ahorro) – Positiva / AXA Colpatria.',
-          'Seguros de vida deudores para protección de obligaciones financieras.',
-          'Vida colectivo para empleados y equipos de trabajo.',
+          "Vida individual (con o sin ahorro).",
+          "Vida deudores.",
+          "Vida colectivo para empleados.",
         ],
       },
       {
-        heading: 'Bienestar del trabajador y la familia',
+        heading: "Bienestar familiar",
         items: [
-          'Programas de protección económica ante fallecimiento o incapacidad.',
-          'Esquemas de beneficios para familias de colaboradores.',
-          'Planes integrales de bienestar asegurado.',
+          "Coberturas por fallecimiento e incapacidad.",
+          "Beneficios integrales para colaboradores.",
+          "Planes de bienestar asegurado.",
         ],
       },
       {
-        heading: 'Estilos de vida y cultura aseguradora',
+        heading: "Cultura aseguradora",
         items: [
-          'Línea ciclistas: vida y accidentes específicos para deportistas.',
-          'Charlas y talleres sobre seguros, prevención y planificación financiera.',
-          'Educación para que las personas comprendan y usen sus coberturas.',
+          "Charlas y talleres de prevención.",
+          "Educación financiera.",
+          "Programas especiales para deportistas.",
         ],
       },
     ],
   },
   {
     icon: FiBriefcase,
-    title: 'Protección',
-    quote: '“Protegemos lo que has construido y lo que estás construyendo.”',
+    title: "Protección",
+    quote: "Cuidamos tu patrimonio y la operación de tu empresa.",
     details: [
       {
-        heading: 'Protección laboral y empresarial',
+        heading: "Protección empresarial",
         items: [
-          'Programas integrales para empresas: vida colectivo + ARL + seguros generales.',
-          'Diseño de esquemas de protección para colaboradores y operación.',
+          "Programas integrales de seguros.",
+          "Diseño de esquemas para operación.",
         ],
       },
       {
-        heading: 'Protección patrimonial',
+        heading: "Protección patrimonial",
         items: [
-          'Seguros generales (en trámite de clave con Seguros del Estado y Seguros Mundial).',
-          'Responsabilidad civil, incendio, terremoto y todo riesgo daños materiales.',
-          'Transporte de mercancías y flota de vehículos empresariales.',
-          'Seguros de autos, motos y hogar para personas y familias.',
+          "Seguros generales.",
+          "RC, incendio, terremoto y daños materiales.",
+          "Flotas, autos y hogar.",
         ],
       },
       {
-        heading: 'Protección especializada',
+        heading: "Protección especializada",
         items: [
-          'Seguro para bicicletas: robo y daños, accesorios y marcos especiales.',
-          'Seguro de viaje para ciclistas: eventos, travesías y competencias.',
-          'Productos a la medida de nuevos nichos y sectores específicos.',
+          "Bicicletas y equipos.",
+          "Viajes y eventos deportivos.",
+          "Productos para nichos específicos.",
         ],
       },
     ],
   },
 ];
 
-export const ServicesSection = () => (
-  <section id="abp" className="bg-white py-24">
-    <div className="mx-auto max-w-6xl px-6">
-      <FadeInWhenVisible className="max-w-4xl">
-        <span className="text-xs font-semibold uppercase tracking-[0.35em] text-abp-blue">
-          Modelo A · B · P
-        </span>
-        <h2 className="mt-3 text-4xl font-serif text-abp-blue">
-          Nuestra manera de construir bienestar asegurado
-        </h2>
-        <p className="mt-4 text-base text-slate-600">
-          El modelo Acompañamiento–Bienestar–Protección articula soluciones integrales para empresas y
-          personas. Cada eje conecta experiencias, resultados y soporte constante.
-        </p>
-      </FadeInWhenVisible>
+export const ServicesSection = () => {
+  const [activeServiceIndex, setActiveServiceIndex] = useState(0);
+  const [activeDetailIndex, setActiveDetailIndex] = useState(0);
 
-      <div className="mt-16 grid gap-16 lg:grid-cols-[1fr,0.9fr] lg:items-start">
-        <div className="space-y-12">
-          <div className="hidden h-px w-full bg-abp-blue/20 lg:block" />
-          {services.map((service, index) => (
-            <FadeInWhenVisible key={service.title} className="grid gap-8 lg:grid-cols-[0.2fr,0.8fr]">
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-3 text-abp-blue">
-                  <span className="text-sm font-semibold uppercase tracking-[0.25em]">{`0${index + 1}`}</span>
-                  <service.icon className="size-8" />
-                </div>
-                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
-                  {service.title}
-                </p>
-                <p className="text-sm text-slate-600">{service.quote}</p>
-              </div>
+  const activeService = services[activeServiceIndex];
+  const activeDetail = activeService.details[activeDetailIndex];
 
-              <div className="space-y-8 border-l border-abp-blue/20 pl-8">
-                {service.details.map((detail) => (
-                  <div key={detail.heading} className="space-y-3">
-                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-abp-blue">
-                      {detail.heading}
-                    </p>
-                    <ul className="grid gap-2 text-sm text-slate-600">
-                      {detail.items.map((item) => (
-                        <li key={item} className="flex items-start gap-2">
-                          <span className="mt-1 size-2 bg-abp-gold" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-
-                <a
-                  href="#contacto"
-                  className="inline-flex items-center text-xs font-semibold uppercase tracking-[0.25em] text-abp-blue transition-colors hover:text-abp-gold"
-                >
-                  Solicita asesoría personalizada
-                </a>
-              </div>
-            </FadeInWhenVisible>
-          ))}
-        </div>
-
-        <FadeInWhenVisible className="space-y-10 border border-abp-blue/10 bg-abp-cream/70 p-10">
-          <div className="space-y-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-abp-blue">
-              Experiencia comprobada
-            </p>
-            <h3 className="text-3xl font-serif text-abp-blue">
-              Entendemos tu operación, anticipamos riesgos y acompañamos la toma de decisiones.
-            </h3>
-          </div>
-
-          <div className="grid gap-6 text-sm text-slate-600">
-            <div>
-              <p className="font-semibold text-abp-blue">Implementación guiada</p>
-              <p className="mt-2">
-                Coordinamos afiliaciones, capacitaciones y documentación en conjunto con tu equipo y la
-                ARL.
-              </p>
-            </div>
-            <div>
-              <p className="font-semibold text-abp-blue">Análisis de datos</p>
-              <p className="mt-2">
-                Revisamos siniestralidad y políticas internas para proponer mejoras continuas.
-              </p>
-            </div>
-            <div>
-              <p className="font-semibold text-abp-blue">Relación aseguradora</p>
-              <p className="mt-2">
-                Gestionamos reclamaciones, documentación y respuestas a auditorías sin costo adicional.
-              </p>
-            </div>
-          </div>
+  return (
+    <section id="portafolio" className="bg-white py-24">
+      <div className="mx-auto max-w-6xl px-6">
+        {/* HEADER */}
+        <FadeInWhenVisible className="max-w-3xl">
+          <span className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
+            Modelo A · B · P
+          </span>
+          <h2 className="mt-3 text-3xl font-semibold text-abp-blue md:text-4xl">
+            Soluciones integrales para acompañamiento, bienestar y protección.
+          </h2>
+          <p className="mt-4 text-base text-slate-600">
+            Tres ejes que se integran para fortalecer la seguridad, bienestar y
+            protección de tu organización.
+          </p>
         </FadeInWhenVisible>
+
+        {/* CONTENIDO */}
+        <div className="mt-10 grid gap-8 md:grid-cols-[1.2fr,2fr]">
+          
+          {/* LADO IZQUIERDO – TARJETAS */}
+          <div className="flex flex-col gap-4">
+            {services.map((service, index) => {
+              const isActive = index === activeServiceIndex;
+              return (
+                <button
+                  key={service.title}
+                  onClick={() => {
+                    setActiveServiceIndex(index);
+                    setActiveDetailIndex(0);
+                  }}
+                  className={`group flex items-center gap-3 rounded-2xl border px-4 py-4 text-left transition-all
+                  ${
+                    isActive
+                      ? "border-abp-blue bg-[#eef3ff] shadow-sm"
+                      : "border-slate-200 bg-white hover:bg-slate-50"
+                  }`}
+                >
+                  <div
+                    className={`flex h-12 w-12 items-center justify-center rounded-full transition-all
+                    ${
+                      isActive
+                        ? "bg-abp-blue text-white"
+                        : "bg-[#e8f0ff] text-abp-blue group-hover:bg-abp-blue group-hover:text-white"
+                    }`}
+                  >
+                    <service.icon className="h-6 w-6" />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <span
+                      className={`text-base font-semibold ${
+                        isActive ? "text-abp-blue" : "text-slate-800"
+                      }`}
+                    >
+                      {service.title}
+                    </span>
+                    <span className="text-xs text-slate-500 line-clamp-1">
+                      {service.quote}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* LADO DERECHO – DETALLE */}
+          <div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeService.title}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.25 }}
+                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+              >
+                {/* ENCABEZADO */}
+                <div className="flex items-start gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#e8f0ff] text-abp-blue">
+                    <activeService.icon className="h-6 w-6" />
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl font-semibold text-abp-blue">
+                      {activeService.title}
+                    </h3>
+                    <p className="mt-1 text-sm text-slate-600">
+                      {activeService.quote}
+                    </p>
+                  </div>
+                </div>
+
+                {/* CHIPS de categorías */}
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {activeService.details.map((detail, idx) => {
+                    const selected = idx === activeDetailIndex;
+                    return (
+                      <button
+                        key={detail.heading}
+                        onClick={() => setActiveDetailIndex(idx)}
+                        className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-wider transition
+                          ${
+                            selected
+                              ? "border-abp-blue bg-[#eef3ff] text-abp-blue"
+                              : "border-slate-300 text-slate-600 hover:border-abp-blue/40"
+                          }`}
+                      >
+                        <FiLayers className="h-3.5 w-3.5" />
+                        {detail.heading}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* TARJETAS DE ITEMS */}
+                <div className="mt-6 grid gap-4 md:grid-cols-2">
+                  {activeDetail.items.map((item) => (
+                    <div
+                      key={item}
+                      className="rounded-xl bg-slate-50 p-4 shadow-sm border border-slate-200 hover:bg-white transition"
+                    >
+                      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                        <FiCheck className="h-4 w-4 text-abp-blue" />
+                        Incluye
+                      </div>
+
+                      <p className="mt-2 text-[0.9rem] text-slate-700 leading-relaxed">
+                        {item}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+               
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
