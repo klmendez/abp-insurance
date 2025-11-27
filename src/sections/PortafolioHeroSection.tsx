@@ -3,6 +3,10 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { Link } from "react-router-dom";
+import slideArl from "../assets/portafolio-arl.jpg";
+import slideVida from "../assets/portafolio-vida.jpg";
+import slideGenerales from "../assets/portafolio-generales.jpg";
+import slideCiclistas from "../assets/portafolio-ciclistas.jpg";
 import {
   FiActivity,
   FiUsers,
@@ -29,7 +33,7 @@ const slides: Slide[] = [
     title: "Seguros de Riesgos Laborales",
     description:
       "Afiliación, prevención y atención de accidentes y enfermedades laborales, con apoyo continuo en SG-SST.",
-    image: "/portafolio-arl.jpg", // cambia por tu imagen real
+    image: slideArl,
     ctaTo: "/portafolio",
     ctaLabel: "Ver detalle ARL",
   },
@@ -39,7 +43,7 @@ const slides: Slide[] = [
     title: "Seguros de Vida para personas y equipos",
     description:
       "Protección económica para personas, familias y colaboradores: vida individual, deudores y colectivo empresarial.",
-    image: "/portafolio-vida.jpg",
+    image: slideVida,
     ctaTo: "/portafolio",
     ctaLabel: "Ver detalle Vida",
   },
@@ -49,7 +53,7 @@ const slides: Slide[] = [
     title: "Protección patrimonial para empresas y personas",
     description:
       "Activos, flotas, proyectos y hogar protegidos con seguros generales alineados con tu realidad y tu operación.",
-    image: "/portafolio-generales.jpg",
+    image: slideGenerales,
     ctaTo: "/portafolio",
     ctaLabel: "Ver detalle Generales",
   },
@@ -59,7 +63,7 @@ const slides: Slide[] = [
     title: "Portafolio especializado para ciclistas",
     description:
       "Vida, bicicleta y viaje para que entrenes, te desplaces y participes en eventos con tranquilidad.",
-    image: "/portafolio-ciclistas.jpg",
+    image: slideCiclistas,
     ctaTo: "/ciclistas",
     ctaLabel: "Ver landing ciclistas",
   },
