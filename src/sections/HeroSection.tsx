@@ -1,6 +1,6 @@
 // src/sections/HeroSection.tsx
 import { motion } from "framer-motion";
-import heroImage from "@/assets/p1.png";
+import heroImage from "../assets/p1.png";
 
 export const HeroSection = () => (
   <section
