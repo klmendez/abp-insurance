@@ -1,147 +1,141 @@
-import { useEffect, useState } from "react";
+// src/components/Navbar.tsx
+import { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { FiMenu, FiX } from "react-icons/fi";
+import logoV from "../assets/logoV.png";
 
-type NavItem = {
-  label: string;
-  href?: string;
-  children?: { label: string; href: string }[];
-};
-
-const navItems: NavItem[] = [
-  { label: "Inicio", href: "#inicio" },
-  {
-    label: "Servicios",
-    children: [
-      { label: "Portafolio integral", href: "#portafolio" },
-      { label: "Servicios empresariales", href: "#servicios-empresariales" },
-    ],
-  },
-  { label: "Proceso", href: "#proceso" },
-  { label: "Aliados", href: "#aliados" },
-  { label: "Contáctenos", href: "#contacto" },
+const navItems = [
+  { label: "Inicio", to: "/" },
+  { label: "Portafolio", to: "/portafolio" },
+  { label: "Servicios empresariales", to: "/servicios-empresariales" },
+  { label: "Aliados", to: "/aliados" },
+  { label: "Ciclistas", to: "/ciclistas" },
+  { label: "Contacto", to: "/contacto" },
 ];
 
 export const Navbar = () => {
-  const [activeSection, setActiveSection] = useState("#inicio");
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // Scroll spy
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = document.querySelectorAll("section[id]");
-      let current = "#inicio";
-
-      sections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        if (rect.top <= 150 && rect.top > -rect.height + 150) {
-          current = `#${section.id}`;
-        }
-      });
-
-      setActiveSection(current);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+    // Navbar fijo, encima del hero y de todas las secciones
+    <header className="fixed inset-x-0 top-0 z-40">
+      {/* CONTENEDOR CENTRADO */}
+      <div className="mx-auto max-w-6xl px-4 pt-4 pb-3 md:pt-6 md:pb-4">
+        {/* PÍLDORA BLANCA */}
+        <div className="flex items-center justify-between gap-4 rounded-full border border-slate-200/70 bg-white/80 px-4 py-2 shadow-sm backdrop-blur-xl md:px-6">
+          {/* LOGO + TEXTO MARCA */}
+          <Link
+            to="/"
+            className="flex items-center gap-3"
+            onClick={() => setOpen(false)}
+          >
+            <img
+              src={logoV}
+              alt="ABP Agencia de Seguros"
+              className="h-9 w-auto md:h-10"
+            />
 
-        {/* LOGO */}
-        <a href="#inicio" className="flex items-center gap-3">
-          <img src="/logoV.png" alt="ABP Seguros" className="h-9 w-auto" />
-          <div className="leading-tight">
-            <span className="text-xl font-semibold text-abp-blue">ABP</span>
-            <span className="block text-[0.78rem] text-slate-500">
-              Agencia de Seguros Ltda.
-            </span>
-          </div>
-        </a>
+            <div className="flex flex-col leading-tight">
+              {/* ABP GRANDE */}
+              <span className="text-base font-bold tracking-[0.18em] text-abp-blue md:text-lg">
+                ABP
+              </span>
+              {/* Agencia de Seguros Ltda. */}
+              <span className="text-[0.7rem] text-slate-700 md:text-xs">
+                Agencia de Seguros Ltda.
+              </span>
+              {/* A · B · P con iniciales destacadas */}
+              <span className="mt-0.5 text-[0.65rem] text-slate-500 md:text-[0.7rem]">
+                <span className="font-semibold text-abp-blue">A</span>
+                compañamiento ·{" "}
+                <span className="font-semibold text-abp-blue">B</span>
+                ienestar ·{" "}
+                <span className="font-semibold text-abp-blue">P</span>
+                rotección
+              </span>
+            </div>
+          </Link>
 
-        {/* NAV DESKTOP */}
-        <div className="hidden flex-1 items-center justify-end gap-8 md:flex">
-          <div className="flex items-center gap-7 text-sm">
+          {/* NAV DESKTOP */}
+          <nav className="hidden items-center gap-6 md:flex">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  [
+                    "relative text-sm font-medium transition-colors",
+                    isActive
+                      ? "text-abp-blue"
+                      : "text-slate-600 hover:text-abp-blue",
+                  ].join(" ")
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <span>{item.label}</span>
+                    <span
+                      className={`pointer-events-none absolute inset-x-0 -bottom-1 mx-auto h-[2px] rounded-full bg-abp-blue transition-all ${
+                        isActive ? "w-full opacity-100" : "w-0 opacity-0"
+                      }`}
+                    />
+                  </>
+                )}
+              </NavLink>
+            ))}
 
-            {navItems.map((item) => {
-              if (item.children) {
-                return (
-                  <div key={item.label} className="relative group">
-                    <button className="flex flex-col items-center text-sm font-medium text-slate-700 hover:text-abp-blue">
-                      {item.label}
+            <Link
+              to="/contacto"
+              className="rounded-full bg-abp-blue px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white hover:bg-abp-blue/90"
+            >
+              Asesoría sin costo
+            </Link>
+          </nav>
 
-                      {/* Underline */}
-                      <span
-                        className={`
-                          mt-1 h-[3px] w-full rounded-full bg-abp-blue transition-all duration-200
-                          ${
-                            activeSection.includes("servicios")
-                              ? "opacity-100"
-                              : "opacity-0 group-hover:opacity-50"
-                          }
-                        `}
-                      />
-                    </button>
-
-                    {/* DROPDOWN */}
-                    <div
-                      className="
-                        absolute left-0 top-full mt-1 w-60
-                        rounded-2xl border border-slate-200 bg-white shadow-lg
-                        opacity-0 translate-y-2 pointer-events-none
-                        transition-all duration-200
-                        group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto
-                      "
-                    >
-                      <ul className="py-2">
-                        {item.children.map((child) => (
-                          <li key={child.href}>
-                            <a
-                              href={child.href}
-                              className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-abp-blue"
-                            >
-                              {child.label}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                );
-              }
-
-              return (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className="group flex flex-col items-center text-sm font-medium text-slate-700 hover:text-abp-blue"
-                >
-                  {item.label}
-                  <span
-                    className={`
-                      mt-1 h-[3px] w-full rounded-full bg-abp-blue transition-all duration-200
-                      ${
-                        activeSection === item.href
-                          ? "opacity-100"
-                          : "opacity-0 group-hover:opacity-50"
-                      }
-                    `}
-                  />
-                </a>
-              );
-            })}
-          </div>
+          {/* HAMBURGUESA MOBILE */}
+          <button
+            type="button"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white/60 text-slate-800 md:hidden"
+            onClick={() => setOpen((prev) => !prev)}
+            aria-label="Abrir menú"
+          >
+            {open ? <FiX className="h-5 w-5" /> : <FiMenu className="h-5 w-5" />}
+          </button>
         </div>
+      </div>
 
-        {/* MOBILE MENU BTN */}
-        <button
-          className="md:hidden p-2 rounded-lg border border-slate-200 text-abp-blue"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          ≡
-        </button>
-      </nav>
+      {/* MENÚ MOBILE DESPLEGABLE */}
+      {open && (
+        <div className="border-t border-slate-200 bg-white/95 backdrop-blur-md md:hidden">
+          <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-3">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                onClick={() => setOpen(false)}
+                className={({ isActive }) =>
+                  [
+                    "block rounded-xl px-3 py-2 text-sm transition",
+                    isActive
+                      ? "bg-abp-blue/10 text-abp-blue"
+                      : "text-slate-700 hover:bg-slate-50",
+                  ].join(" ")
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+
+            <Link
+              to="/contacto"
+              onClick={() => setOpen(false)}
+              className="mt-3 inline-flex items-center justify-center rounded-full bg-abp-blue px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white hover:bg-abp-blue/90"
+            >
+              Asesoría sin costo
+            </Link>
+          </nav>
+        </div>
+      )}
     </header>
   );
 };

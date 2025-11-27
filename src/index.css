@@ -7,7 +7,8 @@
 body {
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, Helvetica, Arial, sans-serif;
-  @apply bg-brand-sand text-abp-ink antialiased;
+  @apply bg-white text-abp-ink antialiased;
+  
 }
 
 @layer base {
@@ -25,6 +26,6 @@ body {
   }
 
   a {
-    @apply transition-colors duration-200 text-abp-blue hover:text-brand-aqua;
+    @apply transition-colors duration-200 text-abp-blue hover:text-white;
   }
 }

@@ -7,7 +7,6 @@ import {
   FiShield,
   FiCheck,
   FiLayers,
-  FiFolder,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 
@@ -129,7 +128,7 @@ export const ServicesSection = () => {
     <section id="portafolio" className="bg-white py-24">
       <div className="mx-auto max-w-6xl px-6">
         {/* HEADER */}
-        <FadeInWhenVisible className="max-w-3xl">
+        <FadeInWhenVisible className="text-center max-w-3xl mx-auto">
           <span className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
             Modelo A · B · P
           </span>
@@ -142,74 +141,73 @@ export const ServicesSection = () => {
           </p>
         </FadeInWhenVisible>
 
-        {/* CONTENIDO */}
-        <div className="mt-10 grid gap-8 md:grid-cols-[1.2fr,2fr]">
-          
-          {/* LADO IZQUIERDO – TARJETAS */}
-          <div className="flex flex-col gap-4">
-            {services.map((service, index) => {
-              const isActive = index === activeServiceIndex;
-              return (
+        {/* SELECTOR DE A · B · P */}
+        <div className="mt-10 grid gap-4 md:grid-cols-3">
+          {services.map((service, index) => {
+            const isActive = index === activeServiceIndex;
+
+            return (
+              <FadeInWhenVisible key={service.title}>
                 <button
-                  key={service.title}
+                  type="button"
                   onClick={() => {
                     setActiveServiceIndex(index);
                     setActiveDetailIndex(0);
                   }}
-                  className={`group flex items-center gap-3 rounded-2xl border px-4 py-4 text-left transition-all
-                  ${
-                    isActive
-                      ? "border-abp-blue bg-[#eef3ff] shadow-sm"
-                      : "border-slate-200 bg-white hover:bg-slate-50"
-                  }`}
-                >
-                  <div
-                    className={`flex h-12 w-12 items-center justify-center rounded-full transition-all
+                  className={`group flex h-full flex-col items-start gap-2 rounded-2xl border px-5 py-4 text-left transition-all
                     ${
                       isActive
-                        ? "bg-abp-blue text-white"
-                        : "bg-[#e8f0ff] text-abp-blue group-hover:bg-abp-blue group-hover:text-white"
+                        ? "border-abp-blue bg-[#eef3ff] shadow-sm"
+                        : "border-slate-200 bg-white hover:bg-slate-50"
                     }`}
+                >
+                  <div
+                    className={`flex h-11 w-11 items-center justify-center rounded-full transition-all
+                      ${
+                        isActive
+                          ? "bg-abp-blue text-white"
+                          : "bg-[#e8f0ff] text-abp-blue group-hover:bg-abp-blue group-hover:text-white"
+                      }`}
                   >
-                    <service.icon className="h-6 w-6" />
+                    <service.icon className="h-5 w-5" />
                   </div>
-
-                  <div className="flex flex-col">
-                    <span
-                      className={`text-base font-semibold ${
+                  <div>
+                    <p
+                      className={`text-sm font-semibold ${
                         isActive ? "text-abp-blue" : "text-slate-800"
                       }`}
                     >
                       {service.title}
-                    </span>
-                    <span className="text-xs text-slate-500 line-clamp-1">
+                    </p>
+                    <p className="mt-1 text-xs text-slate-600 line-clamp-2">
                       {service.quote}
-                    </span>
+                    </p>
                   </div>
                 </button>
-              );
-            })}
-          </div>
+              </FadeInWhenVisible>
+            );
+          })}
+        </div>
 
-          {/* LADO DERECHO – DETALLE */}
-          <div>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeService.title}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.25 }}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-              >
-                {/* ENCABEZADO */}
-                <div className="flex items-start gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#e8f0ff] text-abp-blue">
-                    <activeService.icon className="h-6 w-6" />
+        {/* PANEL DETALLE */}
+        <div className="mt-8">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeService.title}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+              className="rounded-3xl border border-slate-200 bg-[#f7f8ff] px-6 py-6 shadow-sm md:px-8 md:py-8"
+            >
+              {/* ENCABEZADO DEL PANEL */}
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#e0e8ff] text-abp-blue">
+                    <activeService.icon className="h-5 w-5" />
                   </div>
-
                   <div>
-                    <h3 className="text-xl font-semibold text-abp-blue">
+                    <h3 className="text-lg font-semibold text-abp-blue md:text-xl">
                       {activeService.title}
                     </h3>
                     <p className="mt-1 text-sm text-slate-600">
@@ -218,19 +216,20 @@ export const ServicesSection = () => {
                   </div>
                 </div>
 
-                {/* CHIPS de categorías */}
-                <div className="mt-5 flex flex-wrap gap-2">
+                {/* CHIPS DE CATEGORÍAS */}
+                <div className="flex flex-wrap gap-2 mt-2 md:mt-0">
                   {activeService.details.map((detail, idx) => {
                     const selected = idx === activeDetailIndex;
                     return (
                       <button
                         key={detail.heading}
+                        type="button"
                         onClick={() => setActiveDetailIndex(idx)}
-                        className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-wider transition
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.18em] transition
                           ${
                             selected
-                              ? "border-abp-blue bg-[#eef3ff] text-abp-blue"
-                              : "border-slate-300 text-slate-600 hover:border-abp-blue/40"
+                              ? "border-abp-blue bg-white text-abp-blue shadow-sm"
+                              : "border-slate-300 text-slate-600 hover:border-abp-blue/50"
                           }`}
                       >
                         <FiLayers className="h-3.5 w-3.5" />
@@ -239,30 +238,34 @@ export const ServicesSection = () => {
                     );
                   })}
                 </div>
+              </div>
 
-                {/* TARJETAS DE ITEMS */}
-                <div className="mt-6 grid gap-4 md:grid-cols-2">
-                  {activeDetail.items.map((item) => (
-                    <div
-                      key={item}
-                      className="rounded-xl bg-slate-50 p-4 shadow-sm border border-slate-200 hover:bg-white transition"
-                    >
-                      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                        <FiCheck className="h-4 w-4 text-abp-blue" />
-                        Incluye
-                      </div>
-
-                      <p className="mt-2 text-[0.9rem] text-slate-700 leading-relaxed">
-                        {item}
-                      </p>
+              {/* ITEMS DEL DETALLE ACTIVO */}
+              <motion.div
+                key={activeDetail.heading}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                className="mt-6 grid gap-4 md:grid-cols-2"
+              >
+                {activeDetail.items.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-abp-blue/40 hover:shadow-md"
+                  >
+                    <div className="flex items-center gap-2 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                      <FiCheck className="h-4 w-4 text-abp-blue" />
+                      Incluye
                     </div>
-                  ))}
-                </div>
-
-               
+                    <p className="mt-2 text-[0.9rem] leading-relaxed text-slate-700">
+                      {item}
+                    </p>
+                  </div>
+                ))}
               </motion.div>
-            </AnimatePresence>
-          </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </section>

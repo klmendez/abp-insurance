@@ -1,63 +1,39 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { HeroSection } from './sections/HeroSection';
-import { ServicesSection } from './sections/ServicesSection';
-import { ProcessSection } from './sections/ProcessSection';
-import { EnterpriseServicesSection } from './sections/EnterpriseServicesSection';
-import { AdvantagesSection } from './sections/AdvantagesSection';
-import { PartnersSection } from './sections/PartnersSection';
-import { TestimonialsSection } from './sections/TestimonialsSection';
-import { PrimaryCallToActionSection } from './sections/PrimaryCallToActionSection';
-import { ContactSection } from './sections/ContactSection';
-import { Navbar } from './components/Navbar';
-import { Footer } from './components/Footer';
-import { FloatingWhatsappButton } from './components/FloatingWhatsappButton';
+// src/App.tsx
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Navbar } from "./components/Navbar";
+import { Footer } from "./components/Footer";
+import { FloatingWhatsappButton } from "./components/FloatingWhatsappButton";
 
+import { HomePage } from "./pages/HomePage";
+import { PortafolioPage } from "./pages/PortafolioPage";
+import { EnterpriseServicesPage } from "./pages/EnterpriseServicesPage";
+import { PartnersPage } from "./pages/PartnersPage";
+import { ContactPage } from "./pages/ContactPage";
+import { CyclistsPage } from "./pages/CyclistsPage";
 
-const App = () => {
+export const App = () => {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-brand-sand text-abp-ink">
+      <div className="flex-1 flex-col">
         <Navbar />
 
-        <main className="relative">
-          <div className="pointer-events-none absolute inset-0 bg-radial-glow/80" aria-hidden />
-          <div className="relative flex flex-col gap-0 pb-20">
-            <HeroSection />
-            <ServicesSection />
-            <ProcessSection />
-            <EnterpriseServicesSection />
-            <AdvantagesSection />
-            <PartnersSection />
-            <TestimonialsSection />
-            <PrimaryCallToActionSection />
-            <ContactSection />
-        
-          </div>
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/portafolio" element={<PortafolioPage />} />
+            <Route
+              path="/servicios-empresariales"
+              element={<EnterpriseServicesPage />}
+            />
+            <Route path="/aliados" element={<PartnersPage />} />
+            <Route path="/contacto" element={<ContactPage />} />
+            <Route path="/ciclistas" element={<CyclistsPage />} />
+          </Routes>
         </main>
 
         <Footer />
         <FloatingWhatsappButton />
       </div>
-
-      <Routes>
-        <Route path="/politica-privacidad" element={<PlaceholderPage title="Política de privacidad" />} />
-        <Route path="/terminos" element={<PlaceholderPage title="Términos y condiciones" />} />
-      </Routes>
     </BrowserRouter>
   );
 };
-
-const PlaceholderPage = ({ title }: { title: string }) => (
-  <main className="mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center gap-4 px-6 text-center">
-    <h1 className="text-4xl font-display text-abp-blue">{title}</h1>
-    <p className="text-slate-600">
-      Estamos trabajando en esta sección. Mientras tanto, regresa al{' '}
-      <a href="#inicio" className="text-abp-gold underline">
-        inicio
-      </a>
-      .
-    </p>
-  </main>
-);
-
-export default App;
