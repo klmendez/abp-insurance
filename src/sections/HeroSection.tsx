@@ -1,5 +1,6 @@
 // src/sections/HeroSection.tsx
 import { motion } from "framer-motion";
+import heroImage from "@/assets/p1.png";
 
 export const HeroSection = () => (
   <section
@@ -113,7 +114,7 @@ export const HeroSection = () => (
         <div className="relative w-full max-w-xs sm:max-w-sm lg:max-w-md">
           
           <img
-            src="/p1.png"
+            src={heroImage}
             alt="Asesor ABP"
             className="h-auto w-full object-contain md:max-h-[480px]"
           />
