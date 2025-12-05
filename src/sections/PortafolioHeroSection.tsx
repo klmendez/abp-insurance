@@ -1,71 +1,53 @@
 // src/sections/PortafolioHeroSection.tsx
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
-import { Link } from "react-router-dom";
-import slideArl from "../assets/portafolio-arl.jpg";
-import slideVida from "../assets/portafolio-vida.jpg";
-import slideGenerales from "../assets/portafolio-generales.jpg";
-import slideCiclistas from "../assets/portafolio-ciclistas.jpg";
-import {
-  FiActivity,
-  FiUsers,
-  FiShield,
-  FiLayers,
-  FiArrowLeft,
-  FiArrowRight,
-} from "react-icons/fi";
+
+import riesgosLaboralesImg from "../assets/laborales/trabajadores.jpg";
+import vidaImg from "../assets/vida/vida1.jpg"; // ajusta el nombre si tu archivo es distinto
+import generalesImg from "../assets/generales/generales1.jpg"; // ajusta el nombre si tu archivo es distinto
+import ciclista1 from "../assets/especiales/ciclista1.jpg";
+import serviciosEmpresarialesImg from "../assets/complementarios/servicios-empresariales1.jpg"; // ajusta el nombre si tu archivo es distinto
+
+import { FiArrowRight } from "react-icons/fi";
 
 type Slide = {
   id: string;
-  tag: string;
-  title: string;
-  description: string;
+  title: string; // texto después de "Seguros de..."
+  anchor: string;
   image: string;
-  ctaTo: string;
-  ctaLabel: string;
 };
 
 const slides: Slide[] = [
   {
     id: "A",
-    tag: "Línea A · ARL – Positiva",
-    title: "Seguros de Riesgos Laborales",
-    description:
-      "Afiliación, prevención y atención de accidentes y enfermedades laborales, con apoyo continuo en SG-SST.",
-    image: slideArl,
-    ctaTo: "/portafolio",
-    ctaLabel: "Ver detalle ARL",
+    title: "Riesgos Laborales",
+    image: riesgosLaboralesImg, // carpeta laborales
+    anchor: "#portafolio-list",
   },
   {
     id: "B",
-    tag: "Línea B · Vida Positiva & AXA Colpatria",
-    title: "Seguros de Vida para personas y equipos",
-    description:
-      "Protección económica para personas, familias y colaboradores: vida individual, deudores y colectivo empresarial.",
-    image: slideVida,
-    ctaTo: "/portafolio",
-    ctaLabel: "Ver detalle Vida",
+    title: "Vida",
+    image: vidaImg, // carpeta vida
+    anchor: "#portafolio-list",
   },
   {
     id: "C",
-    tag: "Línea C · Seguros Generales",
-    title: "Protección patrimonial para empresas y personas",
-    description:
-      "Activos, flotas, proyectos y hogar protegidos con seguros generales alineados con tu realidad y tu operación.",
-    image: slideGenerales,
-    ctaTo: "/portafolio",
-    ctaLabel: "Ver detalle Generales",
+    title: "Generales",
+    image: generalesImg, // carpeta generales
+    anchor: "#portafolio-list",
   },
   {
     id: "D",
-    tag: "Línea D · Vida, Bicicleta y Viaje",
-    title: "Portafolio especializado para ciclistas",
-    description:
-      "Vida, bicicleta y viaje para que entrenes, te desplaces y participes en eventos con tranquilidad.",
-    image: slideCiclistas,
-    ctaTo: "/ciclistas",
-    ctaLabel: "Ver landing ciclistas",
+    title: "Ciclistas y Recicladores",
+    image: ciclista1, // carpeta especiales
+    anchor: "/ciclistas",
+  },
+  {
+    id: "E",
+    title: "Servicios Empresariales",
+    image: serviciosEmpresarialesImg, // carpeta complementarios
+    anchor: "/servicios-empresariales",
   },
 ];
 
@@ -73,119 +55,95 @@ export const PortafolioHeroSection = () => {
   const [index, setIndex] = useState(0);
   const active = slides[index];
 
-  const handlePrev = () => {
-    setIndex((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
-  };
-
-  const handleNext = () => {
+  const goNext = () =>
     setIndex((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
-  };
+
+  // autoplay
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+    }, 6500);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <section className="relative overflow-hidden bg-black text-white">
-      {/* contenedor de altura tipo banner samsung */}
-      <div className="relative mx-auto max-w-6xl px-6">
-        <div className="relative h-[60vh] min-h-[380px] max-h-[520px]">
-          {/* SLIDE */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active.id}
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
-              transition={{ duration: 0.28 }}
-              className="absolute inset-0"
-            >
-              {/* Imagen de fondo */}
-              <img
-                src={active.image}
-                alt={active.title}
-                className="h-full w-full object-cover"
-              />
+    <section
+      className="relative text-white overflow-hidden"
+      style={{
+        backgroundImage: `url(${active.image})`,
+        backgroundSize: "cover",
+        backgroundPosition: "top center", // 👈 mantenemos la parte de arriba visible
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      {/* Degradado sobre la imagen */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#020617]/90 via-[#020617]/70 to-[#d4a43b]/55" />
 
-              {/* overlay para que se lea el texto */}
-              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/10" />
+      {/* Textura suave */}
+      <div className="pointer-events-none absolute inset-0 opacity-25 mix-blend-soft-light">
+        <div className="h-full w-full bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.18),transparent_70%),radial-gradient(circle_at_80%_80%,rgba(255,215,130,0.22),transparent_70%)]" />
+      </div>
 
-              {/* contenido centrado como samsung */}
-              <div className="relative flex h-full items-center">
-                <div className="grid w-full gap-10 md:grid-cols-[1.2fr,1.1fr] items-center">
-                  {/* columna izquierda: pequeño resumen del modelo */}
-                  <FadeInWhenVisible className="hidden text-sm text-slate-200/90 md:block">
-                    <p className="text-[0.75rem] font-semibold uppercase tracking-[0.32em] text-slate-300/80">
-                      Portafolio ABP · A · B · P
-                    </p>
-                    <h1 className="mt-4 max-w-md text-3xl font-semibold leading-tight md:text-4xl">
-                      Seguros que conectan{" "}
-                      <span className="text-sky-200">Acompañamiento, Bienestar y Protección.</span>
-                    </h1>
-                    <p className="mt-3 max-w-md text-[0.9rem] text-slate-200/85">
-                      Descubre nuestras líneas de seguros para empresas, personas y ciclistas,
-                      diseñadas para cuidar tu operación, tu familia y tus proyectos de vida.
-                    </p>
-                  </FadeInWhenVisible>
+      {/* CONTENIDO */}
+      <div
+        className="
+          relative z-10 mx-auto max-w-6xl
+          px-4 sm:px-6 lg:px-8
+          py-16 sm:py-20 lg:py-24
+          min-h-[80vh] sm:min-h-[90vh] lg:min-h-screen
+          flex items-center
+        "
+      >
+        {/* Columna única a la izquierda */}
+        <FadeInWhenVisible className="max-w-xl">
+          {/* Título principal fijo */}
+          <h1 className="text-3xl sm:text-4xl lg:text-[2.7rem] font-bold leading-tight text-white">
+            Portafolio ABP
+          </h1>
 
-                  {/* columna derecha: texto principal de la slide, tipo samsung */}
-                  <FadeInWhenVisible className="md:ml-auto">
-                    <div className="max-w-md md:text-right">
-                      <p className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-sky-200/80">
-                        {active.tag}
-                      </p>
-                      <h2 className="mt-3 text-2xl font-semibold leading-tight md:text-3xl">
-                        {active.title}
-                      </h2>
-                      <p className="mt-3 text-sm text-slate-200/90">
-                        {active.description}
-                      </p>
+          {/* Subtítulo fijo */}
+          <p className="mt-4 text-sm sm:text-base text-white/90">
+            Explora las líneas de protección que hemos diseñado para personas,
+            empresas y sectores especiales.
+          </p>
 
-                      <div className="mt-6 flex flex-wrap items-center gap-3 md:justify-end">
-                        <Link
-                          to={active.ctaTo}
-                          className="inline-flex items-center justify-center rounded-full bg-white px-6 py-2 text-[0.75rem] font-semibold uppercase tracking-[0.24em] text-abp-blue hover:bg-slate-100"
-                        >
-                          {active.ctaLabel}
-                        </Link>
-                      </div>
-                    </div>
-                  </FadeInWhenVisible>
-                </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* flechas laterales, estilo hero samsung */}
-          <button
-            type="button"
-            onClick={handlePrev}
-            className="absolute left-2 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
-            aria-label="Anterior"
+          {/* Bloque dinámico: cambia con el slide (imagen + título + CTA) */}
+          <motion.div
+            key={active.id}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="mt-8 space-y-4"
           >
-            <FiArrowLeft className="h-5 w-5" />
-          </button>
+            {/* Texto: TODO en dorado, incluyendo "Seguros de" */}
+            <p className="text-base sm:text-lg font-medium">
+              <span className="font-semibold text-[#f5c068]">
+                Seguros de {active.title}.
+              </span>
+            </p>
 
-          <button
-            type="button"
-            onClick={handleNext}
-            className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
-            aria-label="Siguiente"
-          >
-            <FiArrowRight className="h-5 w-5" />
-          </button>
+            <div className="flex flex-wrap items-center gap-4">
+              <a
+                href={active.anchor}
+                className="inline-flex items-center gap-2 rounded-full bg-[#f3c46f] px-7 py-2.5 text-[0.8rem] font-semibold uppercase tracking-[0.22em] text-[#1a1a1a] shadow-lg hover:bg-[#ffcf7b] transition-colors"
+              >
+                Ver
+                <FiArrowRight className="h-4 w-4" />
+              </a>
 
-          {/* indicador inferior tipo barra/dots */}
-          <div className="absolute inset-x-0 bottom-4 flex items-center justify-center gap-2">
-            {slides.map((slide, i) => (
+              {/* Botón “siguiente” para ir cambiando manualmente */}
               <button
-                key={slide.id}
+                onClick={goNext}
                 type="button"
-                onClick={() => setIndex(i)}
-                className={`h-[3px] rounded-full transition-all ${
-                  i === index ? "w-12 bg-white" : "w-6 bg-white/40 hover:bg-white/75"
-                }`}
-                aria-label={`Ir a ${slide.title}`}
-              />
-            ))}
-          </div>
-        </div>
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
+                aria-label="Siguiente línea"
+              >
+                <FiArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+          </motion.div>
+        </FadeInWhenVisible>
       </div>
     </section>
   );

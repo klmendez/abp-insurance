@@ -166,10 +166,7 @@ export const ContactSection = () => (
             </label>
 
             <div className="md:col-span-2 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <button
-                type="submit"
-                className="group inline-flex items-center justify-center gap-2 rounded-full bg-abp-blue px-8 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-abp-blue/90 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-abp-blue/40 focus:ring-offset-2 focus:ring-offset-white"
-              >
+              <button type="submit" className="btn-modern group">
                 Enviar mensaje a ABP
                 <FiArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1.5" />
               </button>

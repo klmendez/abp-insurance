@@ -46,17 +46,11 @@ export const PrimaryCallToActionSection = () => {
           </p>
 
           <div className="mt-6 flex flex-wrap items-center gap-4">
-            <a
-              href="#contacto"
-              className="inline-flex items-center justify-center rounded-full bg-abp-blue px-6 py-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-white hover:bg-abp-blue/90"
-            >
+            <a href="#contacto" className="btn-modern">
               Quiero una asesoría sin costo
             </a>
 
-            <a
-              href="/portafolio"
-              className="text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-abp-blue/80 underline-offset-4 hover:text-abp-blue"
-            >
+            <a href="/portafolio" className="btn-modern btn-modern--light">
               Ver portafolio completo
             </a>
           </div>

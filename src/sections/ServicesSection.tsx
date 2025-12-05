@@ -1,14 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
-import {
-  FiBriefcase,
-  FiHome,
-  FiShield,
-  FiCheck,
-  FiLayers,
-} from "react-icons/fi";
-import type { IconType } from "react-icons";
+import { FiCheck, FiArrowRight } from "react-icons/fi";
 
 type ServiceDetail = {
   heading: string;
@@ -16,22 +8,24 @@ type ServiceDetail = {
 };
 
 type Service = {
-  icon: IconType;
   title: string;
   quote: string;
   details: ServiceDetail[];
+  cta: {
+    label: string;
+    href: string;
+  };
 };
 
 const services: Service[] = [
   {
-    icon: FiHome,
     title: "Acompañamiento",
     quote: "Caminamos contigo en cada decisión, siempre cerca.",
     details: [
       {
         heading: "Servicios clave",
         items: [
-          "Riesgos laborales (ARL – Positiva).",
+          "Riesgos laborales (ARL).",
           "Afiliación, clasificación de riesgo y novedades.",
           "Reporte y gestión de accidentes laborales.",
         ],
@@ -53,9 +47,12 @@ const services: Service[] = [
         ],
       },
     ],
+    cta: {
+      label: "Ver portafolio de Acompañamiento",
+      href: "#portafolio-seguros",
+    },
   },
   {
-    icon: FiShield,
     title: "Bienestar",
     quote: "Protegemos tu tranquilidad y la de quienes dependen de ti.",
     details: [
@@ -84,9 +81,12 @@ const services: Service[] = [
         ],
       },
     ],
+    cta: {
+      label: "Ver portafolio de Bienestar",
+      href: "#portafolio-seguros",
+    },
   },
   {
-    icon: FiBriefcase,
     title: "Protección",
     quote: "Cuidamos tu patrimonio y la operación de tu empresa.",
     details: [
@@ -114,6 +114,10 @@ const services: Service[] = [
         ],
       },
     ],
+    cta: {
+      label: "Ver portafolio de Protección",
+      href: "#portafolio-seguros",
+    },
   },
 ];
 
@@ -124,146 +128,221 @@ export const ServicesSection = () => {
   const activeService = services[activeServiceIndex];
   const activeDetail = activeService.details[activeDetailIndex];
 
+  const activeInitial = activeService.title.charAt(0); // A / B / P
+
   return (
-    <section id="portafolio" className="bg-white py-24">
-      <div className="mx-auto max-w-6xl px-6">
-        {/* HEADER */}
-        <FadeInWhenVisible className="text-center max-w-3xl mx-auto">
-          <span className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
-            Modelo A · B · P
+    <section
+      id="portafolio"
+      className="relative overflow-hidden bg-gradient-to-br from-[#050b1a] via-[#0e2238] to-[#113862] py-16 sm:py-20 md:py-24 text-white"
+    >
+      {/* Fondos suaves */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.10),transparent_55%),radial-gradient(circle_at_bottom_right,rgba(19,118,255,0.18),transparent_60%)]" />
+        <div className="absolute -right-28 top-16 h-64 w-64 rounded-full bg-[#1e5bb3]/30 blur-3xl" />
+        <div className="absolute -bottom-40 -left-16 h-72 w-72 rounded-full bg-[#0a7bd7]/25 blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+        {/* MODELO */}
+        <div className="mb-6 flex items-center justify-center lg:justify-start">
+          <span className="text-sm md:text-base font-semibold uppercase tracking-[0.35em] text-white/80">
+            MODELO
           </span>
-          <h2 className="mt-3 text-3xl font-semibold text-abp-blue md:text-4xl">
-            Soluciones integrales para acompañamiento, bienestar y protección.
-          </h2>
-          <p className="mt-4 text-base text-slate-600">
-            Tres ejes que se integran para fortalecer la seguridad, bienestar y
-            protección de tu organización.
-          </p>
-        </FadeInWhenVisible>
-
-        {/* SELECTOR DE A · B · P */}
-        <div className="mt-10 grid gap-4 md:grid-cols-3">
-          {services.map((service, index) => {
-            const isActive = index === activeServiceIndex;
-
-            return (
-              <FadeInWhenVisible key={service.title}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveServiceIndex(index);
-                    setActiveDetailIndex(0);
-                  }}
-                  className={`group flex h-full flex-col items-start gap-2 rounded-2xl border px-5 py-4 text-left transition-all
-                    ${
-                      isActive
-                        ? "border-abp-blue bg-[#eef3ff] shadow-sm"
-                        : "border-slate-200 bg-white hover:bg-slate-50"
-                    }`}
-                >
-                  <div
-                    className={`flex h-11 w-11 items-center justify-center rounded-full transition-all
-                      ${
-                        isActive
-                          ? "bg-abp-blue text-white"
-                          : "bg-[#e8f0ff] text-abp-blue group-hover:bg-abp-blue group-hover:text-white"
-                      }`}
-                  >
-                    <service.icon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p
-                      className={`text-sm font-semibold ${
-                        isActive ? "text-abp-blue" : "text-slate-800"
-                      }`}
-                    >
-                      {service.title}
-                    </p>
-                    <p className="mt-1 text-xs text-slate-600 line-clamp-2">
-                      {service.quote}
-                    </p>
-                  </div>
-                </button>
-              </FadeInWhenVisible>
-            );
-          })}
         </div>
 
-        {/* PANEL DETALLE */}
-        <div className="mt-8">
+        <div className="grid gap-8 lg:grid-cols-[0.38fr_1.62fr] lg:items-start">
+          {/* ───────────────────── COLUMNA IZQUIERDA ───────────────────── */}
+          <div className="flex flex-col items-center lg:items-start gap-5">
+            {/* MOBILE: solo círculos */}
+            <div className="flex md:hidden items-center justify-center gap-4">
+              {services.map((service, index) => {
+                const isActive = index === activeServiceIndex;
+                return (
+                  <button
+                    key={service.title}
+                    onClick={() => {
+                      setActiveServiceIndex(index);
+                      setActiveDetailIndex(0);
+                    }}
+                  >
+                    <motion.span
+                      whileTap={{ scale: 0.95 }}
+                      className={`flex size-12 items-center justify-center rounded-full border text-lg font-semibold transition
+                        ${
+                          isActive
+                            ? "border-[#f7e7b0] bg-gradient-to-br from-[#f7e7b0] via-[#e6c768] to-[#d4af37] text-[#152746]"
+                            : "border-white/80 bg-white/90 text-[#152746]"
+                        }`}
+                    >
+                      {service.title.charAt(0)}
+                    </motion.span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Etiqueta móvil */}
+            <div className="mt-3 text-center md:hidden">
+              <p className="text-xs uppercase tracking-widest text-white/80">
+                Sección seleccionada
+              </p>
+              <p className="text-sm font-semibold">{activeService.title}</p>
+            </div>
+
+            {/* DESKTOP: círculo + etiqueta detrás, saliendo hacia la derecha */}
+            <div className="hidden md:flex flex-col gap-6">
+              {services.map((service, index) => {
+                const isActive = index === activeServiceIndex;
+
+                return (
+                  <button
+                    key={service.title}
+                    onClick={() => {
+                      setActiveServiceIndex(index);
+                      setActiveDetailIndex(0);
+                    }}
+                    className="flex items-center"
+                  >
+                    <div className="relative flex items-center">
+                      {/* Círculo con letra */}
+                      <motion.span
+                        whileHover={{ scale: 1.05 }}
+                        className={`relative z-10 flex size-20 items-center justify-center rounded-full border text-2xl font-bold transition
+                          ${
+                            isActive
+                              ? "border-[#f7e7b0] bg-gradient-to-br from-[#f7e7b0] via-[#e6c768] to-[#d4af37] text-[#152746]"
+                              : "border-white/25 bg-white/10 text-white"
+                          }`}
+                      >
+                        {service.title.charAt(0)}
+                      </motion.span>
+
+                      {/* Etiqueta, detrás y alineada */}
+                      {isActive && (
+                        <motion.div
+                          initial={{ opacity: 0, x: 8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 8 }}
+                          transition={{ duration: 0.18 }}
+                          className="
+                            relative
+                            -ml-6
+                            pl-10 pr-6 py-2
+                            bg-white 
+                            text-[#152746]
+                            text-base font-semibold
+                            border border-slate-200
+                            shadow-lg
+                            rounded-none
+                            z-0
+                          "
+                        >
+                          {service.title}
+                        </motion.div>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ───────────────────── PANEL DE DETALLE ───────────────────── */}
           <AnimatePresence mode="wait">
             <motion.div
               key={activeService.title}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25 }}
-              className="rounded-3xl border border-slate-200 bg-[#f7f8ff] px-6 py-6 shadow-sm md:px-8 md:py-8"
+              className="rounded-xl border border-slate-200 bg-white px-5 py-6 md:px-7 md:py-8 text-slate-900"
             >
-              {/* ENCABEZADO DEL PANEL */}
-              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#e0e8ff] text-abp-blue">
-                    <activeService.icon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-abp-blue md:text-xl">
-                      {activeService.title}
-                    </h3>
-                    <p className="mt-1 text-sm text-slate-600">
-                      {activeService.quote}
-                    </p>
-                  </div>
+              {/* ENCABEZADO con letra A/B/P */}
+              <div className="flex items-start gap-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#f7e7b0] bg-gradient-to-br from-[#f7e7b0] via-[#e6c768] to-[#d4af37] text-[#152746] font-bold">
+                  {activeInitial}
                 </div>
-
-                {/* CHIPS DE CATEGORÍAS */}
-                <div className="flex flex-wrap gap-2 mt-2 md:mt-0">
-                  {activeService.details.map((detail, idx) => {
-                    const selected = idx === activeDetailIndex;
-                    return (
-                      <button
-                        key={detail.heading}
-                        type="button"
-                        onClick={() => setActiveDetailIndex(idx)}
-                        className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.18em] transition
-                          ${
-                            selected
-                              ? "border-abp-blue bg-white text-abp-blue shadow-sm"
-                              : "border-slate-300 text-slate-600 hover:border-abp-blue/50"
-                          }`}
-                      >
-                        <FiLayers className="h-3.5 w-3.5" />
-                        {detail.heading}
-                      </button>
-                    );
-                  })}
+                <div>
+                  <h3 className="text-xl md:text-2xl font-semibold text-blue-900">
+                    {activeService.title}
+                  </h3>
+                  <p className="mt-1 text-sm text-slate-600">
+                    {activeService.quote}
+                  </p>
                 </div>
               </div>
 
-              {/* ITEMS DEL DETALLE ACTIVO */}
+              {/* TABS con rayita dorada */}
+              <div className="mt-5 flex flex-wrap gap-4 border-b pb-2">
+                {activeService.details.map((detail, idx) => {
+                  const selected = idx === activeDetailIndex;
+                  return (
+                    <button
+                      key={detail.heading}
+                      onClick={() => setActiveDetailIndex(idx)}
+                      className={`border-b-2 pb-1 text-xs uppercase tracking-wide font-semibold transition
+                        ${
+                          selected
+                            ? "text-[#d4af37] border-[#d4af37]"
+                            : "text-slate-500 border-transparent hover:border-[#f7e7b0] hover:text-[#f7e7b0]"
+                        }`}
+                    >
+                      {detail.heading}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* CONTENIDO */}
               <motion.div
                 key={activeDetail.heading}
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
+                exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.2 }}
-                className="mt-6 grid gap-4 md:grid-cols-2"
+                className="mt-6 grid gap-6 md:grid-cols-[0.9fr_1.1fr]"
               >
-                {activeDetail.items.map((item) => (
-                  <div
-                    key={item}
-                    className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-abp-blue/40 hover:shadow-md"
-                  >
-                    <div className="flex items-center gap-2 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                      <FiCheck className="h-4 w-4 text-abp-blue" />
-                      Incluye
+                <div>
+                  <p className="text-xs uppercase font-semibold text-blue-900 tracking-wide">
+                    Categoría
+                  </p>
+                  <h4 className="text-lg font-semibold text-blue-900 mt-1">
+                    {activeDetail.heading}
+                  </h4>
+                  <p className="mt-3 text-sm text-slate-600">
+                    Esta categoría reúne elementos clave de{" "}
+                    <span className="font-medium">
+                      {activeService.title.toLowerCase()}
+                    </span>{" "}
+                    que se adaptan a tus necesidades.
+                  </p>
+                  <p className="mt-3 text-xs text-[#b8952f]">
+                    Incluye {activeDetail.items.length} elementos.
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  {activeDetail.items.map((item) => (
+                    <div key={item} className="border-b pb-3 last:border-none">
+                      <div className="flex items-start gap-2 mt-1">
+                        <FiCheck className="h-4 w-4 text-[#d4af37] mt-0.5" />
+                        <p className="text-sm text-slate-700">{item}</p>
+                      </div>
                     </div>
-                    <p className="mt-2 text-[0.9rem] leading-relaxed text-slate-700">
-                      {item}
-                    </p>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </motion.div>
+
+              {/* CTA */}
+              <div className="mt-7">
+                <a
+                  href={activeService.cta.href}
+                  className="inline-flex items-center gap-2 bg-blue-900 text-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.22em] rounded-full hover:bg-blue-800"
+                >
+                  {activeService.cta.label}
+                  <FiArrowRight className="h-4 w-4" />
+                </a>
+              </div>
             </motion.div>
           </AnimatePresence>
         </div>

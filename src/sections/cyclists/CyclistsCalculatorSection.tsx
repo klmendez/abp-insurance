@@ -249,7 +249,7 @@ export const CyclistsCalculatorSection = () => {
                 )}
 
                 {result && !error && (
-                  <div className="grid gap-4 rounded-3xl border border-white/20 bg-white/10 px-5 py-5 text-left">
+                  <div className="grid gap-4 rounded-3xl border border-white/20 bg-white/10 p-5 text-left">
                     <div>
                       <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-abp-gold/80">
                         Resultado referencial

@@ -10,6 +10,7 @@ import { EnterpriseServicesPage } from "./pages/EnterpriseServicesPage";
 import { PartnersPage } from "./pages/PartnersPage";
 import { ContactPage } from "./pages/ContactPage";
 import { CyclistsPage } from "./pages/CyclistsPage";
+import { AboutPage } from "./pages/AboutPage";
 
 export const App = () => {
   return (
@@ -26,6 +27,7 @@ export const App = () => {
               element={<EnterpriseServicesPage />}
             />
             <Route path="/aliados" element={<PartnersPage />} />
+            <Route path="/sobre-nosotros" element={<AboutPage />} />
             <Route path="/contacto" element={<ContactPage />} />
             <Route path="/ciclistas" element={<CyclistsPage />} />
           </Routes>

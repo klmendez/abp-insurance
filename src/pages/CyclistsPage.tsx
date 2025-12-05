@@ -1,49 +1,39 @@
 // src/pages/CyclistsPage.tsx
-import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
-import { FiArrowRight } from "react-icons/fi";
 import { CyclistsHeroSection } from "@/sections/cyclists/CyclistsHeroSection";
-import { CyclistsStickyNav } from "@/sections/cyclists/CyclistsStickyNav";
-import { CyclistsProductsSection } from "@/sections/cyclists/CyclistsProductsSection";
-import { CyclistsBundlesComparison } from "@/sections/cyclists/CyclistsBundlesComparison";
-import { CyclistsTestimonialsSection } from "@/sections/cyclists/CyclistsTestimonialsSection";
 import { CyclistsCalculatorSection } from "@/sections/cyclists/CyclistsCalculatorSection";
 import { faqItems } from "@/sections/cyclists/cyclistsContent";
+import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
+import { FiArrowRight } from "react-icons/fi";
 
 export const CyclistsPage = () => {
   return (
     <>
       <CyclistsHeroSection />
-      <CyclistsStickyNav />
-      <CyclistsProductsSection />
-      <CyclistsBundlesComparison />
-      <CyclistsTestimonialsSection />
-      <section id="cta" className="bg-white py-16">
+      <section id="productos" className="bg-white py-16">
         <div className="mx-auto max-w-4xl px-6">
-          <FadeInWhenVisible className="rounded-3xl border border-abp-gold/30 bg-gradient-to-br from-abp-navy via-abp-blue to-abp-midnight px-8 py-10 text-center text-white shadow-lg">
-            <p className="text-[0.75rem] font-semibold uppercase tracking-[0.28em] text-abp-gold/90">
-              Resolvemos tus dudas y armamos un plan a tu medida
+          <FadeInWhenVisible className="space-y-6 text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-abp-blue/70">
+              ¿Qué cubrimos?
             </p>
-            <h2 className="mt-4 text-2xl font-semibold md:text-3xl">
-              Un asesor especialista en seguros ciclistas te acompaña en todo momento.
+            <h2 className="text-3xl font-semibold text-abp-blue md:text-4xl">
+              Planes flexibles para tu bici, tu vida y tus viajes.
             </h2>
-            <p className="mt-4 text-base text-slate-100/85">
-              Conversemos sobre tu bici, tu estilo de ciclismo y los eventos que tienes en el radar. Aprovecha una asesoría sin costo para ajustar coberturas, valores asegurados y asistencias.
+            <p className="text-base text-slate-600">
+              Comienza calculando una prima referencial; luego un asesor ABP ajustará valores, aseguradoras y asistencias según tu realidad.
             </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <div className="flex flex-wrap justify-center gap-3">
               <a
-                href="/contacto"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.26em] text-abp-blue hover:bg-slate-100"
+                href="#calculadora"
+                className="inline-flex items-center gap-2 rounded-full bg-abp-blue px-6 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.26em] text-white hover:bg-abp-blue/90"
               >
-                Agendar asesoría
+                Ir a la calculadora
                 <FiArrowRight className="size-4" />
               </a>
               <a
-                href="https://wa.me/573102885625"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-abp-gold/60 px-5 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-white/85 hover:border-abp-gold"
+                href="#contacto"
+                className="inline-flex items-center gap-2 rounded-full border border-abp-blue/30 px-6 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.26em] text-abp-blue hover:border-abp-blue/60"
               >
-                Escríbenos por WhatsApp
+                Solicitar asesoría
               </a>
             </div>
           </FadeInWhenVisible>
