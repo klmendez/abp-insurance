@@ -78,7 +78,8 @@ export const HeroSection = () => (
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          Tu futuro con soluciones de seguros flexibles y cercanas.
+          Acompañamos tus decisiones, aseguramos tu bienestar y protegemos tu futuro
+
         </motion.h1>
 
         {/* DESCRIPCIÓN */}

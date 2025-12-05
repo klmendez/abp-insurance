@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { FiChevronDown, FiMenu, FiX } from "react-icons/fi";
-import logoV from "../assets/logoV.png";
+import logoV from "../assets/Logo profesional parz.png";
 
 type NavChild = {
   label: string;
@@ -69,14 +69,14 @@ export const Navbar = () => {
           >
             <img
               src={logoV}
-              alt="ABP Agencia de Seguros"
+              alt="Agencia de Seguros"
               className="h-9 w-auto md:h-10"
             />
 
             <div className="flex flex-col leading-tight">
               {/* ABP GRANDE */}
               <span className="text-base font-bold tracking-[0.18em] text-abp-blue md:text-lg">
-                ABP
+              
               </span>
               {/* Agencia de Seguros Ltda. */}
               <span className="text-[0.7rem] text-slate-700 md:text-xs">
