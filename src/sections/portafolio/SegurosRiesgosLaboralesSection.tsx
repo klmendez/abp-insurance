@@ -1,6 +1,7 @@
 import { type FC, useEffect, useState } from "react";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { FiCheckCircle } from "react-icons/fi";
+import trabajadoresImg from "@/assets/laborales/trabajadores2.jpg";
 
 const summaryHighlights = [
   "Nos encargamos de la afiliación y las novedades con la ARL para que tu equipo no pierda horas en trámites.",
@@ -99,7 +100,7 @@ export const SegurosRiesgosLaboralesSection: FC = () => {
             {/* Imagen sin tarjeta */}
             <div className="flex justify-center lg:justify-end">
               <img
-                src="src/assets/laborales/trabajadores2.jpg"
+                src={trabajadoresImg}
                 alt="Personas trabajando con elementos de seguridad industrial"
                 className="max-h-64 w-auto object-contain drop-shadow-[0_18px_45px_rgba(0,0,0,0.7)]"
               />

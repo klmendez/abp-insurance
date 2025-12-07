@@ -1,5 +1,6 @@
 import { type FC, useState, useEffect } from "react";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
+import familiaImg from "@/assets/vida/persona-familia.jpg";
 
 const benefits = [
   "Protección financiera para tus proyectos y responsabilidades.",
@@ -72,7 +73,7 @@ export const SegurosVidaSection: FC = () => {
 
           <div className="flex justify-center lg:justify-end">
             <img
-              src="src/assets/vida/persona-familia.jpg"
+              src={familiaImg}
               alt="Familia protegida"
               className="max-h-64 w-auto object-contain drop-shadow-[0_18px_45px_rgba(15,23,42,0.35)]"
             />
