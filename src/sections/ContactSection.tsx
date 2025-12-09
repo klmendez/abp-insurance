@@ -104,17 +104,12 @@ export const ContactSection = () => (
             method="POST"
             data-netlify="true"
             data-netlify-honeypot="bot-field"
+            action="/gracias"
             className="mt-6 grid gap-5 md:grid-cols-2"
           >
-            {/* Campo oculto requerido */}
+            {/* Campos ocultos requeridos por Netlify */}
             <input type="hidden" name="form-name" value="contacto-abp" />
-
-            {/* Honeypot anti-bots */}
-            <p className="hidden">
-              <label>
-                No llenar este campo: <input name="bot-field" />
-              </label>
-            </p>
+            <input type="hidden" name="bot-field" />
 
             <label className="md:col-span-1 space-y-1.5">
               <span className="text-sm font-semibold text-abp-blue">Nombre completo</span>
