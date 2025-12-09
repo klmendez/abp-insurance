@@ -1,11 +1,42 @@
 <!doctype html>
+
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/Logo.png" />
+    <link rel="icon" type="image/svg+xml" href="/src/assets/Logo profesional parz.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ABP Agencia de Seguros</title>
   </head>
+
+  <body class="text-slate-900">
+    <div id="root"></div>
+
+    <!-- 🔥 FORMULARIO OCULTO PARA NETLIFY (¡IMPORTANTE!) -->
+    <form
+      name="contacto-abp"
+      method="POST"
+      netlify
+      netlify-honeypot="bot-field"
+      hidden
+    >
+      <input type="text" name="nombre" />
+      <input type="email" name="correo" />
+      <input type="tel" name="telefono" />
+      <select name="proteccion">
+        <option value="empresa">Mi empresa / negocio</option>
+        <option value="equipo">Mi equipo de trabajo</option>
+        <option value="familia">Mi familia y patrimonio</option>
+        <option value="ciclistas">Portafolio para ciclistas</option>
+        <option value="otro">Otro</option>
+      </select>
+      <textarea name="mensaje"></textarea>
+    </form>
+    <!-- 🔥 FIN DEL FORMULARIO OCULTO -->
+
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
   <body class="text-slate-900">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
