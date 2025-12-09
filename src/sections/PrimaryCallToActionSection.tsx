@@ -50,7 +50,7 @@ export const PrimaryCallToActionSection = () => {
               Quiero una asesoría sin costo
             </a>
 
-            <a href="/portafolio" className="btn-modern btn-modern--light">
+            <a href="/portafolio" className="btn-modern">
               Ver portafolio completo
             </a>
           </div>
@@ -71,8 +71,8 @@ export const PrimaryCallToActionSection = () => {
                   onClick={() => setActiveIndex(index)}
                   className={`flex-1 rounded-full border px-3 py-1.5 text-[0.7rem] font-medium transition-colors ${
                     index === activeIndex
-                      ? "border-abp-blue bg-abp-blue text-white"
-                      : "border-slate-200 bg-slate-50 text-slate-600 hover:border-abp-blue/60 hover:text-abp-blue"
+                      ? "border-[#d4a43b] bg-[#d4a43b] text-[#101934] shadow-[0_12px_28px_-20px_rgba(212,175,55,0.9)]"
+                      : "border-slate-200 bg-white text-slate-600 hover:border-[#d4a43b]/60 hover:text-[#d4a43b]"
                   }`}
                 >
                   {area.label}

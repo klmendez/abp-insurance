@@ -22,15 +22,19 @@ export const FloatingWhatsappButton = ({
         text-sm font-semibold text-white shadow-xl
         transition duration-200
         hover:bg-emerald-600 hover:-translate-y-0.5
-        right-4 bottom-5
-        md:right-0 md:top-1/2 md:-translate-y-1/2
+
+        right-4 bottom-4
+        md:right-0 md:bottom-8
         md:rounded-l-full md:rounded-r-none
       "
     >
-      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
+      <span className="flex h-20 w-20 items-center justify-center rounded-full bg-white/10">
         <FaWhatsapp className="h-5 w-5 text-white" />
       </span>
-      <span className="hidden md:inline">Cotiza ya</span>
+
+      <span className="hidden md:inline text-base font-medium">
+        Cotiza ya
+      </span>
     </a>
   );
 };

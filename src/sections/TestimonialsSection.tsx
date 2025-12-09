@@ -19,12 +19,12 @@ const testimonials = [
       "https://img.freepik.com/foto-gratis/estilo-vida-emociones-gente-concepto-casual-confiado-agradable-sonriente-mujer-asiatica-brazos-cruzados-pecho-seguro-listo-ayudar-escuchando-companeros-trabajo-participando-conversacion_1258-59335.jpg?semt=ais_hybrid&w=740&q=80",
   },
   {
-    name: "Carolina Ruiz",
-    role: "Arquitecta",
+    name: "Francisco Arboleda",
+    role: "Comandante de Bomberos Popayán",
     quote:
-      "Más que una agencia, son aliados que escuchan y diseñan soluciones flexibles. Recomiendo a ABP por su trato cercano y transparente.",
+      "Gracias a ABP reforzamos la protección de nuestras brigadas. Su equipo entiende los riesgos de primera línea y actúa con compromiso total.",
     avatar:
-      "https://www.hola.com/horizon/landscape/6a53cd5134b2-getty-chica-feliz-t.jpg",
+      "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=400&q=80",
   },
 ];
 

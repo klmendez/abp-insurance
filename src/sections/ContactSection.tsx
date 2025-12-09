@@ -2,11 +2,9 @@ import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { FiPhoneCall, FiMail, FiMapPin, FiArrowRight } from "react-icons/fi";
 
 export const ContactSection = () => (
-  <section
-    id="contacto"
-    className="bg-[#f4f6ff] py-16"
-  >
+  <section id="contacto" className="bg-[#f4f6ff] py-16">
     <div className="mx-auto max-w-6xl px-6">
+
       {/* HEADER GENERAL */}
       <FadeInWhenVisible className="mx-auto max-w-3xl text-center">
         <span className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-abp-blue/80">
@@ -23,7 +21,8 @@ export const ContactSection = () => (
       </FadeInWhenVisible>
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[0.9fr,1.1fr] items-start">
-        {/* COLUMNA IZQUIERDA: INFO DE CONTACTO */}
+
+        {/* COLUMNA IZQUIERDA */}
         <FadeInWhenVisible className="rounded-2xl border border-abp-blue/15 bg-white/90 px-6 py-6 shadow-sm md:px-7 md:py-7">
           <p className="text-[0.7rem] font-semibold uppercase tracking-[0.26em] text-abp-blue/80">
             Atención directa
@@ -40,34 +39,34 @@ export const ContactSection = () => (
           <div className="mt-5 space-y-3 text-sm text-abp-blue">
             <div className="flex items-center gap-3">
               <FiPhoneCall className="h-5 w-5 text-abp-gold" />
-              <a
-                href="tel:+573208654369"
-                className="hover:text-abp-blue/80"
-              >
+              <a href="tel:+573208654369" className="hover:text-abp-blue/80">
                 (+57) 320 865 4369
               </a>
             </div>
             <div className="flex items-center gap-3">
               <FiPhoneCall className="h-5 w-5 text-abp-gold" />
-              <a
-                href="tel:+573005687950"
-                className="hover:text-abp-blue/80"
-              >
+              <a href="tel:+573005687950" className="hover:text-abp-blue/80">
                 (+57) 300 568 7950
+              </a>
+            </div>
+            <div className="flex items-center gap-3">
+              <FiPhoneCall className="h-5 w-5 text-abp-gold" />
+              <a href="tel:+573185170013" className="hover:text-abp-blue/80">
+                (+57) 318 517 0013
               </a>
             </div>
             <div className="flex items-center gap-3">
               <FiMail className="h-5 w-5 text-abp-gold" />
               <a
-                href="mailto:abpseguros@gmail.com"
+                href="mailto:apbsegurosltda@gmail.com"
                 className="hover:text-abp-blue/80 break-all"
               >
-                abpseguros@gmail.com
+                apbsegurosltda@gmail.com
               </a>
             </div>
           </div>
 
-          {/* UBICACIÓN / COBERTURA */}
+          {/* UBICACIÓN */}
           <div className="mt-5 border-t border-abp-blue/10 pt-4 text-sm text-slate-700">
             <div className="flex items-start gap-3">
               <FiMapPin className="mt-0.5 h-5 w-5 text-abp-gold" />
@@ -78,7 +77,6 @@ export const ContactSection = () => (
             </div>
           </div>
 
-          {/* MENSAJE CORTO */}
           <p className="mt-4 text-[0.8rem] text-slate-600">
             También podemos coordinar una reunión virtual o una visita a tu
             empresa para revisar tu situación actual.
@@ -93,22 +91,36 @@ export const ContactSection = () => (
           />
 
           <header className="space-y-2">
-            <p className="text-sm font-semibold text-abp-blue">
-              Envíanos un mensaje
-            </p>
+            <p className="text-sm font-semibold text-abp-blue">Envíanos un mensaje</p>
             <p className="text-xs text-slate-600">
               Responde estas preguntas breves y te contactaremos con una
               propuesta a la medida.
             </p>
           </header>
 
-          <form className="mt-6 grid gap-5 md:grid-cols-2">
+          {/* FORMULARIO NETLIFY FORMS */}
+          <form
+            name="contacto-abp"
+            method="POST"
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            className="mt-6 grid gap-5 md:grid-cols-2"
+          >
+            {/* Campo oculto requerido */}
+            <input type="hidden" name="form-name" value="contacto-abp" />
+
+            {/* Honeypot anti-bots */}
+            <p className="hidden">
+              <label>
+                No llenar este campo: <input name="bot-field" />
+              </label>
+            </p>
+
             <label className="md:col-span-1 space-y-1.5">
-              <span className="text-sm font-semibold text-abp-blue">
-                Nombre completo
-              </span>
+              <span className="text-sm font-semibold text-abp-blue">Nombre completo</span>
               <input
                 type="text"
+                name="nombre"
                 placeholder="Tu nombre"
                 className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm transition focus:border-abp-blue focus:outline-none focus:ring-2 focus:ring-abp-blue/20"
                 required
@@ -116,11 +128,10 @@ export const ContactSection = () => (
             </label>
 
             <label className="md:col-span-1 space-y-1.5">
-              <span className="text-sm font-semibold text-abp-blue">
-                Correo electrónico
-              </span>
+              <span className="text-sm font-semibold text-abp-blue">Correo electrónico</span>
               <input
                 type="email"
+                name="correo"
                 placeholder="nombre@correo.com"
                 className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm transition focus:border-abp-blue focus:outline-none focus:ring-2 focus:ring-abp-blue/20"
                 required
@@ -128,21 +139,19 @@ export const ContactSection = () => (
             </label>
 
             <label className="md:col-span-1 space-y-1.5">
-              <span className="text-sm font-semibold text-abp-blue">
-                Teléfono
-              </span>
+              <span className="text-sm font-semibold text-abp-blue">Teléfono</span>
               <input
                 type="tel"
+                name="telefono"
                 placeholder="(+57) 300 000 0000"
                 className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm transition focus:border-abp-blue focus:outline-none focus:ring-2 focus:ring-abp-blue/20"
               />
             </label>
 
             <label className="md:col-span-1 space-y-1.5">
-              <span className="text-sm font-semibold text-abp-blue">
-                ¿Qué quieres proteger?
-              </span>
+              <span className="text-sm font-semibold text-abp-blue">¿Qué quieres proteger?</span>
               <select
+                name="proteccion"
                 className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm transition focus:border-abp-blue focus:outline-none focus:ring-2 focus:ring-abp-blue/20"
               >
                 <option value="">Selecciona una opción</option>
@@ -155,10 +164,9 @@ export const ContactSection = () => (
             </label>
 
             <label className="md:col-span-2 space-y-1.5">
-              <span className="text-sm font-semibold text-abp-blue">
-                Mensaje
-              </span>
+              <span className="text-sm font-semibold text-abp-blue">Mensaje</span>
               <textarea
+                name="mensaje"
                 placeholder="Cuéntanos brevemente tu situación o lo que te gustaría revisar."
                 rows={4}
                 className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm transition focus:border-abp-blue focus:outline-none focus:ring-2 focus:ring-abp-blue/20"
