@@ -103,7 +103,7 @@ export const InsuranceNamesCarouselSection: FC = () => {
             <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white via-white/85 to-transparent" />
             <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white via-white/85 to-transparent" />
 
-            <div className="flex items-center justify-center gap-3 sm:gap-4">
+            <div className="flex items-center justify-center gap-2 sm:gap-4">
               {/* ← Botón anterior (hover dorado, texto azul) */}
               <button
                 type="button"
@@ -120,7 +120,7 @@ export const InsuranceNamesCarouselSection: FC = () => {
               </button>
 
               {/* Opciones */}
-              <div className="relative w-full overflow-hidden px-2 sm:px-3">
+              <div className="relative w-full min-w-0 max-w-full overflow-hidden px-2 sm:px-3">
                 <AnimatePresence initial={false} mode="wait">
                   <motion.ul
                     key={cursor}
@@ -128,7 +128,7 @@ export const InsuranceNamesCarouselSection: FC = () => {
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: -30, opacity: 0 }}
                     transition={{ duration: 0.55, ease: "easeInOut" }}
-                    className="flex items-center justify-center gap-3 sm:gap-4"
+                    className="flex min-w-0 items-center justify-center gap-3 sm:gap-4"
                   >
                     {visibleSlice.map((item, index) => {
                       const isActive = index === centerOffset;
@@ -137,7 +137,7 @@ export const InsuranceNamesCarouselSection: FC = () => {
                         <li
                           key={item.label + index}
                           className={`
-                            flex min-w-[180px] max-w-[250px] justify-center 
+                            flex min-w-[140px] max-w-[220px] justify-center 
                             transition-all duration-300
                             ${
                               isActive
