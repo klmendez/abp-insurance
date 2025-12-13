@@ -25,22 +25,16 @@ const data: Row[] = [
   { name: "Implementación del plan de prevención", sin: 7, con: 3 },
 ];
 
-const formatLabel = (value: string) => {
-  // Hace el label más legible en YAxis (no corta palabras en lugares raros)
-  // Mantiene el texto completo (se verá mejor por ser barras horizontales).
-  return value;
-};
-
 export const ComplexityComparisonSection = () => {
   return (
-    <section className="bg-slate-100 py-16 sm:py-20">
-      <div className="mx-auto max-w-6xl px-6">
+    <section className="bg-slate-100 py-14 sm:py-20">
+      <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
-          {/* Texto (sin tarjetas) */}
-          <FadeInWhenVisible className="space-y-6">
+          {/* TEXTO */}
+          <FadeInWhenVisible className="space-y-5">
             <div className="inline-flex items-center gap-2">
-              <span className="h-[1px] w-10 bg-slate-300" />
-              <span className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-slate-600">
+              <span className="h-px w-8 bg-slate-300" />
+              <span className="text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-slate-600">
                 Complejidad operativa
               </span>
             </div>
@@ -51,77 +45,67 @@ export const ComplexityComparisonSection = () => {
             </h2>
 
             <p className="text-sm leading-relaxed text-slate-600 sm:text-base">
-              Lo invitamos a realizar un análisis sobre la complejidad operativa
-              con o sin servicios de intermediación en ARL. Un acompañamiento
-              especializado reduce fricción administrativa, acelera trámites y
-              mejora el control del cumplimiento.
+              Compare la carga operativa de la gestión en riesgos laborales con
+              o sin intermediación especializada en ARL.
             </p>
 
-            <div className="space-y-2 text-sm text-slate-600 sm:text-base">
-              <p className="leading-relaxed">
-                La comparación se presenta en una escala de 1 a 10.
-              </p>
-              <p className="leading-relaxed">
-                Valores más altos representan mayor carga operativa.
-              </p>
-            </div>
+            <p className="text-xs text-slate-500">
+              Escala de referencia: 0 a 10. Valores mayores indican mayor
+              complejidad.
+            </p>
 
-            <div className="flex flex-wrap gap-3 pt-2">
+            <div className="flex flex-wrap gap-3 pt-1">
               <a href="#contacto" className="btn-modern">
                 Solicitar asesoría
               </a>
-              <Link to="/servicios-empresariales" className="btn-modern btn-modern--dark">
+              <Link
+                to="/servicios-empresariales"
+                className="btn-modern btn-modern--dark"
+              >
                 Ver servicios
               </Link>
             </div>
-
-            <p className="text-xs leading-relaxed text-slate-500">
-              Nota: Los valores son una referencia visual. Se pueden ajustar a métricas reales
-              según el tipo de empresa y el alcance del programa.
-            </p>
           </FadeInWhenVisible>
 
-          {/* Gráfica (sin tarjeta, sin caja) */}
+          {/* GRÁFICA */}
           <FadeInWhenVisible className="w-full">
-            <div className="mb-4">
+            <div className="mb-3">
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-600">
                 Reducción de la complejidad operativa
               </p>
-              <h3 className="mt-2 text-base font-semibold text-slate-900">
+              <p className="mt-1 text-sm font-medium text-slate-800">
                 Comparación por frente de gestión
-              </h3>
-              <p className="mt-1 text-xs text-slate-600">
-                Complejidad (1–10) sin intermediario vs. con ABP Seguros
               </p>
             </div>
 
-            <div className="h-[420px] sm:h-[460px]">
+            {/* Altura RESPONSIVE */}
+            <div className="h-[300px] sm:h-[360px] lg:h-[380px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={data}
                   layout="vertical"
-                  margin={{ top: 6, right: 10, left: 8, bottom: 8 }}
-                  barCategoryGap={18}
+                  margin={{ top: 4, right: 8, left: 0, bottom: 4 }}
+                  barCategoryGap={14}
                 >
-                  {/* Grid más sutil */}
-                  <CartesianGrid strokeDasharray="4 6" vertical={false} />
+                  <CartesianGrid
+                    strokeDasharray="4 6"
+                    vertical={false}
+                  />
 
-                  {/* Categorías (izquierda) */}
+                  {/* Etiquetas más angostas */}
                   <YAxis
                     type="category"
                     dataKey="name"
-                    width={180}
-                    tick={{ fill: "#334155", fontSize: 12 }}
+                    width={130}
+                    tick={{ fill: "#334155", fontSize: 11 }}
                     tickLine={false}
                     axisLine={false}
-                    tickFormatter={formatLabel}
                   />
 
-                  {/* Escala 0-10 (abajo) */}
                   <XAxis
                     type="number"
                     domain={[0, 10]}
-                    tick={{ fill: "#334155", fontSize: 12 }}
+                    tick={{ fill: "#334155", fontSize: 11 }}
                     tickLine={false}
                     axisLine={false}
                   />
@@ -131,45 +115,44 @@ export const ComplexityComparisonSection = () => {
                     contentStyle={{
                       background: "rgba(255,255,255,0.96)",
                       border: "1px solid rgba(148,163,184,0.45)",
-                      borderRadius: 14,
+                      borderRadius: 12,
                       color: "#0f172a",
-                      boxShadow: "0 10px 30px rgba(2,6,23,0.08)",
+                      boxShadow: "0 10px 25px rgba(2,6,23,0.08)",
                     }}
-                    labelStyle={{ color: "#0f172a", fontWeight: 600 }}
+                    labelStyle={{ fontWeight: 600 }}
                   />
 
                   <Legend
-                    wrapperStyle={{ color: "#334155", fontSize: 12 }}
-                    formatter={(value) => <span style={{ color: "#334155" }}>{value}</span>}
+                    wrapperStyle={{ fontSize: 11, color: "#334155" }}
                   />
 
-                  {/* Barras: sin azul; diferenciación sobria */}
+                  {/* Barras más delgadas */}
                   <Bar
                     dataKey="sin"
                     name="Sin intermediario"
                     fill="#fb7185"
-                    radius={[10, 10, 10, 10]}
-                    barSize={14}
+                    radius={[8, 8, 8, 8]}
+                    barSize={10}
                   />
                   <Bar
                     dataKey="con"
                     name="Con ABP Seguros"
-                    fill="#a3a3a3"
-                    radius={[10, 10, 10, 10]}
-                    barSize={14}
+                    fill="#9ca3af"
+                    radius={[8, 8, 8, 8]}
+                    barSize={10}
                   />
                 </BarChart>
               </ResponsiveContainer>
             </div>
 
-            {/* Mini leyenda textual (sin tarjeta) */}
-            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-xs text-slate-600">
+            {/* Leyenda compacta */}
+            <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-[0.7rem] text-slate-600">
               <span className="inline-flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#fb7185]" />
+                <span className="h-2 w-2 rounded-full bg-[#fb7185]" />
                 Sin intermediario
               </span>
               <span className="inline-flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#a3a3a3]" />
+                <span className="h-2 w-2 rounded-full bg-[#9ca3af]" />
                 Con ABP Seguros
               </span>
               <span className="text-slate-500">Escala 0–10</span>
