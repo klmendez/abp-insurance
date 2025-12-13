@@ -23,25 +23,25 @@ const slides: Slide[] = [
     id: "A",
     title: "Riesgos Laborales",
     image: riesgosLaboralesImg, // carpeta laborales
-    anchor: "#portafolio-list",
+    anchor: "/portafolio/riesgos-laborales",
   },
   {
     id: "B",
     title: "Vida",
     image: vidaImg, // carpeta vida
-    anchor: "#portafolio-list",
+    anchor: "/portafolio/seguros-vida",
   },
   {
     id: "C",
     title: "Generales",
     image: generalesImg, // carpeta generales
-    anchor: "#portafolio-list",
+    anchor: "/portafolio/seguros-generales",
   },
   {
     id: "D",
     title: "Ciclistas y Recicladores",
     image: ciclista1, // carpeta especiales
-    anchor: "/ciclistas",
+    anchor: "/portafolio/recicladores",
   },
   {
     id: "E",

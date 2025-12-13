@@ -9,26 +9,11 @@ import segurosMundialLogo from "@/assets/aliados/seguros_mundial.png";
 import previsoraLogo from "@/assets/aliados/Previsora.png";
 
 const partnerLogos = [
-  {
-    name: "Positiva",
-    src: positivaLogo,
-  },
-  {
-    name: "AXA Colpatria",
-    src: axaLogo,
-  },
-  {
-    name: "Seguros del Estado",
-    src: segurosEstadoLogo,
-  },
-  {
-    name: "Seguros Mundial",
-    src: segurosMundialLogo,
-  },
-  {
-    name: "Previsora",
-    src: previsoraLogo,
-  },
+  { name: "Previsora", src: previsoraLogo },
+  { name: "Positiva", src: positivaLogo },
+  { name: "AXA Colpatria", src: axaLogo },
+  { name: "Seguros del Estado", src: segurosEstadoLogo },
+  { name: "Seguros Mundial", src: segurosMundialLogo },
 ] as const;
 
 const VISIBLE_LOGOS = 5;
@@ -61,61 +46,59 @@ export const PartnersSection = () => {
 
   const visibleItems = useMemo(() => {
     const start = cursor - Math.floor(VISIBLE_LOGOS / 2);
-    const end = start + VISIBLE_LOGOS;
-    return loopedLogos.slice(start, end);
+    return loopedLogos.slice(start, start + VISIBLE_LOGOS);
   }, [cursor]);
 
   const centerIndex = Math.floor(VISIBLE_LOGOS / 2);
 
-  const handlePrev = () => setCursor((prev) => prev - 1);
-  const handleNext = () => setCursor((prev) => prev + 1);
-
   return (
     <section
       id="aliados"
-      className="relative overflow-hidden bg-gradient-to-br from-[#f2f6ff] via-white to-[#e7f0ff] py-20"
+      className="relative overflow-hidden bg-gradient-to-br from-[#f2f6ff] via-white to-[#e7f0ff] py-10" 
+      // ↓↓↓ antes era py-20
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(66,104,168,0.12),transparent_60%),radial-gradient(circle_at_80%_85%,rgba(191,214,255,0.32),transparent_70%)]" />
 
-      <div className="relative mx-auto flex max-w-6xl flex-col gap-12 px-6">
+      <div className="relative mx-auto flex max-w-6xl flex-col gap-6 px-6">
+        {/* title now with smaller vertical space */}
         <FadeInWhenVisible className="text-center">
-          <h2 className="text-3xl font-semibold leading-tight text-[#1f3258] sm:text-4xl">
+          <h2 className="text-2xl font-semibold leading-tight text-[#1f3258] sm:text-3xl">
             Aseguradoras que nos respaldan en cada propuesta
           </h2>
         </FadeInWhenVisible>
 
+        {/* Carrusel más compacto */}
         <FadeInWhenVisible>
-          <div className="relative overflow-hidden rounded-[28px] border border-[#cddcfa] bg-white/85 p-6 shadow-[0_30px_80px_-50px_rgba(31,55,105,0.6)]">
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white via-white/80 to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white via-white/80 to-transparent" />
-
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-3">
+              {/* Botón izquierdo */}
               <button
                 type="button"
-                onClick={handlePrev}
+                onClick={() => setCursor((prev) => prev - 1)}
                 aria-label="Aliados anteriores"
-                className="hidden size-11 items-center justify-center rounded-full border border-[#b5c8ef] bg-white text-[#274472] shadow-sm transition hover:border-[#274472] hover:bg-[#ebf2ff] md:flex"
+                className="hidden size-9 items-center justify-center rounded-full border border-[#b5c8ef] bg-white text-[#274472] shadow-sm transition hover:bg-[#ebf2ff] md:flex"
               >
-                <FiChevronLeft className="size-5" />
+                <FiChevronLeft className="size-4" />
               </button>
 
+              {/* Logos */}
               <div className="relative w-full overflow-hidden">
-                <div className="flex w-full items-center justify-center gap-6 transition-all duration-500 ease-out">
+                <div className="flex w-full items-center justify-center gap-4 transition-all duration-500">
                   {visibleItems.map((logo, index) => {
                     const isCenter = index === centerIndex;
                     return (
                       <div
                         key={`${logo.name}-${index}`}
-                        className={`flex min-w-[120px] max-w-[180px] flex-1 items-center justify-center rounded-3xl border border-transparent bg-white/90 px-6 py-4 transition-all duration-500 sm:min-w-[140px] ${
+                        className={`flex min-w-[100px] max-w-[160px] flex-1 items-center justify-center rounded-2xl border border-transparent bg-white/90 px-4 py-3 transition-all duration-500 ${
                           isCenter
-                            ? "scale-110 border-[#274472]/20 shadow-[0_20px_45px_-25px_rgba(39,68,114,0.6)]"
+                            ? "scale-105 border-[#274472]/20 shadow-[0_10px_30px_-15px_rgba(39,68,114,0.5)]"
                             : "opacity-70 hover:scale-105 hover:opacity-100"
                         }`}
                       >
                         <img
                           src={logo.src}
                           alt={logo.name}
-                          className="h-12 w-auto object-contain sm:h-14"
+                          className="h-10 w-auto object-contain sm:h-12"
                         />
                       </div>
                     );
@@ -123,46 +106,27 @@ export const PartnersSection = () => {
                 </div>
               </div>
 
+              {/* Botón derecho */}
               <button
                 type="button"
-                onClick={handleNext}
+                onClick={() => setCursor((prev) => prev + 1)}
                 aria-label="Aliados siguientes"
-                className="hidden size-11 items-center justify-center rounded-full border border-[#b5c8ef] bg-white text-[#274472] shadow-sm transition hover:border-[#274472] hover:bg-[#ebf2ff] md:flex"
-              >
-                <FiChevronRight className="size-5" />
-              </button>
-            </div>
-
-            <div className="mt-6 flex items-center justify-center gap-4 md:hidden">
-              <button
-                type="button"
-                onClick={handlePrev}
-                aria-label="Aliados anteriores"
-                className="flex size-10 items-center justify-center rounded-full border border-[#b5c8ef] bg-white text-[#274472] shadow-sm transition hover:border-[#274472] hover:bg-[#ebf2ff]"
-              >
-                <FiChevronLeft className="size-4" />
-              </button>
-              <button
-                type="button"
-                onClick={handleNext}
-                aria-label="Aliados siguientes"
-                className="flex size-10 items-center justify-center rounded-full border border-[#b5c8ef] bg-white text-[#274472] shadow-sm transition hover:border-[#274472] hover:bg-[#ebf2ff]"
+                className="hidden size-9 items-center justify-center rounded-full border border-[#b5c8ef] bg-white text-[#274472] shadow-sm transition hover:bg-[#ebf2ff] md:flex"
               >
                 <FiChevronRight className="size-4" />
               </button>
             </div>
 
-            <div className="mt-5 flex justify-center gap-2">
-              {partnerLogos.map((logo, index) => {
-                const loopIndex = cursor % partnerLogos.length;
-                const isActive = loopIndex === index;
+            {/* Indicadores compactos */}
+            <div className="flex justify-center gap-1.5">
+              {partnerLogos.map((logo, i) => {
+                const isActive = cursor % partnerLogos.length === i;
                 return (
                   <span
                     key={logo.name}
-                    className={`size-2.5 rounded-full transition ${
+                    className={`size-2 rounded-full transition ${
                       isActive ? "bg-[#274472]" : "bg-[#c1d3f4]"
                     }`}
-                    aria-hidden
                   />
                 );
               })}

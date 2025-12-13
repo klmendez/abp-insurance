@@ -1,4 +1,5 @@
 import { type FC, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { FiCheckCircle } from "react-icons/fi";
 import trabajadoresImg from "@/assets/laborales/trabajadores2.jpg";
@@ -95,6 +96,12 @@ export const SegurosRiesgosLaboralesSection: FC = () => {
                 Trabajamos con empresas, independientes y contratistas en
                 afiliación, siniestros y prevención en riesgos laborales.
               </p>
+
+              <div className="mt-6 flex flex-wrap justify-center gap-3 lg:justify-start">
+                <Link to="/portafolio/riesgos-laborales" className="btn-modern">
+                  Ver portafolio de riesgos laborales
+                </Link>
+              </div>
             </div>
 
             {/* Imagen sin tarjeta */}

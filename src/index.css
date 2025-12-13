@@ -10,6 +10,27 @@ body {
   @apply bg-white text-abp-ink antialiased;
   
 }
+.highlight-gold {
+  border-color: #d4af37 !important;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.55);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Máscara para eliminar el corte inferior + inferior izquierdo COMPLETO */
+.mask-mobile-fade {
+  mask-image:
+    linear-gradient(to bottom, black 50%, transparent 100%),
+    radial-gradient(circle at 0% 100%, black 35%, transparent 85%);
+  mask-composite: intersect;
+
+  /* Safari */
+  -webkit-mask-image:
+    linear-gradient(to bottom, black 50%, transparent 100%),
+    radial-gradient(circle at 0% 100%, black 35%, transparent 85%);
+  -webkit-mask-composite: source-in;
+}
+
+
 
 @layer base {
   h1,

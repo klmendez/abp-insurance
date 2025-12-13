@@ -1,84 +1,119 @@
 import { Link } from "react-router-dom";
+import footerBg from "../bg/Footer1.png";
 
 export const Footer = () => {
   const year = new Date().getFullYear();
 
+  const linkClass =
+    "text-white/80 no-underline visited:text-white/80 hover:text-abp-gold focus:text-abp-gold active:text-abp-gold transition";
+
   return (
-    <footer className="mt-12 border-t border-abp-blue/15 bg-[#020617] text-slate-200">
-      {/* FILA PRINCIPAL */}
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-8 md:flex-row md:items-start md:justify-between">
-        {/* Marca + tagline */}
-        <div className="space-y-2">
-          <p className="text-base font-semibold tracking-[0.18em] text-white md:text-lg">
-            ABP AGENCIA DE SEGUROS LTDA.
-          </p>
-          <p className="text-sm text-slate-400">
-            Acompañamiento, bienestar y protección para empresas, personas y
-            proyectos de vida.
-          </p>
+    <footer className="relative mt-16 text-white">
+
+      {/* Imagen de fondo */}
+      <div
+        className="absolute inset-0 bg-cover bg-no-repeat bg-[center_70%]"
+        style={{ backgroundImage: `url(${footerBg})` }}
+        aria-hidden="true"
+      />
+
+      {/* Overlay oscuro (SIN azul) */}
+      <div
+        className="
+          absolute inset-0
+          bg-gradient-to-b
+          from-black/75
+          via-black/65
+          to-black/85
+        "
+        aria-hidden="true"
+      />
+
+      <div className="relative z-10">
+
+        {/* Contenido principal */}
+        <div className="mx-auto max-w-6xl px-6 py-10 md:py-12">
+          <div className="flex flex-col gap-10 md:flex-row md:justify-between">
+
+            {/* Marca */}
+            <div className="max-w-md space-y-3">
+              <p className="text-sm md:text-base font-semibold tracking-[0.18em] uppercase text-abp-gold">
+                ABP AGENCIA DE SEGUROS LTDA.
+              </p>
+              <p className="text-sm md:text-[0.95rem] text-white/85 leading-relaxed">
+                Acompañamiento, bienestar y protección para empresas, personas y
+                proyectos de vida.
+              </p>
+            </div>
+
+            {/* Navegación + contacto */}
+            <div className="flex flex-wrap gap-10 text-sm md:gap-16">
+
+              {/* Navegación */}
+              <div className="space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-abp-gold">
+                  Navegación
+                </p>
+                <div className="flex flex-col gap-1.5">
+                  <Link to="/portafolio" className={linkClass}>
+                    Portafolio
+                  </Link>
+                  <Link to="/servicios-empresariales" className={linkClass}>
+                    Servicios empresariales
+                  </Link>
+                  <Link to="/ciclistas" className={linkClass}>
+                    Ciclistas
+                  </Link>
+                  <Link to="/aliados" className={linkClass}>
+                    Aliados
+                  </Link>
+                </div>
+              </div>
+
+              {/* Contacto */}
+              <div className="space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-abp-gold">
+                  Contacto
+                </p>
+                <div className="flex flex-col gap-1.5">
+                  <a href="mailto:abpseguros@gmail.com" className={linkClass}>
+                    abpseguros@gmail.com
+                  </a>
+                  <a
+                    href="https://wa.me/57"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={linkClass}
+                  >
+                    WhatsApp · Asesoría sin costo
+                  </a>
+                  <a href="#contacto" className={linkClass}>
+                    Formulario de contacto
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
 
-        {/* Navegación rápida */}
-        <div className="flex flex-wrap gap-8 text-sm md:gap-10">
-          <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
-              Navegación
+        {/* Línea inferior */}
+        <div className="border-t border-white/15 bg-black/50">
+          <div className="mx-auto max-w-6xl px-6 py-4 flex flex-col gap-2 text-[0.72rem] text-white/70 md:flex-row md:justify-between">
+            <p>
+              © {year} ABP Agencia de Seguros Ltda. Todos los derechos reservados.
             </p>
-            <div className="flex flex-col gap-1.5">
-              <Link to="/portafolio" className="hover:text-white">
-                Portafolio
+            <div className="flex gap-4">
+              <Link to="/politica-privacidad" className={linkClass}>
+                Política de privacidad
               </Link>
-              <Link to="/servicios-empresariales" className="hover:text-white">
-                Servicios empresariales
-              </Link>
-              <Link to="/ciclistas" className="hover:text-white">
-                Ciclistas
-              </Link>
-              <Link to="/aliados" className="hover:text-white">
-                Aliados
+              <Link to="/terminos" className={linkClass}>
+                Términos y condiciones
               </Link>
             </div>
           </div>
-
-          {/* Contacto */}
-          <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
-              Contacto
-            </p>
-            <div className="flex flex-col gap-1.5 text-sm">
-              <a
-                href="mailto:abpseguros@gmail.com"
-                className="hover:text-white"
-              >
-                abpseguros@gmail.com
-              </a>
-              <a href="https://wa.me/57" className="hover:text-white">
-                WhatsApp · Asesoría sin costo
-              </a>
-              <a href="#contacto" className="hover:text-white">
-                Formulario de contacto
-              </a>
-            </div>
-          </div>
         </div>
-      </div>
 
-      {/* Fila inferior legal */}
-      <div className="border-t border-white/5">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-4 text-[0.7rem] text-slate-500 md:flex-row md:items-center md:justify-between">
-          <p>
-            © {year} ABP Agencia de Seguros Ltda. Todos los derechos
-            reservados.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <Link to="/politica-privacidad" className="hover:text-slate-300">
-              Política de privacidad
-            </Link>
-            <Link to="/terminos" className="hover:text-slate-300">
-              Términos y condiciones
-            </Link>
-          </div>
-        </div>
       </div>
     </footer>
   );

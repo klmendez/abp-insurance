@@ -1,89 +1,151 @@
 import { type FC } from "react";
+import { Link } from "react-router-dom";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { FiCompass, FiGlobe } from "react-icons/fi";
 
-const solutions = [
-  {
-    title: "Ciclistas y movilidad",
-    description:
-      "Coberturas de vida, accidentes y equipo para ciclistas, repartidores y recicladores que requieren protección en movimiento.",
-  },
-  {
-    title: "Eventos y actividades",
-    description:
-      "Seguros que respaldan competencias deportivas, activaciones y experiencias de marca con planes flexibles por evento.",
-  },
-  {
-    title: "Nichos personalizados",
-    description:
-      "Diseñamos programas a la medida para colectivos con necesidades particulares, desde startups hasta asociaciones sectoriales.",
-  },
+const ciclistasBullets = [
+  "Seguro especial para bicicletas y ciclistas urbanos.",
+  "Cobertura de vida y accidentes personales mientras te desplazas.",
+  "Protección para la bicicleta frente a daños o hurto según el plan.",
+  "Opciones pensadas para repartidores y mensajeros en apps.",
+];
+
+const recicladoresBullets = [
+  "Seguro especial para recicladores y recuperadores de oficio.",
+  "Cobertura ante accidentes durante las jornadas de recolección.",
+  "Protección en caso de fallecimiento o incapacidad total y permanente.",
+  "Acompañamiento en reclamaciones y orientación en caso de siniestro.",
 ];
 
 const callouts = [
-  "Análisis de riesgo y acompañamiento 360° en proyectos especiales",
-  "Procesos de reclamación ágiles con aliados especializados",
-  "Integración con beneficios complementarios para colaboradores",
+  "Análisis de riesgo y acompañamiento 360° en proyectos especiales.",
+  "Procesos de reclamación ágiles con aliados especializados.",
+  "Integración con beneficios complementarios para colaboradores.",
 ];
 
 export const SegurosEspecialesSection: FC = () => {
   return (
     <section
       id="linea-seguros-especiales"
-      className="relative overflow-hidden bg-gradient-to-br from-[#10172b] via-[#131f35] to-[#1e2f4d] py-16 text-white"
+      className="relative overflow-hidden bg-gradient-to-br from-[#0b1020] via-[#111827] to-[#1f2937] py-16 text-white"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.1),transparent_60%),radial-gradient(circle_at_80%_80%,rgba(34,84,160,0.25),transparent_65%)]" />
+      {/* Fondos luminosos suaves */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.06),transparent_60%),radial-gradient(circle_at_80%_80%,rgba(37,99,235,0.25),transparent_65%)]" />
 
-      <div className="relative mx-auto flex max-w-6xl flex-col gap-12 px-6">
+      <div className="relative mx-auto max-w-6xl flex flex-col gap-10 px-6">
+
+        {/* HEADER */}
         <FadeInWhenVisible className="text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.32em] text-white/70">
+          <span className="text-[0.7rem] font-semibold uppercase tracking-[0.32em] text-slate-200/80">
             Línea C · Seguros Especiales
           </span>
-          <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
+
+          <h2 className="mt-3 text-3xl font-semibold sm:text-4xl text-slate-50">
             Seguros Especiales
           </h2>
-          <p className="mt-4 text-sm text-white/80 sm:text-base">
-            Protegemos proyectos únicos y colectivos con soluciones dinámicas que se adaptan a cada escenario.
+
+          <p className="mt-4 text-sm text-slate-200/85 sm:text-base">
+            Actualmente contamos con <span className="font-semibold text-[#d4a43b]">dos seguros especiales</span>:
+            uno para <span className="font-medium">ciclistas</span> y otro para{" "}
+            <span className="font-medium">recicladores</span>.
           </p>
         </FadeInWhenVisible>
 
-        <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
-          <FadeInWhenVisible className="rounded-2xl border border-white/15 bg-white/5 p-6 backdrop-blur">
-            <div className="flex items-center gap-3 text-white">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white">
-                <FiCompass className="h-5 w-5" />
+        {/* DOS COLUMNAS — CICLISTAS & RECICLADORES */}
+        <FadeInWhenVisible className="grid gap-10 lg:grid-cols-2 lg:items-start">
+
+          {/* ================= CICLISTAS ================ */}
+          <div>
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-500 bg-slate-900/40">
+                <FiCompass className="h-5 w-5 text-white" />
               </span>
-              <h3 className="text-lg font-semibold">Ámbitos de cobertura</h3>
+
+              <div>
+                <p className="text-[0.7rem] font-semibold uppercase tracking-[0.26em] text-slate-300/80">
+                  Seguro especial
+                </p>
+                <h3 className="text-lg font-semibold text-slate-50">Ciclistas</h3>
+              </div>
             </div>
 
-            <ul className="mt-6 space-y-4 text-sm text-white/80">
-              {solutions.map((item) => (
-                <li key={item.title} className="rounded-xl border border-white/10 bg-white/5 p-4">
-                  <h4 className="text-base font-semibold text-white">{item.title}</h4>
-                  <p className="mt-2 text-sm text-white/75">{item.description}</p>
-                </li>
-              ))}
-            </ul>
-          </FadeInWhenVisible>
+            <p className="mt-3 text-sm text-slate-200/80">
+              Pensado para quienes usan la bicicleta como transporte o trabajo.
+            </p>
 
-          <FadeInWhenVisible className="space-y-6 rounded-2xl border border-white/15 bg-white/5 p-6 backdrop-blur">
-            <div className="flex items-center gap-3 text-white">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white">
-                <FiGlobe className="h-5 w-5" />
-              </span>
-              <h3 className="text-lg font-semibold">Valor agregado</h3>
-            </div>
-
-            <ul className="space-y-4 text-sm text-white/80">
-              {callouts.map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <span className="mt-1 block h-2 w-2 rounded-full bg-[#f7e7b0]" />
+            <ul className="mt-5 space-y-2 border-l border-slate-600/70 pl-4 text-sm text-slate-100">
+              {ciclistasBullets.map((item) => (
+                <li key={item} className="flex gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#d4a43b]" />
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
-          </FadeInWhenVisible>
-        </div>
+
+            {/* 🔥 BOTÓN DORADO — IGUAL AL HERO */}
+            <Link to="/ciclistas" className="btn-modern mt-6 inline-flex">
+              Ver seguro para ciclistas
+            </Link>
+          </div>
+
+          {/* ================= RECICLADORES ================ */}
+          <div>
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-500 bg-slate-900/40">
+                <FiGlobe className="h-5 w-5 text-white" />
+              </span>
+
+              <div>
+                <p className="text-[0.7rem] font-semibold uppercase tracking-[0.26em] text-slate-300/80">
+                  Seguro especial
+                </p>
+                <h3 className="text-lg font-semibold text-slate-50">Recicladores</h3>
+              </div>
+            </div>
+
+            <p className="mt-3 text-sm text-slate-200/80">
+              Diseñado para proteger la labor esencial de los recicladores.
+            </p>
+
+            <ul className="mt-5 space-y-2 border-l border-slate-600/70 pl-4 text-sm text-slate-100">
+              {recicladoresBullets.map((item) => (
+                <li key={item} className="flex gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#d4a43b]" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            {/* 🔥 BOTÓN DORADO — IGUAL AL HERO */}
+            <Link
+              to="/portafolio/recicladores"
+              className="btn-modern mt-6 inline-flex"
+            >
+              Ver seguro para recicladores
+            </Link>
+          </div>
+
+        </FadeInWhenVisible>
+
+        {/* VALOR AGREGADO */}
+        <FadeInWhenVisible className="border-t border-slate-700/70 pt-6">
+          <p className="text-center text-[0.7rem] font-semibold uppercase tracking-[0.26em] text-slate-300/80">
+            Valor agregado
+          </p>
+
+          <div className="mt-4 grid gap-4 text-sm text-slate-200/85 sm:grid-cols-3">
+            {callouts.map((item) => (
+              <div key={item} className="flex gap-2">
+                <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#d4a43b]" />
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-4 text-center text-xs text-slate-300/75">
+            Si perteneces a un colectivo de ciclistas o recicladores, podemos crear un programa especial para ustedes.
+          </p>
+        </FadeInWhenVisible>
       </div>
     </section>
   );

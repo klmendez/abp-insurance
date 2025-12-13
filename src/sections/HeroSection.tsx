@@ -1,5 +1,5 @@
 // src/sections/HeroSection.tsx
-import desktopBackground from "../bg/1.png";
+import desktopBackground from "../bg/13.png";
 import mobileBackground from "../bg/mobile1.png";
 import { FiPhoneCall } from "react-icons/fi";
 import React from "react";
@@ -7,20 +7,18 @@ import React from "react";
 export const HeroSection = () => (
   <section
     id="inicio"
-    className="relative overflow-hidden min-h-screen"
+    className="relative overflow-hidden min-h-[100svh] flex items-stretch"
   >
-
-    {/* Overlay para asegurar contraste sin cubrir a la persona */}
-    <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#030712]/75 via-[#030712]/45 to-transparent" />
+    {/* Overlay */}
+    <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#030712]/40 via-[#030712]/20 to-transparent" />
 
     {/* BG MOBILE */}
     <div
       className="
         absolute inset-0
         sm:hidden
-        bg-no-repeat
-        bg-[length:auto_100%]
-        bg-[right_20%_bottom]
+        bg-no-repeat bg-cover
+        bg-[position:right_bottom]
         z-0
       "
       style={{ backgroundImage: `url(${mobileBackground})` }}
@@ -38,135 +36,82 @@ export const HeroSection = () => (
       style={{ backgroundImage: `url(${desktopBackground})` }}
     />
 
-    {/* ======================================================
-    📱 MOBILE HERO
-====================================================== */}
-    <div
-      className="
-        relative z-20
-        sm:hidden
-        flex min-h-screen flex-col items-center text-center
-        px-6
-        pt-24
-        pb-14
-      "
-    >
+    <div className="relative z-20 flex flex-1">
+      <div className="mx-auto flex w-full max-w-6xl items-center px-6 sm:px-8 lg:px-12 py-16 sm:py-20 lg:py-24">
+        
+        <div className="flex flex-col gap-6 max-w-3xl text-center sm:text-left">
 
-      {/* TÍTULO (más abajo) */}
-      <h1 className="text-white font-semibold text-3xl leading-tight max-w-xs">
-        Acompañamos tus decisiones y protegemos tu futuro
-      </h1>
-
-      {/* DESCRIPCIÓN */}
-      <p className="text-slate-100/90 text-base leading-relaxed max-w-sm mt-3">
-        Soluciones en seguros diseñadas para ti, tu familia o tu empresa.
-      </p>
-
-      {/* CTA LLAMA YA */}
-      <div className="flex flex-col gap-1 items-center mt-4">
-        <div className="flex items-center gap-2 text-[#d4a43b] font-semibold text-base">
-          <FiPhoneCall className="text-lg" />
-          Llama ya
-        </div>
-
-        <p className="text-white text-sm leading-relaxed">
-          (+57) 320 865 4369 <br />
-          (+57) 300 568 7950
-        </p>
-      </div>
-
-      {/* BOTONES MÁS PEQUEÑOS Y PEGADOS ABAJO */}
-      <div className="mt-auto w-full flex flex-col gap-3">
-
-        {/* Botón 1 */}
-        <a
-          href="https://wa.me/57XXXXXXXXX"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-modern w-full py-2 text-sm font-semibold text-center shadow-xl"
-        >
-          Agendar asesoría
-        </a>
-
-        {/* Botón 2 */}
-        <a
-          href="#portafolio"
-          className="btn-modern w-full py-2 text-sm font-semibold text-center"
-        >
-          Ver servicios
-        </a>
-
-      </div>
-    </div>
-
-
-    {/* ======================================================
-        🖥 DESKTOP HERO (SE MANTIENE IGUAL)
-    ====================================================== */}
-    <div className="hidden sm:flex relative z-20 min-h-screen">
-      <div
-        className="
-          max-w-7xl mx-auto
-          px-4 sm:px-6 lg:px-12
-          w-full
-          flex flex-col gap-8
-          justify-center
-        "
-      >
-        <span className="
-          inline-flex items-center w-fit
-          rounded-full bg-black/30 px-4 py-1 
-          text-[0.72rem] font-semibold uppercase
-          tracking-[0.18em] text-slate-100 ring-1 ring-white/20
-        ">
-          Tu tranquilidad, nuestra prioridad
-        </span>
-
-        <h1 className="
-          text-white font-semibold leading-tight
-          text-4xl md:text-[3.2rem] lg:text-[3.6rem]
-          max-w-[900px]
-        ">
-          Acompañamos tus decisiones, aseguramos tu bienestar y protegemos tu futuro
-        </h1>
-
-        <p className="text-slate-100/90 max-w-xl text-base md:text-lg">
-          En ABP Agencia de Seguros, diseñamos coberturas a la medida para personas y empresas.
-        </p>
-
-        {/* CTA TELÉFONO */}
-        <div className="space-y-1">
-          <p className="text-white/85 text-base font-semibold flex items-center gap-2">
-            <FiPhoneCall className="text-[#d4a43b] text-xl" />
-            Llama ya:
-          </p>
-
-          <p className="text-[1.3rem] leading-tight font-bold text-[#d4a43b] drop-shadow-sm">
-            (+57) 320 865 4369
-          </p>
-
-          <p className="text-[1.3rem] leading-tight font-bold text-[#d4a43b]">
-            (+57) 300 568 7950
-          </p>
-        </div>
-
-        {/* BOTONES DESKTOP */}
-        <div className="flex flex-col sm:flex-row gap-4 w-full mt-4">
-          <a href="#portafolio" className="btn-modern btn-modern--light">
-            Conoce nuestros servicios
-          </a>
-
-          <a
-            href="https://wa.me/57XXXXXXXXX"
-            className="btn-modern"
-            target="_blank"
-            rel="noopener noreferrer"
+          <span
+            className="
+              inline-flex items-center justify-center
+              self-center sm:self-start
+              rounded-full bg-black/40 px-4 py-1
+              text-[0.65rem] sm:text-[0.7rem]
+              font-semibold uppercase tracking-[0.2em]
+              text-slate-100 ring-1 ring-white/20
+            "
           >
-            Agenda una asesoría gratuita
-          </a>
+            Tu tranquilidad, nuestra prioridad
+          </span>
+
+          <h1
+            className="
+              text-white font-semibold leading-tight
+              text-[1.9rem]
+              sm:text-[2.2rem]
+              lg:text-[2.6rem]
+              xl:text-[2.9rem]
+            "
+          >
+            Acompañamos tus decisiones, aseguramos tu bienestar y protegemos tu futuro
+          </h1>
+
+          <p
+            className="
+              text-sm sm:text-base lg:text-lg
+              text-white/90
+              sm:max-w-xl
+              mx-auto sm:mx-0
+            "
+          >
+            En ABP Agencia de Seguros diseñamos coberturas a la medida para proteger a las personas, las familias y las empresas.
+          </p>
+
+          {/* PHONE SECTION */}
+          <div className="flex flex-col items-center gap-2 text-center sm:flex-row sm:items-center sm:justify-start sm:text-left">
+            <div className="flex items-center gap-2 text-sm sm:text-base font-semibold text-abp-gold">
+              <FiPhoneCall className="text-lg sm:text-xl" />
+              Llama ya
+            </div>
+            <div className="text-white/90 text-sm sm:text-base font-medium leading-snug">
+              (+57) 320 865 4369
+              <span className="hidden sm:inline"> · </span>
+              <br className="sm:hidden" />
+              (+57) 300 568 7950
+            </div>
+          </div>
+
+          {/* BUTTONS */}
+          <div className="flex flex-col items-center gap-3 pt-2 sm:flex-row sm:items-center sm:gap-4">
+            <a
+              href="https://wa.me/57XXXXXXXXX"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-modern w-full sm:w-auto text-xs sm:text-sm px-4 py-2"
+            >
+              Agenda una asesoría gratuita
+            </a>
+
+            <a
+              href="#portafolio"
+              className="btn-modern btn-modern--light w-full sm:w-auto text-xs sm:text-sm px-4 py-2"
+            >
+              Conoce nuestros servicios
+            </a>
+          </div>
+
         </div>
       </div>
     </div>
-
   </section>
 );

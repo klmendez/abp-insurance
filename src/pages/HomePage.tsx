@@ -6,6 +6,7 @@ import { TestimonialsSection } from "../sections/TestimonialsSection";
 import { ContactSection } from "../sections/ContactSection";
 import { ServicesSection } from "../sections/ServicesSection";
 import { PartnersSection } from "../sections/PartnersSection";
+import { ComplexityComparisonSection } from "../sections/ComplexityComparisonSection";
 
 export const HomePage = () => {
   return (
@@ -13,12 +14,12 @@ export const HomePage = () => {
       <HeroSection />
       <InsuranceNamesCarouselSection />
       <ServicesSection />
-            <PartnersSection />
-      
-   <PrimaryCallToActionSection />
 
+      <PartnersSection />
+      <ComplexityComparisonSection />
+
+      <PrimaryCallToActionSection />
       <TestimonialsSection />
-      {/* Contacto como cierre suave, no súper largo */}
       <ContactSection />
     </>
   );

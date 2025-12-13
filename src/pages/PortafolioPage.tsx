@@ -4,11 +4,11 @@ import { useLocation } from "react-router-dom";
 import { ProcessSection } from "../sections/ProcessSection";
 import { PortafolioSection } from "@/sections/Portafolio";
 import { PortafolioHeroSection } from "@/sections/PortafolioHeroSection";
-import { SegurosGeneralesSection } from "@/sections/portafolio/SegurosGeneralesSection";
 import { SegurosRiesgosLaboralesSection } from "@/sections/portafolio/SegurosRiesgosLaboralesSection";
 import { SegurosVidaSection } from "@/sections/portafolio/SegurosVidaSection";
 import { SegurosEspecialesSection } from "@/sections/portafolio/SegurosEspecialesSection";
-import { ServiciosComplementariosSection } from "@/sections/portafolio/ServiciosComplementariosSection";
+import { EnterpriseServicesSection } from "@/sections/portafolio/EnterpriseServicesSection";
+import { SegurosGeneralesSection } from "@/sections/portafolio/SegurosGeneralesSection";
 import { PartnersSection } from "@/sections/PartnersSection";
 
 
@@ -44,7 +44,8 @@ export const PortafolioPage = () => {
       <SegurosVidaSection />
       <SegurosEspecialesSection />
       <SegurosGeneralesSection />
-      <ServiciosComplementariosSection />
+      
+      <EnterpriseServicesSection />
       {/* Aquí puedes añadir un pequeño hero específico si quieres */}
       {/* El proceso ABP también encaja bien aquí */}
       <ProcessSection />

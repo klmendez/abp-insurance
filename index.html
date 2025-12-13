@@ -8,30 +8,6 @@
   </head>
   <body class="text-slate-900">
     <div id="root"></div>
-
-    <!-- FORMULARIO OCULTO PARA DETECCIÓN DE NETLIFY -->
-    <form
-      name="contacto-abp"
-      method="POST"
-      netlify
-      netlify-honeypot="bot-field"
-      hidden
-    >
-      <input type="text" name="nombre" />
-      <input type="email" name="correo" />
-      <input type="tel" name="telefono" />
-      <select name="proteccion">
-        <option value="empresa">Mi empresa / negocio</option>
-        <option value="equipo">Mi equipo de trabajo</option>
-        <option value="familia">Mi familia y patrimonio</option>
-        <option value="ciclistas">Portafolio para ciclistas</option>
-        <option value="otro">Otro</option>
-      </select>
-      <textarea name="mensaje"></textarea>
-      <input type="text" name="bot-field" />
-    </form>
-    <!-- FIN FORMULARIO OCULTO -->
-
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
