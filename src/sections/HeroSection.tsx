@@ -37,17 +37,17 @@ export const HeroSection = () => (
     />
 
     <div className="relative z-20 flex flex-1">
-      <div className="mx-auto flex w-full max-w-6xl items-center px-6 sm:px-8 lg:px-12 py-16 sm:py-20 lg:py-24">
+      <div className="mx-auto flex w-full max-w-6xl items-center px-4 sm:px-8 lg:px-12 py-16 sm:py-20 lg:py-24">
         
-        <div className="flex flex-col gap-6 max-w-3xl text-center sm:text-left">
+        <div className="flex w-full flex-col gap-6 sm:gap-8 text-center sm:text-left max-w-[32rem] mx-auto sm:mx-0">
 
           <span
             className="
               inline-flex items-center justify-center
               self-center sm:self-start
               rounded-full bg-black/40 px-4 py-1
-              text-[0.65rem] sm:text-[0.7rem]
-              font-semibold uppercase tracking-[0.2em]
+              text-[0.62rem] sm:text-[0.7rem]
+              font-semibold uppercase tracking-[0.16em] sm:tracking-[0.2em]
               text-slate-100 ring-1 ring-white/20
             "
           >
@@ -56,8 +56,8 @@ export const HeroSection = () => (
 
           <h1
             className="
-              text-white font-semibold leading-tight
-              text-[1.9rem]
+              text-white font-semibold leading-tight text-balance
+              text-[1.8rem]
               sm:text-[2.2rem]
               lg:text-[2.6rem]
               xl:text-[2.9rem]
@@ -69,7 +69,7 @@ export const HeroSection = () => (
           <p
             className="
               text-sm sm:text-base lg:text-lg
-              text-white/90
+              text-white/90 text-balance
               sm:max-w-xl
               mx-auto sm:mx-0
             "
@@ -78,33 +78,36 @@ export const HeroSection = () => (
           </p>
 
           {/* PHONE SECTION */}
-          <div className="flex flex-col items-center gap-2 text-center sm:flex-row sm:items-center sm:justify-start sm:text-left">
-            <div className="flex items-center gap-2 text-sm sm:text-base font-semibold text-abp-gold">
-              <FiPhoneCall className="text-lg sm:text-xl" />
-              Llama ya
-            </div>
-            <div className="text-white/90 text-sm sm:text-base font-medium leading-snug">
-              (+57) 320 865 4369
-              <span className="hidden sm:inline"> · </span>
-              <br className="sm:hidden" />
-              (+57) 300 568 7950
+          <div className="w-full max-w-xs sm:max-w-sm rounded-2xl border border-white/15 bg-black/35 px-4 py-4 backdrop-blur-sm text-center sm:self-start sm:text-left">
+            <div className="flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:gap-3">
+              <div className="flex items-center gap-2 text-sm sm:text-base font-semibold text-abp-gold">
+                <FiPhoneCall className="text-lg sm:text-xl" />
+                Llama ya
+              </div>
+              <div className="hidden sm:block h-5 w-px bg-white/25" aria-hidden="true" />
+              <div className="text-white/90 text-sm sm:text-base font-medium leading-snug">
+                (+57) 320 865 4369
+                <span className="hidden sm:inline"> · </span>
+                <br className="sm:hidden" />
+                (+57) 300 568 7950
+              </div>
             </div>
           </div>
 
           {/* BUTTONS */}
-          <div className="flex flex-col items-center gap-3 pt-2 sm:flex-row sm:items-center sm:gap-4">
+          <div className="flex w-full flex-col items-center gap-3 pt-3 sm:flex-row sm:items-center sm:justify-start sm:gap-4">
             <a
               href="https://wa.me/57XXXXXXXXX"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-modern w-full sm:w-auto text-xs sm:text-sm px-4 py-2"
+              className="btn-modern w-full max-w-xs sm:max-w-none sm:w-auto text-xs sm:text-sm px-4 py-2"
             >
               Agenda una asesoría gratuita
             </a>
 
             <a
               href="#portafolio"
-              className="btn-modern btn-modern--light w-full sm:w-auto text-xs sm:text-sm px-4 py-2"
+              className="btn-modern btn-modern--light w-full max-w-xs sm:max-w-none sm:w-auto text-xs sm:text-sm px-4 py-2"
             >
               Conoce nuestros servicios
             </a>

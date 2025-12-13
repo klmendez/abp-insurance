@@ -146,7 +146,7 @@ export const ServicesSection = () => {
         {/* MODELO */}
         <div className="mb-6 flex items-center justify-center lg:justify-start">
           <span className="text-sm md:text-base font-semibold uppercase tracking-[0.35em] text-white/80">
-            MODELO
+            MODELO ESTRATEGICO
           </span>
         </div>
 
