@@ -3,28 +3,16 @@ import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 
 const supportTeam = [
   {
-    name: "Carlos Mejía",
-    role: "Coordinador de Afiliaciones",
+    name: "Laura Victoria Guevara L.",
+    role: "Ing. Industrial – Especialista en SSST",
     focus:
-      "Asegura que cada solicitud con la ARL se procese en tiempos óptimos y sin reprocesos, acompañando a talento humano en cada novedad.",
+      "Diseña e implementa estrategias de seguridad y salud en el trabajo, garantizando cumplimiento normativo y bienestar en cada operación.",
   },
   {
-    name: "Diana Rojas",
-    role: "Analista de Siniestros",
+    name: "Angely C. Realpe A.",
+    role: "Psicóloga – Especialista en Gerencia Educativa",
     focus:
-      "Gestiona reportes, seguimiento de incapacidades y reclamaciones para garantizar que los colaboradores reciban la atención necesaria.",
-  },
-  {
-    name: "Felipe Torres",
-    role: "Especialista SG-SST",
-    focus:
-      "Coordina planes de prevención, capacitaciones y auditorías internas que fortalecen la cultura de seguridad en las empresas.",
-  },
-  {
-    name: "María Camacho",
-    role: "Ejecutiva de Servicio",
-    focus:
-      "Resuelve solicitudes y casos críticos con enfoque humano, conectando aseguradoras, clientes y colaboradores de manera ágil.",
+      "Acompaña procesos de salud mental y rutas psicosociales, articulando programas educativos que fortalecen el clima laboral y la prevención.",
   },
 ] as const;
 
@@ -51,7 +39,7 @@ export const SupportTeamSection: FC = () => {
         </FadeInWhenVisible>
 
         {/* GRID SIN TARJETAS — MISMO ESTILO QUE MAINTEAMSECTION */}
-        <div className="mt-12 grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-12 sm:grid-cols-2 lg:grid-cols-2">
           {supportTeam.map((member) => (
             <FadeInWhenVisible
               key={member.name}
