@@ -165,8 +165,8 @@ export const Navbar = () => {
               <Link
                 to="/contacto"
                 className={[
-                  "rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] transition",
-                  "bg-slate-300 text-slate-800 hover:bg-slate-400/70 hover:text-abp-blue",
+                  "btn-modern px-6 py-2 text-[0.6rem] sm:text-[0.68rem]",
+                  "tracking-[0.22em] uppercase",
                   linkSafe,
                 ].join(" ")}
               >
@@ -294,9 +294,8 @@ export const Navbar = () => {
               to="/contacto"
               onClick={closeMobileMenu}
               className={[
-                "mt-3 inline-flex items-center justify-center rounded-full px-4 py-2",
-                "text-xs font-semibold uppercase tracking-[0.18em] transition",
-                "bg-slate-300 text-slate-800 hover:bg-slate-400/70 hover:text-abp-blue",
+                "mt-3 inline-flex items-center justify-center btn-modern px-6 py-2",
+                "text-xs sm:text-sm tracking-[0.22em] uppercase",
                 linkSafe,
               ].join(" ")}
             >

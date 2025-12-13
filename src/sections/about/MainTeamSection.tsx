@@ -1,5 +1,15 @@
 import { type FC } from "react";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
+import AndresImg from "@/assets/personas/Andres.png";
+import LuisImg from "@/assets/personas/Luis.png";
+import MariaImg from "@/assets/personas/Maria.png";
+
+type TeamMember = {
+  name: string;
+  role: string;
+  focus: string;
+  image?: string;
+};
 
 const mainTeam = [
   {
@@ -7,20 +17,23 @@ const mainTeam = [
     role: "Ejecutiva comercial",
     focus:
       "Acompaña a los clientes en procesos comerciales, análisis de necesidades y estructuración de propuestas empresariales.",
+    image: MariaImg,
   },
   {
     name: "Luis Hernando Barrios Hernandez",
     role: "Abogado especialista en Derecho Laboral y Seguridad Social",
     focus:
       "Brinda asesoría jurídica en derecho laboral y seguridad social, gestionando riesgos legales y fortaleciendo la protección organizacional.",
+    image: LuisImg,
   },
   {
     name: "Andrés José Paz Arboleda",
     role: "Ingeniero industrial",
     focus:
       "Optimiza procesos y lidera la planeación y ejecución de proyectos empresariales con enfoque estratégico.",
+    image: AndresImg,
   },
-] as const;
+] satisfies readonly TeamMember[];
 
 export const MainTeamSection: FC = () => {
   return (
@@ -53,14 +66,16 @@ export const MainTeamSection: FC = () => {
               className="flex flex-col items-center text-center"
             >
               {/* ESPACIO PARA FOTO */}
-              <div className="mb-5 h-40 w-40 rounded-full bg-[#e1e9fb]">
-                {/* Cuando tengas fotos:
+              <div className="relative mb-5 h-40 w-40 overflow-hidden rounded-full bg-[#e1e9fb] shadow-inner ring-4 ring-[#f5c068]/30">
+                {member.image ? (
                   <img
-                    src="..."
+                    src={member.image}
                     alt={member.name}
-                    className="h-full w-full rounded-full object-cover"
+                    className="h-full w-full object-cover object-top"
+                    loading="lazy"
                   />
-                */}
+                ) : null}
+                <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-[#f5c068]/45 via-transparent to-transparent mix-blend-multiply" aria-hidden="true" />
               </div>
 
               {/* INFO */}

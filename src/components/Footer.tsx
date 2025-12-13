@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import footerBg from "../bg/Footer1.png";
+import footerBg from "../bg/Footer copia.png";
 
 export const Footer = () => {
   const year = new Date().getFullYear();
