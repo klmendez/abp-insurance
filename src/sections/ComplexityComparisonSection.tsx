@@ -5,7 +5,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
@@ -30,6 +29,7 @@ export const ComplexityComparisonSection = () => {
     <section className="bg-slate-100 py-14 sm:py-20">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
+
           {/* TEXTO */}
           <FadeInWhenVisible className="space-y-5">
             <div className="inline-flex items-center gap-2">
@@ -78,8 +78,8 @@ export const ComplexityComparisonSection = () => {
               </p>
             </div>
 
-            {/* Altura RESPONSIVE */}
-            <div className="h-[300px] sm:h-[360px] lg:h-[380px]">
+            {/* CONTENEDOR RESPONSIVE + FIX OVERFLOW */}
+            <div className="h-[300px] sm:h-[360px] lg:h-[380px] overflow-x-hidden">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={data}
@@ -92,7 +92,6 @@ export const ComplexityComparisonSection = () => {
                     vertical={false}
                   />
 
-                  {/* Etiquetas más angostas */}
                   <YAxis
                     type="category"
                     dataKey="name"
@@ -110,23 +109,40 @@ export const ComplexityComparisonSection = () => {
                     axisLine={false}
                   />
 
+                  {/* TOOLTIP FIX MOBILE */}
                   <Tooltip
-                    cursor={{ fill: "rgba(148,163,184,0.15)" }}
-                    contentStyle={{
-                      background: "rgba(255,255,255,0.96)",
-                      border: "1px solid rgba(148,163,184,0.45)",
-                      borderRadius: 12,
-                      color: "#0f172a",
-                      boxShadow: "0 10px 25px rgba(2,6,23,0.08)",
-                    }}
-                    labelStyle={{ fontWeight: 600 }}
-                  />
+  allowEscapeViewBox={{ x: false, y: true }}
+  offset={8}
+  cursor={{ fill: "rgba(148,163,184,0.12)" }}
+  wrapperStyle={{
+    maxWidth: "calc(100vw - 32px)",
+    zIndex: 50,
+  }}
+  contentStyle={{
+    background: "rgba(255,255,255,0.95)",
+    border: "1px solid rgba(148,163,184,0.35)",
+    borderRadius: 10,
+    color: "#0f172a",
+    boxShadow: "0 6px 14px rgba(2,6,23,0.06)",
+    maxWidth: 200,           // ⬅️ MÁS PEQUEÑO
+    padding: "6px 8px",      // ⬅️ MENOS PADDING
+    fontSize: "11px",        // ⬅️ TEXTO MÁS CHICO
+    lineHeight: 1.2,
+    whiteSpace: "normal",
+    overflowWrap: "anywhere",
+  }}
+  labelStyle={{
+    fontWeight: 600,
+    fontSize: "11px",
+    marginBottom: 2,
+  }}
+  itemStyle={{
+    padding: 0,
+    fontSize: "11px",
+  }}
+/>
 
-                  <Legend
-                    wrapperStyle={{ fontSize: 11, color: "#334155" }}
-                  />
 
-                  {/* Barras más delgadas */}
                   <Bar
                     dataKey="sin"
                     name="Sin intermediario"
@@ -145,7 +161,7 @@ export const ComplexityComparisonSection = () => {
               </ResponsiveContainer>
             </div>
 
-            {/* Leyenda compacta */}
+            {/* LEYENDA CUSTOM */}
             <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-[0.7rem] text-slate-600">
               <span className="inline-flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-[#fb7185]" />

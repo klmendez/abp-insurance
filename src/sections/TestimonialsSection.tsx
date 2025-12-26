@@ -11,13 +11,14 @@ const testimonials = [
       "https://img.freepik.com/foto-gratis/joven-hombre-barbudo-camisa-rayas_273609-5677.jpg?semt=ais_hybrid&w=740&q=80",
   },
   {
-    name: "María López",
-    role: "Directora de RRHH, Grupo Nova",
-    quote:
-      "ABP nos brindó una solución corporativa a la medida. Su equipo respondió con rapidez a cada siniestro y nos acompaña en las decisiones clave.",
-    avatar:
-      "https://img.freepik.com/foto-gratis/estilo-vida-emociones-gente-concepto-casual-confiado-agradable-sonriente-mujer-asiatica-brazos-cruzados-pecho-seguro-listo-ayudar-escuchando-companeros-trabajo-participando-conversacion_1258-59335.jpg?semt=ais_hybrid&w=740&q=80",
-  },
+  name: "María López",
+  role: "Directora de RRHH",
+  quote:
+    "ABP nos brindó una solución corporativa a la medida. Su equipo respondió con rapidez a cada siniestro y nos acompaña en las decisiones clave.",
+  avatar:
+    "https://img.freepik.com/foto-gratis/estilo-vida-emociones-gente-concepto-casual-confiado-agradable-sonriente-mujer-asiatica-brazos-cruzados-pecho-seguro-listo-ayudar-escuchando-companeros-trabajo-participando-conversacion_1258-59335.jpg?semt=ais_hybrid&w=740&q=80",
+},
+
   {
     name: "Francisco Arboleda",
     role: "Comandante de Bomberos Popayán",

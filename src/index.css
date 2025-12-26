@@ -4,6 +4,65 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ======================================= */
+/* HERO: overlay azul + puntos dorados      */
+/* ======================================= */
+
+/* Overlay azul oscuro, se desvanece a la derecha */
+.hero-blue-overlay {
+  background: linear-gradient(
+    to right,
+    rgba(3, 12, 28, 0.78) 0%,
+    rgba(3, 12, 28, 0.55) 35%,
+    rgba(3, 12, 28, 0.25) 65%,
+    rgba(3, 12, 28, 0.00) 100%
+  );
+}
+
+/* Puntos dorados: pocos, grandes, elegantes */
+.hero-gold-dots {
+  background-image:
+    radial-gradient(circle at 36% 64%, rgba(212, 175, 55, 0.32) 0 5.5px, transparent 70px),
+    radial-gradient(circle at 54% 38%, rgba(212, 175, 55, 0.30) 0 5.5px, transparent 22px);
+
+  background-size: 600px 600px;
+  background-repeat: repeat;
+
+  opacity: 0.6;
+  filter: blur(0.15px);
+  mix-blend-mode: screen;
+
+  /* Se desvanecen hacia la derecha */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,0.85) 45%,
+    rgba(0,0,0,0.35) 70%,
+    rgba(0,0,0,0) 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,0.85) 45%,
+    rgba(0,0,0,0.35) 70%,
+    rgba(0,0,0,0) 100%
+  );
+}
+
+/* Movimiento MUY lento */
+@keyframes heroDotsFloat {
+  0%   { transform: translate3d(0, 0, 0); }
+  50%  { transform: translate3d(-14px, 9px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-gold-dots {
+    animation: heroDotsFloat 38s ease-in-out infinite;
+  }
+}
+
+
 body {
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, Helvetica, Arial, sans-serif;
@@ -15,6 +74,8 @@ body {
   box-shadow: 0 0 12px rgba(212, 175, 55, 0.55);
   transition: all 0.3s ease-in-out;
 }
+
+
 
 /* Máscara para eliminar el corte inferior + inferior izquierdo COMPLETO */
 .mask-mobile-fade {

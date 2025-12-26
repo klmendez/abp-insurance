@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
-import { FiCheck, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 /* ---------- Datos ---------- */
 
@@ -18,6 +18,12 @@ const benefitSlides = [
     subtitle: "Equipos conscientes de sus riesgos y responsabilidades.",
   },
 ];
+
+const WHATSAPP_NUMBER = "573135707125";
+const buildWhatsAppLink = (text: string) =>
+  `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(
+    text
+  )}`;
 
 /* ---------- Componente principal ---------- */
 
@@ -58,7 +64,7 @@ export const EnterpriseServicesSection = () => {
             </p>
           </div>
 
-          {/* CARRUSEL DE BENEFICIOS (SIN TARJETAS) */}
+          {/* CARRUSEL DE BENEFICIOS */}
           <div className="mt-4 flex flex-col items-center gap-4">
             <div className="max-w-xl text-center">
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-abp-blue">
@@ -107,7 +113,7 @@ export const EnterpriseServicesSection = () => {
           </div>
         </FadeInWhenVisible>
 
-        {/* TRES EJES EN COLUMNAS */}
+        {/* TRES EJES */}
         <FadeInWhenVisible className="grid grid-cols-1 gap-10 md:grid-cols-3">
           {/* Eje 1 */}
           <div className="space-y-4">
@@ -117,26 +123,6 @@ export const EnterpriseServicesSection = () => {
             <p className="text-sm text-slate-600">
               Mantén tus documentos laborales en orden y siempre actualizados.
             </p>
-
-            <ul className="space-y-2 text-sm text-slate-700">
-              <li className="flex gap-2">
-                <span className="mt-[3px] text-abp-blue">•</span>
-                Archivos laborales completos y fáciles de encontrar.
-              </li>
-              <li className="flex gap-2">
-                <span className="mt-[3px] text-abp-blue">•</span>
-                Control de vencimientos y renovaciones de soportes.
-              </li>
-              <li className="flex gap-2">
-                <span className="mt-[3px] text-abp-blue">•</span>
-                Preparación anticipada para auditorías y verificaciones.
-              </li>
-            </ul>
-
-            <p className="text-xs italic text-slate-500">
-              Resultado: tu empresa sabe dónde está todo y evita correr a última
-              hora.
-            </p>
           </div>
 
           {/* Eje 2 */}
@@ -145,27 +131,7 @@ export const EnterpriseServicesSection = () => {
               Seguridad y cumplimiento
             </h3>
             <p className="text-sm text-slate-600">
-              Implementa el SG-SST sin complicaciones y alineado con tu
-              operación.
-            </p>
-
-            <ul className="space-y-2 text-sm text-slate-700">
-              <li className="flex gap-2">
-                <span className="mt-[3px] text-abp-blue">•</span>
-                Sistema de Seguridad y Salud estructurado o actualizado.
-              </li>
-              <li className="flex gap-2">
-                <span className="mt-[3px] text-abp-blue">•</span>
-                Coordinación con la ARL para programas y campañas efectivas.
-              </li>
-              <li className="flex gap-2">
-                <span className="mt-[3px] text-abp-blue">•</span>
-                Respuesta oportuna a hallazgos e informes de visita.
-              </li>
-            </ul>
-
-            <p className="text-xs italic text-slate-500">
-              Resultado: cumples la norma sin frenar el trabajo diario.
+              Implementa el SG-SST sin complicaciones y alineado con tu operación.
             </p>
           </div>
 
@@ -177,57 +143,44 @@ export const EnterpriseServicesSection = () => {
             <p className="text-sm text-slate-600">
               Formación práctica para que tu gente actúe de forma segura.
             </p>
-
-            <ul className="space-y-2 text-sm text-slate-700">
-              <li className="flex gap-2">
-                <span className="mt-[3px] text-abp-blue">•</span>
-                Capacitación en riesgos laborales y autocuidado.
-              </li>
-              <li className="flex gap-2">
-                <span className="mt-[3px] text-abp-blue">•</span>
-                Inducción y reinducción que aterrizan responsabilidades.
-              </li>
-              <li className="flex gap-2">
-                <span className="mt-[3px] text-abp-blue">•</span>
-                Contenidos construidos según el sector y sus riesgos.
-              </li>
-            </ul>
-
-            <p className="text-xs italic text-slate-500">
-              Resultado: la prevención se vive en el día a día, no solo en el
-              papel.
-            </p>
           </div>
         </FadeInWhenVisible>
 
-        {/* CTA FINAL – FONDO AZUL, LETRAS BLANCAS */}
-<FadeInWhenVisible className="rounded-3xl border border-[#C9A048]/40 bg-[#f7f8fa] px-8 py-10 md:px-12 md:py-12 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-  <div className="space-y-3 max-w-xl">
-    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-abp-blue/70">
-      ¿Cómo empezamos?
-    </p>
+        {/* CTA FINAL */}
+        <FadeInWhenVisible className="rounded-3xl border border-[#C9A048]/40 bg-[#f7f8fa] px-8 py-10 md:px-12 md:py-12 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-3 max-w-xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-abp-blue/70">
+              ¿Cómo empezamos?
+            </p>
 
-    <h3 className="text-2xl font-display leading-snug text-abp-blue">
-      Conversemos sobre la Línea E para tu organización
-    </h3>
+            <h3 className="text-2xl font-display leading-snug text-abp-blue">
+              Conversemos sobre la Línea E para tu organización
+            </h3>
 
-    <p className="text-sm text-slate-700">
-      Revisamos juntos tus necesidades en documentación, cumplimiento y formación,
-      y definimos un acompañamiento que se adapte a tu realidad, no al revés.
-    </p>
-  </div>
+            <p className="text-sm text-slate-700">
+              Revisamos juntos tus necesidades en documentación, cumplimiento y
+              formación, y definimos un acompañamiento que se adapte a tu
+              realidad, no al revés.
+            </p>
+          </div>
 
-  <div className="flex flex-col items-start md:items-end gap-3">
-    <a href="#contacto" className="btn-modern">
-      Agendar una conversación
-    </a>
+          <div className="flex flex-col items-start md:items-end gap-3">
+            <a
+              href={buildWhatsAppLink(
+                "Hola, quiero agendar una conversación sobre la Línea E."
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-modern !bg-abp-gold !text-[#030712]"
+            >
+              Agendar una conversación
+            </a>
 
-    <p className="text-[0.7rem] uppercase tracking-[0.22em] text-slate-600 text-left md:text-right">
-      Línea E · Orden interno · Cumplimiento · Cultura preventiva
-    </p>
-  </div>
-</FadeInWhenVisible>
-
+            <p className="text-[0.7rem] uppercase tracking-[0.22em] text-slate-600 text-left md:text-right">
+              Línea E · Orden interno · Cumplimiento · Cultura preventiva
+            </p>
+          </div>
+        </FadeInWhenVisible>
       </div>
     </section>
   );

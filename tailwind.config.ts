@@ -5,6 +5,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        abpBlue: "#254561",
+        abpBlueDark: "#1f3b54",
+
+        // 🟡 Dorado corporativo (LTDA)
+        abpGold: "#d4af37",
         brand: {
           midnight: '#0b1021',
           storm: '#111a2e',
@@ -27,7 +32,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+        sans: ["Inter",'"Space Grotesk"', 'system-ui', 'sans-serif'],
         display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
       },
       boxShadow: {

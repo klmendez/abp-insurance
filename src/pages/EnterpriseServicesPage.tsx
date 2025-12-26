@@ -2,10 +2,14 @@
 import { EnterpriseServicesSection } from "../sections/portafolio/EnterpriseServicesSection";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 
+import serviciosEmpresarialesImg from "../assets/complementarios/servicios-empresariales1.jpg";
+
 const WHATSAPP_NUMBER = "573135707125";
 
 const buildWhatsAppLink = (text: string) =>
-  `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+  `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(
+    text
+  )}`;
 
 // Ajusta este valor a la altura de tu navbar fijo (en px)
 const NAVBAR_OFFSET = 120;
@@ -13,10 +17,8 @@ const NAVBAR_OFFSET = 120;
 export const EnterpriseServicesPage = () => {
   const scrollToService = (id: string) => {
     const el = document.getElementById(id);
-
     if (!el) return;
 
-    // Calculamos la posición del elemento y le restamos el alto del navbar
     const rect = el.getBoundingClientRect();
     const scrollTop = window.scrollY || window.pageYOffset;
     const targetY = rect.top + scrollTop - NAVBAR_OFFSET;
@@ -26,38 +28,86 @@ export const EnterpriseServicesPage = () => {
       behavior: "smooth",
     });
 
-    // Quitamos highlight previo por si acaso
     el.classList.remove("highlight-gold");
 
-    // Aplicamos el dorado un poquito después para que coincida con el scroll
     setTimeout(() => {
       el.classList.add("highlight-gold");
-
-      // Quitamos el dorado luego de 2 segundos
-      setTimeout(() => {
-        el.classList.remove("highlight-gold");
-      }, 2000);
+      setTimeout(() => el.classList.remove("highlight-gold"), 2000);
     }, 400);
   };
 
   return (
     <>
       {/* ================================== */}
-      {/* ENCABEZADO PRINCIPAL DE LA PÁGINA */}
+      {/* HERO (pantalla completa + overlay que NO bloquea clics) */}
       {/* ================================== */}
-      <section className="relative overflow-hidden bg-white pt-24 pb-10">
-        <div className="mx-auto max-w-5xl px-6">
-          <FadeInWhenVisible className="text-center">
-            <h1 className="text-3xl sm:text-4xl font-semibold text-[#1f3258]">
+      <section
+        className="relative overflow-hidden h-[100svh]"
+        style={{
+          backgroundImage: `url(${serviciosEmpresarialesImg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "top center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Overlay / degradado (IMPORTANTE: pointer-events-none) */}
+        <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-[#020617]/90 via-[#020617]/70 to-[#d4a43b]/55 opacity-55 sm:opacity-100" />
+
+        {/* Textura suave (ya tenía pointer-events-none, lo dejamos) */}
+        <div className="pointer-events-none absolute inset-0 opacity-15 sm:opacity-25 mix-blend-soft-light">
+          <div className="h-full w-full bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.18),transparent_70%),radial-gradient(circle_at_80%_80%,rgba(255,215,130,0.22),transparent_70%)]" />
+        </div>
+
+        {/* CONTENIDO */}
+        <div
+          className="
+            relative z-10
+            mx-auto max-w-5xl
+            px-6
+            h-full
+            flex items-center
+            pt-24
+          "
+        >
+          <FadeInWhenVisible className="text-center w-full">
+            <h1 className="font-semibold text-white leading-tight text-[clamp(1.8rem,3.2vw,2.7rem)]">
               Línea E · Servicios complementarios
             </h1>
 
-            <p className="mt-4 text-sm sm:text-base text-[#274472]">
+            <p className="mt-4 text-white/90 mx-auto max-w-3xl text-[clamp(0.9rem,1.2vw,1.05rem)]">
               Estamos en la capacidad de ofrecerle algunos servicios adicionales que
               generan valor a su plan de trabajo con la ARL de su preferencia. Sin
               embargo, estos servicios son susceptibles de análisis, previa negociación
               con su empresa, según la prima anual y/o mensual que aporta a la ARL.
             </p>
+
+            {/* CTA (si tienes btn-modern global como en el hero anterior) */}
+            <div className="mt-8 flex justify-center">
+              <a
+                href="#servicios-complementarios"
+                className="
+                  btn-modern
+                  px-6 py-2.5
+                  text-[clamp(0.65rem,0.8vw,0.8rem)]
+                  tracking-tight
+                  !bg-abp-gold !text-[#030712]
+                "
+              >
+                Ver todas las soluciones
+              </a>
+            </div>
+
+            {/* Botón WhatsApp (opcional, por si quieres tener uno directo en el hero) */}
+            <div className="mt-3 flex justify-center">
+              <a
+                href={buildWhatsAppLink("Hola, quiero agendar una conversación.")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/90 hover:text-white underline underline-offset-4 text-sm"
+              >
+                Agendar una conversación
+              </a>
+            </div>
           </FadeInWhenVisible>
         </div>
       </section>
@@ -77,9 +127,8 @@ export const EnterpriseServicesPage = () => {
               a ordenar procesos, mejorar el cumplimiento y cuidar mejor a tu equipo.
             </p>
 
-            {/* 4 PREGUNTAS EN UNA FILA (GRID), SIN SCROLL LATERAL */}
+            {/* 4 PREGUNTAS */}
             <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto max-w-5xl">
-              {/* 1 */}
               <button
                 type="button"
                 onClick={() => scrollToService("servicio-reinversion")}
@@ -98,7 +147,6 @@ export const EnterpriseServicesPage = () => {
                 </span>
               </button>
 
-              {/* 2 */}
               <button
                 type="button"
                 onClick={() => scrollToService("servicio-asesoria-juridica")}
@@ -117,7 +165,6 @@ export const EnterpriseServicesPage = () => {
                 </span>
               </button>
 
-              {/* 3 */}
               <button
                 type="button"
                 onClick={() => scrollToService("servicio-logistica")}
@@ -136,7 +183,6 @@ export const EnterpriseServicesPage = () => {
                 </span>
               </button>
 
-              {/* 4 */}
               <button
                 type="button"
                 onClick={() => scrollToService("servicio-apoyo-profesional")}
@@ -176,10 +222,10 @@ export const EnterpriseServicesPage = () => {
             <div
               id="servicio-reinversion"
               className="
-                px-6 sm:px-10 py-8 sm:py-12 
-                bg-[#f7f9fc] 
-                rounded-2xl 
-                shadow-sm 
+                px-6 sm:px-10 py-8 sm:py-12
+                bg-[#f7f9fc]
+                rounded-2xl
+                shadow-sm
                 border-l-4 border-abp-blue
                 transition duration-300
                 hover:shadow-md
@@ -194,13 +240,13 @@ export const EnterpriseServicesPage = () => {
 
                   <p className="text-sm text-[#274472] leading-relaxed">
                     Te acompañamos de forma continua para que el dinero que la ARL destina
-                    a Seguridad y Salud en el Trabajo realmente se vea en tu empresa. 
-                    Nos encargamos de gestionar solicitudes, hacer seguimiento a los retornos 
-                    administrativos y ayudarte a decidir en qué acciones vale más la pena 
+                    a Seguridad y Salud en el Trabajo realmente se vea en tu empresa.
+                    Nos encargamos de gestionar solicitudes, hacer seguimiento a los retornos
+                    administrativos y ayudarte a decidir en qué acciones vale más la pena
                     reinvertir para que no se pierdan oportunidades.
                   </p>
 
-                  {/* BOTÓN WHATSAPP */}
+                  {/* BOTÓN WHATSAPP (funcional) */}
                   <div className="mt-6">
                     <a
                       href={buildWhatsAppLink(
@@ -209,27 +255,20 @@ export const EnterpriseServicesPage = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="
-                        inline-flex items-center gap-2 
-                        rounded-full border border-[#d4af37] 
-                        px-4 py-2 text-xs font-semibold 
-                        text-[#1f3258] hover:bg-[#d4af37] hover:text-white 
+                        inline-flex items-center gap-2
+                        rounded-full border border-[#d4af37]
+                        px-4 py-2 text-xs font-semibold
+                        text-[#1f3258] hover:bg-[#d4af37] hover:text-white
                         transition
                       "
                     >
-                      Necesito ayuda con esto
-                      <span aria-hidden>💬</span>
+                      Necesito ayuda con esto <span aria-hidden>💬</span>
                     </a>
                   </div>
                 </div>
 
                 {/* ICON */}
-                <div
-                  className="
-                    h-16 w-16 rounded-full bg-[#e1ecff] 
-                    flex items-center justify-center 
-                    order-1 sm:order-2 ml-auto
-                  "
-                >
+                <div className="h-16 w-16 rounded-full bg-[#e1ecff] flex items-center justify-center order-1 sm:order-2 ml-auto">
                   <img
                     src="/icons/reinversion.png"
                     className="h-10 w-10 opacity-90"
@@ -245,10 +284,10 @@ export const EnterpriseServicesPage = () => {
             <div
               id="servicio-asesoria-juridica"
               className="
-                px-6 sm:px-10 py-8 sm:py-12 
-                bg-[#f7f9fc] 
-                rounded-2xl 
-                shadow-sm 
+                px-6 sm:px-10 py-8 sm:py-12
+                bg-[#f7f9fc]
+                rounded-2xl
+                shadow-sm
                 border-r-4 border-abp-blue
                 transition duration-300
                 hover:shadow-md
@@ -256,12 +295,7 @@ export const EnterpriseServicesPage = () => {
             >
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-8">
                 {/* ICON IZQUIERDA */}
-                <div
-                  className="
-                    h-16 w-16 rounded-full bg-[#e1ecff] 
-                    flex items-center justify-center order-1
-                  "
-                >
+                <div className="h-16 w-16 rounded-full bg-[#e1ecff] flex items-center justify-center order-1">
                   <img
                     src="/icons/juridica.png"
                     className="h-10 w-10 opacity-90"
@@ -277,20 +311,20 @@ export const EnterpriseServicesPage = () => {
 
                   <ul className="text-sm text-[#274472] space-y-2 leading-relaxed">
                     <li>
-                      Te acompañamos paso a paso cuando ocurre un accidente o se presenta 
-                      una posible enfermedad laboral, para que sepas qué hacer, cómo 
-                      investigar y cómo reducir riesgos en el futuro, sin sentirte solo 
+                      Te acompañamos paso a paso cuando ocurre un accidente o se presenta
+                      una posible enfermedad laboral, para que sepas qué hacer, cómo
+                      investigar y cómo reducir riesgos en el futuro, sin sentirte solo
                       frente a los requerimientos.
                     </li>
                     <li>
-                      Te explicamos en lenguaje sencillo cómo funciona la Seguridad Social 
-                      (reforma pensional, regímenes de Prima Media y Ahorro Individual) y 
-                      te ayudamos a gestionar pensiones de vejez, invalidez o sobrevivientes, 
+                      Te explicamos en lenguaje sencillo cómo funciona la Seguridad Social
+                      (reforma pensional, regímenes de Prima Media y Ahorro Individual) y
+                      te ayudamos a gestionar pensiones de vejez, invalidez o sobrevivientes,
                       para que tomes decisiones informadas.
                     </li>
                   </ul>
 
-                  {/* BOTÓN WHATSAPP */}
+                  {/* BOTÓN WHATSAPP (funcional) */}
                   <div className="mt-6">
                     <a
                       href={buildWhatsAppLink(
@@ -299,15 +333,14 @@ export const EnterpriseServicesPage = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="
-                        inline-flex items-center gap-2 
-                        rounded-full border border-[#d4af37] 
-                        px-4 py-2 text-xs font-semibold 
-                        text-[#1f3258] hover:bg-[#d4af37] hover:text-white 
+                        inline-flex items-center gap-2
+                        rounded-full border border-[#d4af37]
+                        px-4 py-2 text-xs font-semibold
+                        text-[#1f3258] hover:bg-[#d4af37] hover:text-white
                         transition
                       "
                     >
-                      Necesito ayuda con esto
-                      <span aria-hidden>💬</span>
+                      Necesito ayuda con esto <span aria-hidden>💬</span>
                     </a>
                   </div>
                 </div>
@@ -320,10 +353,10 @@ export const EnterpriseServicesPage = () => {
             <div
               id="servicio-logistica"
               className="
-                px-6 sm:px-10 py-8 sm:py-12 
-                bg-[#f7f9fc] 
-                rounded-2xl 
-                shadow-sm 
+                px-6 sm:px-10 py-8 sm:py-12
+                bg-[#f7f9fc]
+                rounded-2xl
+                shadow-sm
                 border-l-4 border-abp-blue
                 transition duration-300
                 hover:shadow-md
@@ -337,14 +370,14 @@ export const EnterpriseServicesPage = () => {
                   </h3>
 
                   <p className="text-sm text-[#274472] leading-relaxed">
-                    Nos encargamos de la logística de tus actividades de bienestar y salud 
-                    en el trabajo: refrigerios, souvenirs, espacios de capacitación e 
-                    incentivos. La idea es que tú no tengas que estar pendiente de cada 
-                    detalle y puedas enfocarte en tu equipo, mientras nosotros ayudamos a 
+                    Nos encargamos de la logística de tus actividades de bienestar y salud
+                    en el trabajo: refrigerios, souvenirs, espacios de capacitación e
+                    incentivos. La idea es que tú no tengas que estar pendiente de cada
+                    detalle y puedas enfocarte en tu equipo, mientras nosotros ayudamos a
                     fortalecer el clima organizacional y la integración.
                   </p>
 
-                  {/* BOTÓN WHATSAPP */}
+                  {/* BOTÓN WHATSAPP (funcional) */}
                   <div className="mt-6">
                     <a
                       href={buildWhatsAppLink(
@@ -353,26 +386,20 @@ export const EnterpriseServicesPage = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="
-                        inline-flex items-center gap-2 
-                        rounded-full border border-[#d4af37] 
-                        px-4 py-2 text-xs font-semibold 
-                        text-[#1f3258] hover:bg-[#d4af37] hover:text-white 
+                        inline-flex items-center gap-2
+                        rounded-full border border-[#d4af37]
+                        px-4 py-2 text-xs font-semibold
+                        text-[#1f3258] hover:bg-[#d4af37] hover:text-white
                         transition
                       "
                     >
-                      Necesito ayuda con esto
-                      <span aria-hidden>💬</span>
+                      Necesito ayuda con esto <span aria-hidden>💬</span>
                     </a>
                   </div>
                 </div>
 
                 {/* ICON DERECHA */}
-                <div
-                  className="
-                    h-16 w-16 rounded-full bg-[#e1ecff] 
-                    flex items-center justify-center order-1 sm:order-2 ml-auto
-                  "
-                >
+                <div className="h-16 w-16 rounded-full bg-[#e1ecff] flex items-center justify-center order-1 sm:order-2 ml-auto">
                   <img
                     src="/icons/logistica.png"
                     className="h-10 w-10 opacity-90"
@@ -388,10 +415,10 @@ export const EnterpriseServicesPage = () => {
             <div
               id="servicio-apoyo-profesional"
               className="
-                px-6 sm:px-10 py-8 sm:py-12 
-                bg-[#f7f9fc] 
-                rounded-2xl 
-                shadow-sm 
+                px-6 sm:px-10 py-8 sm:py-12
+                bg-[#f7f9fc]
+                rounded-2xl
+                shadow-sm
                 border-r-4 border-abp-blue
                 transition duration-300
                 hover:shadow-md
@@ -399,12 +426,7 @@ export const EnterpriseServicesPage = () => {
             >
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-8">
                 {/* ICON IZQUIERDA */}
-                <div
-                  className="
-                    h-16 w-16 rounded-full bg-[#e1ecff] 
-                    flex items-center justify-center order-1
-                  "
-                >
+                <div className="h-16 w-16 rounded-full bg-[#e1ecff] flex items-center justify-center order-1">
                   <img
                     src="/icons/profesional.png"
                     className="h-10 w-10 opacity-90"
@@ -419,15 +441,15 @@ export const EnterpriseServicesPage = () => {
                   </h3>
 
                   <p className="text-sm text-[#274472] leading-relaxed">
-                    Te apoyamos en la implementación de baterías de riesgo psicosocial y 
-                    la coordinación de exámenes ocupacionales, para que el seguimiento a 
-                    la salud de tu equipo no se quede solo en el papel. Nuestro objetivo 
-                    es que cuentes con información clara, acciones concretas y un 
-                    acompañamiento que haga más fácil cumplir la norma y cuidar a las 
+                    Te apoyamos en la implementación de baterías de riesgo psicosocial y
+                    la coordinación de exámenes ocupacionales, para que el seguimiento a
+                    la salud de tu equipo no se quede solo en el papel. Nuestro objetivo
+                    es que cuentes con información clara, acciones concretas y un
+                    acompañamiento que haga más fácil cumplir la norma y cuidar a las
                     personas.
                   </p>
 
-                  {/* BOTÓN WHATSAPP */}
+                  {/* BOTÓN WHATSAPP (funcional) */}
                   <div className="mt-6">
                     <a
                       href={buildWhatsAppLink(
@@ -436,15 +458,14 @@ export const EnterpriseServicesPage = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="
-                        inline-flex items-center gap-2 
-                        rounded-full border border-[#d4af37] 
-                        px-4 py-2 text-xs font-semibold 
-                        text-[#1f3258] hover:bg-[#d4af37] hover:text-white 
+                        inline-flex items-center gap-2
+                        rounded-full border border-[#d4af37]
+                        px-4 py-2 text-xs font-semibold
+                        text-[#1f3258] hover:bg-[#d4af37] hover:text-white
                         transition
                       "
                     >
-                      Necesito ayuda con esto
-                      <span aria-hidden>💬</span>
+                      Necesito ayuda con esto <span aria-hidden>💬</span>
                     </a>
                   </div>
                 </div>
@@ -455,7 +476,7 @@ export const EnterpriseServicesPage = () => {
       </section>
 
       {/* ================================== */}
-      {/* SECCIÓN ORIGINAL QUE YA TENÍAS */}
+      {/* SECCIÓN ORIGINAL (aquí puede estar “Agendar una conversación”) */}
       {/* ================================== */}
       <EnterpriseServicesSection />
     </>
