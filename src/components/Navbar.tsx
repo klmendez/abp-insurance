@@ -23,7 +23,7 @@ const portfolioSections: NavChild[] = [
     to: "/portafolio#linea-seguros-especiales",
     children: [
       { label: "Ciclistas", to: "/ciclistas" }, // ✅ existe en App.tsx
-      { label: "Recicladores", to: "/portafolio/recicladores" }, // ✅ RUTA REAL
+      { label: "Recicladores", to: "/portafolio/recicladores" }, // ✅ ruta real
     ],
   },
   { label: "Seguros generales", to: "/portafolio#linea-seguros-generales" },
@@ -58,6 +58,7 @@ export const Navbar = () => {
     setExpandedMenu(null);
   };
 
+  // 🔒 Anti-azul del navegador (visited/focus)
   const linkSafe =
     "no-underline visited:text-inherit focus:text-[#254561] active:text-[#254561]";
 
@@ -131,13 +132,18 @@ export const Navbar = () => {
   const goldUnderline = "bg-[#D4AF37]";
 
   const isInicioActive = location.pathname === "/";
+
+  // Portafolio activo también cuando estás en /ciclistas o /portafolio/recicladores
   const isPortafolioActive =
-    location.pathname.startsWith("/portafolio") || location.pathname === "/ciclistas";
+    location.pathname.startsWith("/portafolio") ||
+    location.pathname === "/ciclistas" ||
+    location.pathname === "/portafolio/recicladores";
 
   return (
     <header className="fixed inset-x-0 top-0 z-40">
       <div className="mx-auto max-w-6xl px-4 pt-4 pb-3 md:pt-6 md:pb-4">
         <div className="relative">
+          {/* BARRA PRINCIPAL */}
           <div
             className="
               flex items-center justify-between gap-4
@@ -164,6 +170,7 @@ export const Navbar = () => {
               aria-label="Ir al inicio"
             >
               <span className="font-['Inter',sans-serif] text-[#254561] whitespace-nowrap leading-tight">
+                {/* Mobile: una línea | sm+: dos líneas */}
                 <span className="inline sm:block font-semibold tracking-[0.06em] text-[0.8rem] sm:text-[0.85rem] md:text-[1rem]">
                   Agencia de
                 </span>{" "}
@@ -183,7 +190,7 @@ export const Navbar = () => {
               </span>
             </a>
 
-            {/* DESKTOP */}
+            {/* NAV DESKTOP */}
             <nav className="hidden items-center gap-6 md:flex">
               {navItems.map((item) => {
                 const isActiveManual =
@@ -376,13 +383,148 @@ export const Navbar = () => {
                   bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.55),rgba(255,255,255,0)_55%)]
                 "
               />
-              <img src={logoV} alt="Agencia de Seguros" className="relative h-[68px] w-auto" />
+              <img
+                src={logoV}
+                alt="Agencia de Seguros"
+                className="relative h-[68px] w-auto"
+              />
             </span>
           </a>
         </div>
       </div>
 
-      {/* MOBILE MENU (igual que antes, si lo quieres con rayitas doradas también lo adapto) */}
+      {/* ✅ MENÚ MOBILE COMPLETO */}
+      {open && (
+        <div className="border-t border-slate-300 bg-slate-200/95 md:hidden">
+          <nav className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-3">
+            {navItems.map((item) => {
+              if (item.children) {
+                const isExpanded = expandedMenu === item.label;
+
+                return (
+                  <div key={item.to} className="rounded-xl border border-slate-300 bg-slate-100/80 p-2">
+                    <div className="flex items-center justify-between gap-3">
+                      <a
+                        href={item.to}
+                        onClick={handleNavTo(item.to)}
+                        className={[
+                          "relative text-sm font-medium transition",
+                          linkSafe,
+                          isPortafolioActive ? "text-[#254561]" : "text-slate-700 hover:text-[#254561]",
+                        ].join(" ")}
+                      >
+                        {item.label}
+                        {/* rayita dorada si Portafolio está activo */}
+                        <span
+                          className={[
+                            "pointer-events-none absolute left-0 right-0 -bottom-1 mx-auto h-[2px] rounded-full transition-all",
+                            goldUnderline,
+                            isPortafolioActive ? "w-full opacity-100" : "w-0 opacity-0",
+                          ].join(" ")}
+                        />
+                      </a>
+
+                      <button
+                        type="button"
+                        className="flex size-8 items-center justify-center rounded-full border border-slate-300 bg-slate-200 text-slate-600 hover:text-[#254561] transition"
+                        onClick={() => setExpandedMenu((prev) => (prev === item.label ? null : item.label))}
+                        aria-label="Abrir submenú"
+                      >
+                        <FiChevronDown className={`transition-transform ${isExpanded ? "rotate-180" : ""}`} size={16} />
+                      </button>
+                    </div>
+
+                    {isExpanded && (
+                      <div className="mt-2 space-y-1 border-t border-slate-300 pt-2">
+                        {item.children.map((child) => (
+                          <div key={child.to}>
+                            <a
+                              href={child.to}
+                              onClick={handleNavTo(child.to)}
+                              className={[
+                                "block rounded-lg px-3 py-2 text-sm font-medium transition",
+                                "text-slate-700 hover:bg-slate-200 hover:text-[#254561]",
+                                linkSafe,
+                              ].join(" ")}
+                            >
+                              {child.label}
+                            </a>
+
+                            {!!child.children?.length && (
+                              <div className="ml-3 mt-1 space-y-1 border-l border-slate-300 pl-3">
+                                {child.children.map((gchild) => (
+                                  <a
+                                    key={gchild.to}
+                                    href={gchild.to}
+                                    onClick={handleNavTo(gchild.to)}
+                                    className={[
+                                      "block rounded-lg px-3 py-2 text-sm font-medium transition",
+                                      "text-slate-700 hover:bg-slate-200 hover:text-[#254561]",
+                                      linkSafe,
+                                    ].join(" ")}
+                                  >
+                                    {gchild.label}
+                                  </a>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavTo(item.to)(e);
+                  }}
+                  className={({ isActive }) =>
+                    [
+                      "relative block rounded-xl px-3 py-2 text-sm font-medium transition",
+                      linkSafe,
+                      isActive ? "bg-slate-300/40 text-[#254561]" : "text-slate-700 hover:bg-slate-200 hover:text-[#254561]",
+                    ].join(" ")
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      {item.label}
+                      <span
+                        className={[
+                          "pointer-events-none absolute left-3 right-3 -bottom-0.5 mx-auto h-[2px] rounded-full transition-all",
+                          goldUnderline,
+                          isActive ? "opacity-100" : "opacity-0",
+                        ].join(" ")}
+                      />
+                    </>
+                  )}
+                </NavLink>
+              );
+            })}
+
+            <Link
+              to="/contacto"
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavTo("/contacto")(e);
+              }}
+              className={[
+                "mt-3 inline-flex items-center justify-center btn-modern px-6 py-2",
+                "text-xs sm:text-sm tracking-[0.22em] uppercase",
+                linkSafe,
+              ].join(" ")}
+            >
+              Contacto
+            </Link>
+          </nav>
+        </div>
+      )}
     </header>
   );
 };

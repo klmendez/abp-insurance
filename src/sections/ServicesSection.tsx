@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiCheck, FiArrowRight } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 type ServiceDetail = {
   heading: string;
@@ -13,7 +14,7 @@ type Service = {
   details: ServiceDetail[];
   cta: {
     label: string;
-    href: string;
+    to: string;
   };
 };
 
@@ -49,7 +50,7 @@ const services: Service[] = [
     ],
     cta: {
       label: "Ver portafolio de Acompañamiento",
-      href: "#portafolio-seguros",
+      to: "/portafolio/riesgos-laborales",
     },
   },
   {
@@ -83,7 +84,7 @@ const services: Service[] = [
     ],
     cta: {
       label: "Ver portafolio de Bienestar",
-      href: "#portafolio-seguros",
+      to: "/portafolio/seguros-vida",
     },
   },
   {
@@ -116,7 +117,7 @@ const services: Service[] = [
     ],
     cta: {
       label: "Ver portafolio de Protección",
-      href: "#portafolio-seguros",
+      to: "/portafolio/seguros-generales",
     },
   },
 ];
@@ -164,6 +165,7 @@ export const ServicesSection = () => {
                       setActiveServiceIndex(index);
                       setActiveDetailIndex(0);
                     }}
+                    className="focus:outline-none"
                   >
                     <motion.span
                       whileTap={{ scale: 0.95 }}
@@ -183,10 +185,12 @@ export const ServicesSection = () => {
 
             {/* Etiqueta móvil */}
             <div className="mt-3 text-center md:hidden">
-              <p className="text-xs uppercase tracking-widest text-white/80">
+              <p className="text-xs uppercase tracking-widest text-abp-gold">
                 Sección seleccionada
               </p>
-              <p className="text-sm font-semibold">{activeService.title}</p>
+              <p className="text-sm font-semibold text-abp-gold">
+                {activeService.title}
+              </p>
             </div>
 
             {/* DESKTOP: círculo + etiqueta detrás, saliendo hacia la derecha */}
@@ -333,15 +337,22 @@ export const ServicesSection = () => {
                 </div>
               </motion.div>
 
-              {/* CTA */}
+              {/* CTA (igual estilo Hero en desktop y mobile) */}
               <div className="mt-7">
-                <a
-                  href={activeService.cta.href}
-                  className="inline-flex items-center gap-2 bg-blue-900 text-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.22em] rounded-full hover:bg-blue-800"
+                <Link
+                  to={activeService.cta.to}
+                  className="
+                    btn-modern
+                    w-full sm:w-auto
+                    inline-flex items-center justify-center gap-2
+                    text-[clamp(0.65rem,0.75vw,0.75rem)]
+                    tracking-tight px-5 py-2.5
+                    !bg-abp-gold !text-[#030712]
+                  "
                 >
                   {activeService.cta.label}
                   <FiArrowRight className="h-4 w-4" />
-                </a>
+                </Link>
               </div>
             </motion.div>
           </AnimatePresence>
