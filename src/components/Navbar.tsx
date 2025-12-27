@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { FiChevronDown, FiMenu, FiX } from "react-icons/fi";
 import logoV from "../assets/Logo profesional parz.png";
+import { CustomButton } from "./CustomButton";
 
 type NavChild = {
   label: string;
@@ -329,20 +330,17 @@ export const Navbar = () => {
                 );
               })}
 
-              <Link
+              <CustomButton
                 to="/contacto"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavTo("/contacto")(e);
-                }}
+                onClick={handleNavTo("/contacto")}
                 className={[
-                  "btn-modern px-6 py-2 text-[0.65rem]",
+                  "px-6 py-2 text-[0.65rem]",
                   "tracking-[0.22em] uppercase",
                   linkSafe,
                 ].join(" ")}
               >
                 Contacto
-              </Link>
+              </CustomButton>
             </nav>
 
             {/* MOBILE BTN */}
@@ -508,20 +506,17 @@ export const Navbar = () => {
               );
             })}
 
-            <Link
+            <CustomButton
               to="/contacto"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavTo("/contacto")(e);
-              }}
+              onClick={handleNavTo("/contacto")}
               className={[
-                "mt-3 inline-flex items-center justify-center btn-modern px-6 py-2",
+                "mt-3 inline-flex items-center justify-center px-6 py-2",
                 "text-xs sm:text-sm tracking-[0.22em] uppercase",
                 linkSafe,
               ].join(" ")}
             >
               Contacto
-            </Link>
+            </CustomButton>
           </nav>
         </div>
       )}

@@ -1,8 +1,8 @@
 import { type FC } from "react";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
-import AndresImg from "@/assets/personas/Andres.png";
-import LuisImg from "@/assets/personas/Luis.png";
-import MariaImg from "@/assets/personas/Maria.png";
+import AndresImg from "@/assets/personas/Andres.jpeg";
+import LuisImg from "@/assets/personas/Luis.jpeg";
+import MariaImg from "@/assets/personas/Maria.jpeg";
 
 type TeamMember = {
   name: string;
@@ -41,7 +41,7 @@ export const MainTeamSection: FC = () => {
       id="equipo-trabajo"
       className="relative overflow-hidden bg-gradient-to-br from-[#f2f6ff] via-white to-[#e7f0ff] py-16 sm:py-20"
     >
-      {/* Mismo overlay de fondo que en PartnersSection */}
+      {/* Overlay de fondo */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(66,104,168,0.12),transparent_60%),radial-gradient(circle_at_80%_85%,rgba(191,214,255,0.32),transparent_70%)]" />
 
       <div className="relative mx-auto max-w-6xl px-6">
@@ -51,34 +51,42 @@ export const MainTeamSection: FC = () => {
             Nuestro equipo de trabajo
           </h2>
 
-          <p className="mt-3 max-w-2xl mx-auto text-sm text-[#274472] sm:text-base">
-            Profesionales con experiencia en derecho laboral, seguridad social, finanzas
-            empresariales y gerencia de proyectos que acompañan la toma de decisiones
-            estratégicas de tu organización.
+          <p className="mt-3 mx-auto max-w-2xl text-sm text-[#274472] sm:text-base">
+            Profesionales con experiencia en derecho laboral, seguridad social,
+            finanzas empresariales y gerencia de proyectos que acompañan la toma
+            de decisiones estratégicas de tu organización.
           </p>
         </FadeInWhenVisible>
 
-        {/* GRID SIN TARJETAS */}
+        {/* Grid */}
         <div className="mt-12 grid gap-12 sm:grid-cols-3">
           {mainTeam.map((member) => (
             <FadeInWhenVisible
               key={member.name}
               className="flex flex-col items-center text-center"
             >
-              {/* ESPACIO PARA FOTO */}
+              {/* Foto */}
               <div className="relative mb-5 h-40 w-40 overflow-hidden rounded-full bg-[#e1e9fb] shadow-inner ring-4 ring-[#f5c068]/30">
-                {member.image ? (
+                {member.image && (
                   <img
                     src={member.image}
                     alt={member.name}
-                    className="h-full w-full object-cover object-top"
                     loading="lazy"
+                    className="
+                      h-full w-full
+                      object-cover
+                      transform scale-150 origin-top object-center
+                    "
                   />
-                ) : null}
-                <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-[#f5c068]/45 via-transparent to-transparent mix-blend-multiply" aria-hidden="true" />
+                )}
+
+                <div
+                  className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-[#f5c068]/45 via-transparent to-transparent mix-blend-multiply"
+                  aria-hidden="true"
+                />
               </div>
 
-              {/* INFO */}
+              {/* Info */}
               <h3 className="text-lg font-semibold text-[#1f3258]">
                 {member.name}
               </h3>
