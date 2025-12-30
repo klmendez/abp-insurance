@@ -25,7 +25,8 @@ exports.handler = async (event) => {
 
     // Inicializamos cliente con la API Key
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const modelName = process.env.GENAI_MODEL || "models/text-bison-001";
+    const model = genAI.getGenerativeModel({ model: modelName });
 
     const systemPrompt = `Eres el asistente virtual de ABP Agencia de Seguros.
 Usa esta información de contexto: ARL, Vida y bienestar, Seguros generales, programas para ciclistas.
@@ -37,8 +38,19 @@ Responde de forma breve, clara y amable.`;
 Consulta del usuario:
 ${message}`;
 
-    const result = await model.generateContent(prompt);
-    const reply = result?.response?.text?.() ?? "Lo siento, no pude generar una respuesta en este momento.";
+    let reply;
+
+    if (modelName.includes("gemini")) {
+      const result = await model.generateContent(prompt);
+      reply = result?.response?.text?.();
+    } else {
+      const result = await model.generateText({ prompt });
+      reply = result?.response?.candidates?.[0]?.output;
+    }
+
+    if (!reply) {
+      reply = "Lo siento, no pude generar una respuesta en este momento.";
+    }
 
     return {
       statusCode: 200,
