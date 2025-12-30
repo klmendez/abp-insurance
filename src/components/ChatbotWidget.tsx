@@ -6,7 +6,7 @@ type Message = {
   content: string;
 };
 
-export const ChatbotIA = () => {
+export const ChatbotWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([
