@@ -2,46 +2,33 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 exports.handler = async (event) => {
-  // Solo permitimos POST
   if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      body: "Method Not Allowed",
-    };
+    return { statusCode: 405, body: "Method Not Allowed" };
   }
 
   try {
-    // Parseamos el mensaje enviado desde el frontend
     const { message } = JSON.parse(event.body);
 
-    // Inicializamos el cliente con la API Key de AI Studio
-    const client = new GoogleGenerativeAI({
-      apiKey: process.env.GEMINI_API_KEY,
-    });
+    // Inicializamos cliente con tu API Key
+    const client = new GoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY });
 
-    // Seleccionamos un modelo disponible
-    const model = client.getModel("models/text-bison-001");
-
-    // Creamos la respuesta usando generateMessage
-    const response = await model.generateMessage({
-      // Instrucciones al asistente
-      input: [
+    // Llamamos directamente a generateMessage con el modelo como string
+    const response = await client.generateMessage({
+      model: "models/text-bison-001", // modelo soportado
+      messages: [
         {
           role: "system",
           content: `
-            Eres el asistente de ABP Agencia de Seguros. 
-            Usa la información: ARL, Vida, Ciclistas, Generales, Contacto +573208654369. 
+            Eres el asistente de ABP Agencia de Seguros.
+            Usa esta información: ARL, Vida, Ciclistas, Generales.
+            Contacto: +573208654369
             Responde de forma breve y clara.
           `,
         },
-        {
-          role: "user",
-          content: message,
-        },
+        { role: "user", content: message },
       ],
     });
 
-    // Obtenemos el texto de la respuesta
     const reply = response.output[0].content[0].text;
 
     return {
@@ -52,9 +39,7 @@ exports.handler = async (event) => {
     console.error("CHAT ERROR:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({
-        error: "Hubo un problema al procesar tu solicitud.",
-      }),
+      body: JSON.stringify({ error: "Hubo un problema al procesar tu solicitud." }),
     };
   }
 };

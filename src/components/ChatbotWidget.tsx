@@ -65,9 +65,10 @@ export const ChatbotWidget = () => {
   };
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 font-sans">
+    <div className="fixed bottom-10 right-5 z-50 font-sans">
       {isOpen && (
         <div className="mb-4 w-80 h-[450px] bg-white border shadow-2xl rounded-2xl flex flex-col overflow-hidden">
+          {/* Header */}
           <div className="bg-[#102545] p-4 text-white flex justify-between items-center">
             <span className="font-bold text-sm">Asistente ABP</span>
             <button onClick={() => setIsOpen(false)}>
@@ -75,6 +76,7 @@ export const ChatbotWidget = () => {
             </button>
           </div>
 
+          {/* Mensajes */}
           <div
             ref={scrollRef}
             className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 text-sm text-slate-700"
@@ -104,6 +106,7 @@ export const ChatbotWidget = () => {
             )}
           </div>
 
+          {/* Input */}
           <div className="p-3 border-t flex gap-2">
             <input
               className="flex-1 bg-gray-100 rounded-lg px-3 py-2 text-sm outline-none focus:ring-1 ring-blue-500"
@@ -124,6 +127,7 @@ export const ChatbotWidget = () => {
         </div>
       )}
 
+      {/* Botón flotante */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="bg-[#102545] w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-white text-2xl hover:scale-105 transition-transform"
