@@ -11,40 +11,49 @@ exports.handler = async (event) => {
   }
 
   try {
+    // Parseamos el mensaje enviado desde el frontend
     const { message } = JSON.parse(event.body);
 
-    if (!message || message.trim() === "") {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ reply: "Por favor envía un mensaje válido." }),
-      };
-    }
-
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-    // Usamos un modelo válido
-    const model = genAI.getGenerativeModel({
-      model: "models/text-bison-001", // modelo válido
-      systemInstruction:
-        "Eres el asistente virtual de ABP Agencia de Seguros. Usa información sobre: ARL, Vida, Ciclistas, Seguros Generales. Responde breve y claro. Contacto: +573208654369.",
+    // Inicializamos el cliente con la API Key de AI Studio
+    const client = new GoogleGenerativeAI({
+      apiKey: process.env.GEMINI_API_KEY,
     });
 
-    // Generar contenido
-    const result = await model.generateContent(message);
-    const response = await result.response;
+    // Seleccionamos un modelo disponible
+    const model = client.getModel("models/text-bison-001");
+
+    // Creamos la respuesta usando generateMessage
+    const response = await model.generateMessage({
+      // Instrucciones al asistente
+      input: [
+        {
+          role: "system",
+          content: `
+            Eres el asistente de ABP Agencia de Seguros. 
+            Usa la información: ARL, Vida, Ciclistas, Generales, Contacto +573208654369. 
+            Responde de forma breve y clara.
+          `,
+        },
+        {
+          role: "user",
+          content: message,
+        },
+      ],
+    });
+
+    // Obtenemos el texto de la respuesta
+    const reply = response.output[0].content[0].text;
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ reply: response.text() }),
+      body: JSON.stringify({ reply }),
     };
   } catch (error) {
     console.error("CHAT ERROR:", error);
-
     return {
       statusCode: 500,
       body: JSON.stringify({
-        reply:
-          "⚠️ Lo siento, hubo un problema con el asistente. Intenta nuevamente más tarde.",
+        error: "Hubo un problema al procesar tu solicitud.",
       }),
     };
   }
