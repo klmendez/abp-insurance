@@ -5,70 +5,161 @@ import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { MainTeamSection } from "@/sections/about/MainTeamSection";
 import { SupportTeamSection } from "@/sections/about/SupportTeamSection";
 import { PartnersSection } from "@/sections/PartnersSection";
-import footerBg from "../bg/Footer1.png";
-import footerBgMobile from "../bg/FooterMobile.png";
+
+import allImg from "../bg/all.png";
 
 export const AboutPage: FC = () => {
   return (
     <>
       {/* ================= HERO ================= */}
-      <section className="relative flex min-h-screen flex-col overflow-hidden text-white sm:min-h-[100vh] sm:flex-row sm:items-end sm:justify-start">
-        {/* FONDO MOBILE */}
+      <section className="relative overflow-hidden min-h-[100svh] text-white">
+        {/* BACKGROUND */}
         <div
-          className="absolute inset-0 bg-cover bg-[position:center_85%] bg-no-repeat sm:hidden"
-          style={{ backgroundImage: `url(${footerBgMobile})` }}
+          className="absolute inset-0 z-0"
           aria-hidden="true"
+          style={{
+            background:
+              "linear-gradient(135deg, #0f3f6a 0%, #144e7c 36%, #1a5c8b 58%, #eadfbe 100%)",
+          }}
         />
 
-        {/* FONDO DESKTOP */}
+        {/* OVERLAYS */}
+        <div className="absolute inset-0 z-10 hero-blue-overlay pointer-events-none opacity-40 sm:opacity-70" />
+        <div className="absolute inset-0 z-10 hero-gold-dots pointer-events-none opacity-45 sm:opacity-65" />
+
+        {/* GLOW */}
         <div
-          className="absolute inset-0 hidden bg-cover bg-[position:center_78%] bg-no-repeat sm:block"
-          style={{ backgroundImage: `url(${footerBg})` }}
+          className="absolute inset-0 z-10 pointer-events-none"
           aria-hidden="true"
+          style={{
+            background:
+              "radial-gradient(700px 460px at 88% 78%, rgba(212,175,55,0.18) 0%, rgba(212,175,55,0.08) 38%, rgba(212,175,55,0) 72%)",
+          }}
         />
 
-        <div className="relative w-full">
-          <FadeInWhenVisible className="mx-auto flex h-full min-h-screen w-full flex-col justify-between px-5 py-12 text-center sm:min-h-0 sm:justify-end sm:gap-8 sm:px-6 sm:pb-20 sm:pt-0 sm:text-left">
-            <div className="flex w-full flex-col justify-start sm:ml-12 md:ml-16 lg:ml-20 sm:max-w-5xl">
-              <div className="mx-auto max-w-xl space-y-5 sm:mx-0 sm:space-y-6">
-                <span className="inline-flex items-center justify-center rounded-full bg-black/20 px-10 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.32em] text-abp-gold ring-1 ring-abp-gold/40">
-                  Sobre nosotros
-                </span>
+        {/* CONTENT */}
+        <div className="relative z-20 min-h-[100svh]">
+          <div
+            className="
+              relative
+              mx-auto w-full max-w-7xl
+              px-5 sm:px-6
+              pt-24 sm:pt-32
+              min-h-[100svh]
+            "
+          >
+            {/* TEXT */}
+            <div className="relative z-20 max-w-xl mx-auto sm:mx-0">
+              <FadeInWhenVisible className="text-center sm:text-left">
+                <div className="space-y-5 sm:space-y-6">
+                  <span
+                    aria-hidden="true"
+                    className="inline-flex items-center justify-center rounded-full bg-black/25 px-10 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.32em] text-abp-gold ring-1 ring-abp-gold/40 backdrop-blur-sm"
+                  >
+                    Sobre nosotros
+                  </span>
 
-                <h1 className="text-[2.4rem] font-semibold leading-tight text-white lg:text-[2.65rem]">
-                  Diseñamos coberturas a la medida para personas y empresas
-                </h1>
+                  <h1 className="text-white font-semibold leading-tight text-balance text-[clamp(2rem,3.1vw,3.35rem)]">
+                    Diseñamos coberturas a la medida para personas y empresas
+                  </h1>
 
-                <p className="text-base leading-relaxed text-abp-gold/100 sm:text-lg sm:leading-snug sm:text-white/85">
-                  Experiencia técnica y calidez humana para acompañarte en cada decisión clave.
-                </p>
-              </div>
-
-              {/* TELÉFONOS */}
-              <div className="hidden sm:flex sm:flex-col sm:items-start sm:gap-1.5 sm:pt-4">
-                <div className="flex items-center gap-2 text-sm font-semibold text-abp-gold">
-                  <FiPhoneCall className="text-base" />
-                  Llama ya
+                  <p className="text-white/85 text-[clamp(0.95rem,1.1vw,1.125rem)] leading-relaxed">
+                    Experiencia técnica y calidez humana para acompañarte en cada
+                    decisión clave.
+                  </p>
                 </div>
-                <p className="text-sm sm:text-base text-white/85">
-                  (+57) 320 865 4369
-                  <br />
-                  (+57) 300 568 7950
-                </p>
-              </div>
+
+                {/* PHONES – NUEVO DISEÑO */}
+                <div className="mt-8 flex flex-col items-center sm:items-start gap-3">
+                  <div className="flex items-center gap-2 font-semibold text-abp-gold text-[clamp(0.9rem,1vw,1rem)]">
+                    <FiPhoneCall className="text-lg sm:text-xl" />
+                    <span>Llama ya</span>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <a
+                      href="tel:+573208654369"
+                      className="
+                        inline-flex items-center justify-center sm:justify-start gap-3
+                        rounded-full bg-white/10 px-5 py-2
+                        text-sm sm:text-base font-medium text-white
+                        ring-1 ring-white/20
+                        hover:bg-white/20 hover:text-abp-gold
+                        transition
+                      "
+                    >
+                      <FiPhoneCall className="text-abp-gold" />
+                      <span>(+57) 320 865 4369</span>
+                    </a>
+
+                    <a
+                      href="tel:+573005687950"
+                      className="
+                        inline-flex items-center justify-center sm:justify-start gap-3
+                        rounded-full bg-white/10 px-5 py-2
+                        text-sm sm:text-base font-medium text-white
+                        ring-1 ring-white/20
+                        hover:bg-white/20 hover:text-abp-gold
+                        transition
+                      "
+                    >
+                      <FiPhoneCall className="text-abp-gold" />
+                      <span>(+57) 300 568 7950</span>
+                    </a>
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <div className="mt-10 flex justify-center sm:justify-start">
+                  <Link to="/contacto" className="btn-modern">
+                    Agenda una asesoría
+                  </Link>
+                </div>
+              </FadeInWhenVisible>
             </div>
 
-            {/* CTA */}
-            <div className="mt-16 flex w-full justify-center sm:mt-0">
-              <Link to="/contacto" className="btn-modern">
-                Agenda una asesoría
-              </Link>
+            {/* IMAGE */}
+            <div
+              className="
+                absolute bottom-0 left-0 right-0
+                flex justify-center sm:justify-end
+                pointer-events-none
+              "
+            >
+              <img
+                src={allImg}
+                alt="Equipo ABP"
+                loading="eager"
+                decoding="async"
+                draggable={false}
+                className="
+                  select-none object-contain
+                  w-[95%]
+                  max-w-none
+
+                  /* Mobile */
+                  max-h-[48svh]
+
+                  /* Tablet */
+                  sm:w-auto
+                  sm:max-h-[75vh]
+                  sm:translate-y-[16px]
+
+                  /* Desktop */
+                  lg:max-h-[90vh]
+                  lg:translate-y-[40px]
+
+                  /* Large screens */
+                  xl:max-h-[80vh]
+                  xl:translate-y-[48px]
+                "
+              />
             </div>
-          </FadeInWhenVisible>
+          </div>
         </div>
       </section>
 
-      {/* ================= NUESTRAS OFICINAS ================= */}
+      {/* ================= OFFICES ================= */}
       <section className="bg-slate-100 py-16 sm:py-20">
         <FadeInWhenVisible className="mx-auto max-w-6xl px-6">
           <div className="mb-10 max-w-2xl">
@@ -79,7 +170,8 @@ export const AboutPage: FC = () => {
               Presencia en Colombia
             </h2>
             <p className="mt-3 text-slate-600">
-              Contamos con oficinas físicas para brindarte atención cercana y personalizada.
+              Contamos con oficinas físicas para brindarte atención cercana y
+              personalizada.
             </p>
           </div>
 
@@ -96,7 +188,8 @@ export const AboutPage: FC = () => {
                 Torre Krystal, Oficina 2003
               </p>
               <p className="mt-3 text-slate-600">
-                Teléfono: <span className="font-medium">318 517 0013</span>
+                Teléfono:{" "}
+                <span className="font-medium">318 517 0013</span>
               </p>
               <p className="mt-1 flex items-center gap-2 text-slate-600">
                 <FiMail className="text-abp-gold" />
@@ -120,12 +213,15 @@ export const AboutPage: FC = () => {
                 <br />
                 Oficina 103, Edificio Albarracín
               </p>
+              <p className="mt-3 text-slate-500 italic text-sm">
+                Atención con cita previa
+              </p>
             </div>
           </div>
         </FadeInWhenVisible>
       </section>
 
-      {/* ================= OTRAS SECCIONES ================= */}
+      {/* ================= OTHER SECTIONS ================= */}
       <PartnersSection />
       <MainTeamSection />
       <SupportTeamSection />

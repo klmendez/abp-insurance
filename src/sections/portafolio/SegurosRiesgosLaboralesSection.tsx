@@ -1,8 +1,8 @@
 import { type FC, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { FiCheckCircle } from "react-icons/fi";
 import trabajadoresImg from "@/assets/laborales/trabajadores2.jpg";
+import { CustomButton } from "@/components/CustomButton";
 
 const summaryHighlights = [
   "Nos encargamos de la afiliación y las novedades con la ARL para que tu equipo no pierda horas en trámites.",
@@ -98,9 +98,9 @@ export const SegurosRiesgosLaboralesSection: FC = () => {
               </p>
 
               <div className="mt-6 flex flex-wrap justify-center gap-3 lg:justify-start">
-                <Link to="/portafolio/riesgos-laborales" className="btn-modern">
+                <CustomButton to="/portafolio/riesgos-laborales">
                   Ver portafolio de riesgos laborales
-                </Link>
+                </CustomButton>
               </div>
             </div>
 
@@ -248,9 +248,9 @@ export const SegurosRiesgosLaboralesSection: FC = () => {
           <p className="text-sm text-white/85">
             ¿Quieres revisar cómo estás gestionando hoy tus riesgos laborales?
           </p>
-          <button className="mt-4 inline-flex items-center justify-center rounded-full bg-[#f5c068] px-6 py-2 text-sm font-semibold text-[#050816] shadow-[0_18px_40px_-28px_rgba(0,0,0,0.9)] transition hover:bg-[#f1b654] focus:outline-none focus:ring-2 focus:ring-[#f5c068]/70 focus:ring-offset-2 focus:ring-offset-[#071525]">
+          <CustomButton to="/contacto" className="mt-4">
             Agenda una asesoría gratuita
-          </button>
+          </CustomButton>
         </FadeInWhenVisible>
       </div>
     </section>

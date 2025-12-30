@@ -1,7 +1,7 @@
 import { type FC } from "react";
-import { Link } from "react-router-dom";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { FiHome, FiBriefcase } from "react-icons/fi";
+import { CustomButton } from "@/components/CustomButton";
 
 const coverageAreas = [
   {
@@ -51,9 +51,9 @@ export const SegurosGeneralesSection: FC = () => {
           </p>
 
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link to="/portafolio/seguros-generales" className="btn-modern">
+            <CustomButton to="/portafolio/seguros-generales">
               Ver portafolio de seguros generales
-            </Link>
+            </CustomButton>
           </div>
         </FadeInWhenVisible>
 
@@ -99,12 +99,12 @@ export const SegurosGeneralesSection: FC = () => {
             Podemos armar un portafolio integral para tu empresa o tu patrimonio.
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
-            <Link to="/portafolio/seguros-generales" className="btn-modern">
+            <CustomButton to="/portafolio/seguros-generales">
               Explorar programas completos
-            </Link>
-            <a href="#contacto" className="btn-modern btn-modern--light">
+            </CustomButton>
+            <CustomButton href="#contacto">
               Hablar con un especialista
-            </a>
+            </CustomButton>
           </div>
         </FadeInWhenVisible>
       </div>

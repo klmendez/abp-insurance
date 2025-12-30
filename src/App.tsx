@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { FloatingWhatsappButton } from "./components/FloatingWhatsappButton";
+import { ChatbotWidget } from "./components/ChatbotWidget";
 
 import { HomePage } from "./pages/HomePage";
 import { PortafolioPage } from "./pages/PortafolioPage";
@@ -70,6 +71,7 @@ export const App = () => {
 
         <Footer />
         <FloatingWhatsappButton />
+        <ChatbotWidget />
       </div>
     </BrowserRouter>
   );

@@ -1,7 +1,7 @@
 import { type FC, useState } from "react";
-import { Link } from "react-router-dom";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import familiaImg from "@/assets/vida/persona-familia.jpg";
+import { CustomButton } from "@/components/CustomButton";
 
 const benefits = [
   "Protección financiera para tus proyectos y responsabilidades.",
@@ -71,9 +71,9 @@ export const SegurosVidaSection: FC = () => {
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link to="/portafolio/seguros-vida" className="btn-modern">
+              <CustomButton to="/portafolio/seguros-vida">
                 Ver portafolio de vida
-              </Link>
+              </CustomButton>
             </div>
           </div>
 
@@ -165,9 +165,9 @@ export const SegurosVidaSection: FC = () => {
             responsabilidades y el nivel de tranquilidad que quieres alcanzar.
           </p>
 
-          <button className="mt-5 inline-flex items-center justify-center rounded-full bg-[#d9a43a] px-6 py-2 text-sm font-semibold text-[#102545] transition hover:bg-[#b48327]">
+          <CustomButton to="/contacto" className="mt-5">
             Agenda una asesoría
-          </button>
+          </CustomButton>
         </FadeInWhenVisible>
       </div>
     </section>
