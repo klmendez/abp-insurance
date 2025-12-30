@@ -1,4 +1,3 @@
-// src/App.tsx
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
@@ -18,7 +17,7 @@ import { SegurosGeneralesPage } from "./pages/SegurosGeneralesPage";
 import { RecicladoresPage } from "./pages/RecicladoresPage";
 import logoFavicon from "./assets/Logo profesional parz.png";
 
-export const App = () => {
+const App = () => {
   useEffect(() => {
     const existingFavicon = document.querySelector(
       "link[rel='icon']"
@@ -43,26 +42,11 @@ export const App = () => {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/portafolio" element={<PortafolioPage />} />
-            <Route
-              path="/portafolio/riesgos-laborales"
-              element={<RiesgosLaboralesPage />}
-            />
-            <Route
-              path="/portafolio/seguros-vida"
-              element={<SegurosVidaPage />}
-            />
-            <Route
-              path="/portafolio/seguros-generales"
-              element={<SegurosGeneralesPage />}
-            />
-            <Route
-              path="/portafolio/recicladores"
-              element={<RecicladoresPage />}
-            />
-            <Route
-              path="/servicios-empresariales"
-              element={<EnterpriseServicesPage />}
-            />
+            <Route path="/portafolio/riesgos-laborales" element={<RiesgosLaboralesPage />} />
+            <Route path="/portafolio/seguros-vida" element={<SegurosVidaPage />} />
+            <Route path="/portafolio/seguros-generales" element={<SegurosGeneralesPage />} />
+            <Route path="/portafolio/recicladores" element={<RecicladoresPage />} />
+            <Route path="/servicios-empresariales" element={<EnterpriseServicesPage />} />
             <Route path="/sobre-nosotros" element={<AboutPage />} />
             <Route path="/contacto" element={<ContactPage />} />
             <Route path="/ciclistas" element={<CyclistsPage />} />
@@ -76,3 +60,5 @@ export const App = () => {
     </BrowserRouter>
   );
 };
+
+export default App;

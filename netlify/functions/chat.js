@@ -1,24 +1,22 @@
-// netlify/functions/chat.js
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const ABP_CONTEXT = `
 Eres el asistente virtual oficial de ABP Agencia de Seguros en Colombia.
 
-SERVICIOS:
-1. Riesgos Laborales (ARL): afiliación para empresas e independientes, gestión de accidentes y SG-SST.
-2. Vida y Bienestar: vida con y sin ahorro, vida deudores, seguros empresariales.
-3. Seguro para Ciclistas: hurto, daños, accidentes personales, asistencias. Incluye calculadora de prima.
-4. Seguros Generales: vehículos, flotas, hogar, responsabilidad civil.
-5. Servicios Complementarios: orden documental y formación preventiva.
+Servicios:
+- ARL (Riesgos Laborales)
+- Seguros de Vida y Bienestar
+- Seguro para Ciclistas
+- Seguros Generales (vehículos, hogar, RC)
+- Servicios complementarios
 
-REGLAS DE CONVERSACIÓN:
-- Sé claro, cercano y profesional.
-- Guía paso a paso, no entregues todo de una vez.
+Reglas:
+- Sé claro, humano y profesional.
+- Guía paso a paso.
 - Ofrece opciones numeradas.
-- Siempre permite volver atrás o cambiar de opción.
-- No inventes coberturas ni precios.
-- Si el usuario quiere contacto humano, ofrece WhatsApp +57 320 865 4369.
-- Usa español neutro colombiano.
+- Permite cambiar de opción.
+- No inventes precios.
+- Si pide asesor humano, ofrece WhatsApp +57 320 865 4369.
 `;
 
 exports.handler = async (event) => {
@@ -27,50 +25,30 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { message } = JSON.parse(event.body);
-
-    if (!message) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ reply: "¿En qué puedo ayudarte hoy?" }),
-      };
-    }
+    const { message } = JSON.parse(event.body || "{}");
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
       systemInstruction: ABP_CONTEXT,
     });
 
-    const result = await model.generateContent({
-      contents: [
-        {
-          role: "user",
-          parts: [{ text: message }],
-        },
-      ],
-    });
-
-    const responseText =
-      result?.response?.text()?.trim() ||
-      "Puedo ayudarte con seguros de vida, ARL, ciclismo o vehículos. ¿Cuál te interesa?";
+    const result = await model.generateContent(message || "Hola");
+    const reply =
+      result?.response?.text() ||
+      "¿Qué tipo de seguro te interesa hoy?";
 
     return {
       statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ reply: responseText }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ reply }),
     };
   } catch (error) {
-    console.error("Chat error:", error);
-
     return {
       statusCode: 500,
       body: JSON.stringify({
         reply:
-          "⚠️ En este momento tengo un inconveniente técnico. Si deseas, puedes escribirnos directamente al WhatsApp +57 320 865 4369.",
+          "⚠️ Tenemos un inconveniente técnico. Escríbenos al WhatsApp +57 320 865 4369.",
       }),
     };
   }
