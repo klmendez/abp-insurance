@@ -7,33 +7,38 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { message } = JSON.parse(event.body);
+    const body = JSON.parse(event.body || "{}");
+    const { message } = body;
 
-    // Inicializamos cliente con tu API Key
-    const client = new GoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY });
+    if (!message || typeof message !== "string") {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Debes enviar un mensaje válido." }),
+      };
+    }
 
-    // Generamos la respuesta usando chat.completions
-    const completion = await client.chat.completions.create({
-      model: "models/text-bison-001",
-      messages: [
-        {
-          role: "system",
-          content: `
-            Eres el asistente de ABP Agencia de Seguros.
-            Usa esta información: ARL, Vida, Ciclistas, Generales.
-            Contacto: +573208654369
-            Responde de forma breve y clara.
-          `,
-        },
-        {
-          role: "user",
-          content: message,
-        },
-      ],
-    });
+    const apiKey = process.env.GEMINI_API_KEY;
 
-    // Obtenemos el texto de la respuesta
-    const reply = completion.choices[0].message.content[0].text;
+    if (!apiKey) {
+      throw new Error("Falta la variable de entorno GEMINI_API_KEY");
+    }
+
+    // Inicializamos cliente con la API Key
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+    const systemPrompt = `Eres el asistente virtual de ABP Agencia de Seguros.
+Usa esta información de contexto: ARL, Vida y bienestar, Seguros generales, programas para ciclistas.
+Contacto directo: +57 320 865 4369.
+Responde de forma breve, clara y amable.`;
+
+    const prompt = `${systemPrompt}
+
+Consulta del usuario:
+${message}`;
+
+    const result = await model.generateContent(prompt);
+    const reply = result?.response?.text?.() ?? "Lo siento, no pude generar una respuesta en este momento.";
 
     return {
       statusCode: 200,
