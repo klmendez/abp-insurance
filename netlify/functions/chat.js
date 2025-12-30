@@ -12,9 +12,9 @@ exports.handler = async (event) => {
     // Inicializamos cliente con tu API Key
     const client = new GoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY });
 
-    // Llamamos directamente a generateMessage con el modelo como string
-    const response = await client.generateMessage({
-      model: "models/text-bison-001", // modelo soportado
+    // Generamos la respuesta usando chat.completions
+    const completion = await client.chat.completions.create({
+      model: "models/text-bison-001",
       messages: [
         {
           role: "system",
@@ -25,11 +25,15 @@ exports.handler = async (event) => {
             Responde de forma breve y clara.
           `,
         },
-        { role: "user", content: message },
+        {
+          role: "user",
+          content: message,
+        },
       ],
     });
 
-    const reply = response.output[0].content[0].text;
+    // Obtenemos el texto de la respuesta
+    const reply = completion.choices[0].message.content[0].text;
 
     return {
       statusCode: 200,
