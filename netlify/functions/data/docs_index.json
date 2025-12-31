@@ -1,0 +1,475 @@
+{
+  "createdAt": 1767212761427,
+  "chunks": [
+    {
+      "id": "ciclistas.md::0",
+      "file": "ciclistas.md",
+      "chunkIndex": 0,
+      "content": "# Programas para Ciclistas (ABP)",
+      "tokens": [
+        "programas",
+        "ciclistas",
+        "abp"
+      ]
+    },
+    {
+      "id": "ciclistas.md::1",
+      "file": "ciclistas.md",
+      "chunkIndex": 1,
+      "content": "## Qué es\r\nPrograma para proteger al ciclista, su bicicleta y/o viajes (según plan elegido).",
+      "tokens": [
+        "programa",
+        "proteger",
+        "ciclista",
+        "bicicleta",
+        "viajes",
+        "segun",
+        "plan",
+        "elegido"
+      ]
+    },
+    {
+      "id": "ciclistas.md::2",
+      "file": "ciclistas.md",
+      "chunkIndex": 2,
+      "content": "## Para quién aplica\r\n- Ciclistas urbanos/recreativos\r\n- Entrenamiento frecuente\r\n- Competitivo (requiere declarar eventos/uso)",
+      "tokens": [
+        "quien",
+        "aplica",
+        "ciclistas",
+        "urbanos",
+        "recreativos",
+        "entrenamiento",
+        "frecuente",
+        "competitivo",
+        "requiere",
+        "declarar",
+        "eventos",
+        "uso"
+      ]
+    },
+    {
+      "id": "ciclistas.md::3",
+      "file": "ciclistas.md",
+      "chunkIndex": 3,
+      "content": "## Planes disponibles\r\n- Vida y Accidentes: protección personal (accidentes/fallecimiento).\r\n- Seguro Bicicleta: protección del bien (bici/accesorios).\r\n- Viaje Ciclistas: asistencias y coberturas en viajes.\r\n- Combo Integral: combinación de coberturas.",
+      "tokens": [
+        "planes",
+        "disponibles",
+        "vida",
+        "accidentes",
+        "proteccion",
+        "personal",
+        "accidentes",
+        "fallecimiento",
+        "seguro",
+        "bicicleta",
+        "proteccion",
+        "bien",
+        "bici",
+        "accesorios",
+        "viaje",
+        "ciclistas",
+        "asistencias",
+        "coberturas",
+        "viajes",
+        "combo",
+        "integral",
+        "combinacion",
+        "coberturas"
+      ]
+    },
+    {
+      "id": "ciclistas.md::4",
+      "file": "ciclistas.md",
+      "chunkIndex": 4,
+      "content": "## Qué cubre (resumen por categorías)\r\n### Bicicleta\r\n- Robo total (según condiciones)\r\n- Daños accidentales (según condiciones)\r\n- Accesorios (si están declarados)",
+      "tokens": [
+        "cubre",
+        "resumen",
+        "categorias",
+        "bicicleta",
+        "robo",
+        "total",
+        "segun",
+        "condiciones",
+        "danos",
+        "accidentales",
+        "segun",
+        "condiciones",
+        "accesorios",
+        "estan",
+        "declarados"
+      ]
+    },
+    {
+      "id": "ciclistas.md::5",
+      "file": "ciclistas.md",
+      "chunkIndex": 5,
+      "content": "### Persona\r\n- Accidentes (asistencias / cobertura según plan)\r\n- Fallecimiento (si aplica)",
+      "tokens": [
+        "persona",
+        "accidentes",
+        "asistencias",
+        "cobertura",
+        "segun",
+        "plan",
+        "fallecimiento",
+        "aplica"
+      ]
+    },
+    {
+      "id": "ciclistas.md::6",
+      "file": "ciclistas.md",
+      "chunkIndex": 6,
+      "content": "### Responsabilidad civil\r\n- Daños a terceros (si aplica en el plan)",
+      "tokens": [
+        "responsabilidad",
+        "civil",
+        "danos",
+        "terceros",
+        "aplica",
+        "plan"
+      ]
+    },
+    {
+      "id": "ciclistas.md::7",
+      "file": "ciclistas.md",
+      "chunkIndex": 7,
+      "content": "### Viajes\r\n- Asistencia médica y legal en viajes (si aplica)\r\n- Traslados/asistencia (si aplica)",
+      "tokens": [
+        "viajes",
+        "asistencia",
+        "medica",
+        "legal",
+        "viajes",
+        "aplica",
+        "traslados",
+        "asistencia",
+        "aplica"
+      ]
+    },
+    {
+      "id": "ciclistas.md::8",
+      "file": "ciclistas.md",
+      "chunkIndex": 8,
+      "content": "## Exclusiones frecuentes (ejemplos)\r\n- Desgaste normal / mantenimiento\r\n- Competencias profesionales no declaradas\r\n- Uso distinto al declarado (ej. comercial)\r\n- Pérdidas sin soporte/documentos cuando se exigen",
+      "tokens": [
+        "exclusiones",
+        "frecuentes",
+        "ejemplos",
+        "desgaste",
+        "normal",
+        "mantenimiento",
+        "competencias",
+        "profesionales",
+        "declaradas",
+        "uso",
+        "distinto",
+        "declarado",
+        "comercial",
+        "perdidas",
+        "soporte",
+        "documentos",
+        "cuando",
+        "exigen"
+      ]
+    },
+    {
+      "id": "ciclistas.md::9",
+      "file": "ciclistas.md",
+      "chunkIndex": 9,
+      "content": "## Requisitos para asegurar bien\r\n- Factura o soporte de valor\r\n- Marca/modelo/serial\r\n- Fotos\r\n- Valor declarado real (para evitar infraseguro)",
+      "tokens": [
+        "requisitos",
+        "asegurar",
+        "bien",
+        "factura",
+        "soporte",
+        "valor",
+        "marca",
+        "modelo",
+        "serial",
+        "fotos",
+        "valor",
+        "declarado",
+        "real",
+        "evitar",
+        "infraseguro"
+      ]
+    },
+    {
+      "id": "ciclistas.md::10",
+      "file": "ciclistas.md",
+      "chunkIndex": 10,
+      "content": "## Deducibles y condiciones\r\nEl deducible, topes y condiciones dependen de la aseguradora y la póliza contratada.",
+      "tokens": [
+        "deducibles",
+        "condiciones",
+        "deducible",
+        "topes",
+        "condiciones",
+        "dependen",
+        "aseguradora",
+        "poliza",
+        "contratada"
+      ]
+    },
+    {
+      "id": "ciclistas.md::11",
+      "file": "ciclistas.md",
+      "chunkIndex": 11,
+      "content": "## Qué hacer en caso de siniestro (pasos)\r\n1. Reportar el evento lo antes posible\r\n2. Reunir soportes (denuncia, factura, fotos, etc.)\r\n3. Enviar información al asesor / aseguradora",
+      "tokens": [
+        "hacer",
+        "caso",
+        "siniestro",
+        "pasos",
+        "reportar",
+        "evento",
+        "antes",
+        "posible",
+        "reunir",
+        "soportes",
+        "denuncia",
+        "factura",
+        "fotos",
+        "etc",
+        "enviar",
+        "informacion",
+        "asesor",
+        "aseguradora"
+      ]
+    },
+    {
+      "id": "ciclistas.md::12",
+      "file": "ciclistas.md",
+      "chunkIndex": 12,
+      "content": "## Preguntas frecuentes\r\n### ¿Cubre robo parcial?\r\nDepende de la póliza. Normalmente se define si aplica a partes/accesorios y si estaban declarados.",
+      "tokens": [
+        "preguntas",
+        "frecuentes",
+        "cubre",
+        "robo",
+        "parcial",
+        "depende",
+        "poliza",
+        "normalmente",
+        "define",
+        "aplica",
+        "partes",
+        "accesorios",
+        "estaban",
+        "declarados"
+      ]
+    },
+    {
+      "id": "ciclistas.md::13",
+      "file": "ciclistas.md",
+      "chunkIndex": 13,
+      "content": "### ¿Cubre cuando viajo?\r\nSi el plan incluye “Viaje Ciclistas” o coberturas de asistencia en viaje, aplica según condiciones.",
+      "tokens": [
+        "cubre",
+        "cuando",
+        "viajo",
+        "plan",
+        "incluye",
+        "viaje",
+        "ciclistas",
+        "coberturas",
+        "asistencia",
+        "viaje",
+        "aplica",
+        "segun",
+        "condiciones"
+      ]
+    },
+    {
+      "id": "ciclistas.md::14",
+      "file": "ciclistas.md",
+      "chunkIndex": 14,
+      "content": "### ¿Cubre en competencia?\r\nSolo si está declarado y aprobado en póliza (si aplica). Si no, puede considerarse exclusión.",
+      "tokens": [
+        "cubre",
+        "competencia",
+        "solo",
+        "esta",
+        "declarado",
+        "aprobado",
+        "poliza",
+        "aplica",
+        "puede",
+        "considerarse",
+        "exclusion"
+      ]
+    },
+    {
+      "id": "ciclistas.md::15",
+      "file": "ciclistas.md",
+      "chunkIndex": 15,
+      "content": "## Si no encuentras tu caso aquí\r\nPuedo pedirte 2 datos (tipo de uso y valor) y escalarlo con un asesor para confirmación exacta.",
+      "tokens": [
+        "encuentras",
+        "caso",
+        "aqui",
+        "puedo",
+        "pedirte",
+        "datos",
+        "tipo",
+        "uso",
+        "valor",
+        "escalarlo",
+        "asesor",
+        "confirmacion",
+        "exacta"
+      ]
+    },
+    {
+      "id": "vida.md::0",
+      "file": "vida.md",
+      "chunkIndex": 0,
+      "content": "## Qué es\r\nSoluciones para proteger a una persona o un grupo ante fallecimiento, invalidez o contingencias (según póliza).",
+      "tokens": [
+        "soluciones",
+        "proteger",
+        "persona",
+        "grupo",
+        "ante",
+        "fallecimiento",
+        "invalidez",
+        "contingencias",
+        "segun",
+        "poliza"
+      ]
+    },
+    {
+      "id": "vida.md::1",
+      "file": "vida.md",
+      "chunkIndex": 1,
+      "content": "## Tipos comunes\r\n- Vida individual (con o sin ahorro)\r\n- Vida deudores (créditos)\r\n- Vida grupo / colectivos (empleados)",
+      "tokens": [
+        "tipos",
+        "comunes",
+        "vida",
+        "individual",
+        "ahorro",
+        "vida",
+        "deudores",
+        "creditos",
+        "vida",
+        "grupo",
+        "colectivos",
+        "empleados"
+      ]
+    },
+    {
+      "id": "vida.md::2",
+      "file": "vida.md",
+      "chunkIndex": 2,
+      "content": "## Qué cubre (depende del plan)\r\n- Fallecimiento\r\n- Invalidez (si aplica)\r\n- Coberturas adicionales (según póliza)",
+      "tokens": [
+        "cubre",
+        "depende",
+        "plan",
+        "fallecimiento",
+        "invalidez",
+        "aplica",
+        "coberturas",
+        "adicionales",
+        "segun",
+        "poliza"
+      ]
+    },
+    {
+      "id": "vida.md::3",
+      "file": "vida.md",
+      "chunkIndex": 3,
+      "content": "## Para quién aplica\r\n- Personas con dependientes económicos\r\n- Personas con créditos (vida deudores)\r\n- Empresas que ofrecen beneficios",
+      "tokens": [
+        "quien",
+        "aplica",
+        "personas",
+        "dependientes",
+        "economicos",
+        "personas",
+        "creditos",
+        "vida",
+        "deudores",
+        "empresas",
+        "ofrecen",
+        "beneficios"
+      ]
+    },
+    {
+      "id": "vida.md::4",
+      "file": "vida.md",
+      "chunkIndex": 4,
+      "content": "## Requisitos típicos\r\n- Datos personales\r\n- Declaración de asegurabilidad (según monto)\r\n- Exámenes (en algunos casos)",
+      "tokens": [
+        "requisitos",
+        "tipicos",
+        "datos",
+        "personales",
+        "declaracion",
+        "asegurabilidad",
+        "segun",
+        "monto",
+        "examenes",
+        "algunos",
+        "casos"
+      ]
+    },
+    {
+      "id": "vida.md::5",
+      "file": "vida.md",
+      "chunkIndex": 5,
+      "content": "## Preguntas frecuentes\r\n### ¿Puedo cambiar beneficiarios?\r\nNormalmente sí, siguiendo el proceso de la aseguradora.",
+      "tokens": [
+        "preguntas",
+        "frecuentes",
+        "puedo",
+        "cambiar",
+        "beneficiarios",
+        "normalmente",
+        "siguiendo",
+        "proceso",
+        "aseguradora"
+      ]
+    },
+    {
+      "id": "vida.md::6",
+      "file": "vida.md",
+      "chunkIndex": 6,
+      "content": "### ¿Con ahorro vs sin ahorro?\r\nDepende de si buscas componente de acumulación o solo protección.",
+      "tokens": [
+        "ahorro",
+        "ahorro",
+        "depende",
+        "buscas",
+        "componente",
+        "acumulacion",
+        "solo",
+        "proteccion"
+      ]
+    },
+    {
+      "id": "vida.md::7",
+      "file": "vida.md",
+      "chunkIndex": 7,
+      "content": "## Si no encuentras tu caso aquí\r\nUn asesor puede cotizar según edad, monto, plazo y objetivo.",
+      "tokens": [
+        "encuentras",
+        "caso",
+        "aqui",
+        "asesor",
+        "puede",
+        "cotizar",
+        "segun",
+        "edad",
+        "monto",
+        "plazo",
+        "objetivo"
+      ]
+    }
+  ]
+}

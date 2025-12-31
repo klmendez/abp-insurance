@@ -1,97 +1,65 @@
-// netlify/functions/chat.js
-exports.handler = async (event) => {
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method Not Allowed" };
+import { searchDocs } from "./rag.js";
+
+function formatAnswer(hits) {
+  if (!hits.length) {
+    return (
+      "No encontré esa información en los documentos disponibles.\n\n" +
+      "Puedes intentar con otras palabras (ej: “robo bici”, “viajes”, “deducible”) " +
+      "o escribir “menú” para ver opciones."
+    );
   }
 
+  const top = hits[0];
+  const extras = hits.slice(1, 3);
+
+  const parts = [];
+  parts.push(`Según nuestros documentos (${top.file}):\n`);
+  parts.push(top.content);
+
+  if (extras.length) {
+    parts.push(
+      `\n\n📌 Relacionado:\n` +
+        extras
+          .map(
+            (h) =>
+              `- (${h.file}) ${h.content.replace(/\n/g, " ").slice(0, 140)}...`
+          )
+          .join("\n")
+    );
+  }
+
+  parts.push(
+    `\n\n¿Quieres que te lo resuma más corto, o que te muestre el “glosario” si hay términos técnicos?`
+  );
+
+  return parts.join("\n");
+}
+
+export const handler = async (event) => {
   try {
     const body = JSON.parse(event.body || "{}");
-    const { message } = body;
+    const message = body.message || "";
 
-    if (!message || typeof message !== "string") {
+    if (!message.trim()) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "Debes enviar un mensaje válido." }),
+        body: JSON.stringify({ error: "message requerido" }),
       };
     }
 
-    const reply = buildReply(message);
+    const hits = searchDocs(message, 4);
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ reply }),
+      body: JSON.stringify({
+        reply: formatAnswer(hits),
+        hits: hits.map((h) => ({ id: h.id, file: h.file, score: h.score })),
+      }),
     };
-  } catch (error) {
-    console.error("CHAT ERROR:", error);
+  } catch (e) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Hubo un problema al procesar tu solicitud." }),
+      body: JSON.stringify({ error: e.message }),
     };
   }
-};
-
-// ============================
-// Reglas de conversación básicas
-// ============================
-
-const normalizeText = (text = "") =>
-  text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[^a-z0-9\s]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-
-const includesAny = (haystack, keywords) => {
-  const normalized = normalizeText(haystack);
-  return keywords.some((keyword) => normalized.includes(normalizeText(keyword)));
-};
-
-const knowledgeBase = [
-  {
-    keywords: ["arl", "riesgos laborales", "seguridad laboral", "accidente"],
-    response:
-      "Nuestros planes ARL abarcan evaluación de riesgos, capacitación y acompañamiento en seguridad y salud en el trabajo. Podemos apoyarte con programas completos de prevención y respuesta.",
-  },
-  {
-    keywords: ["vida", "bienestar", "salud", "familia"],
-    response:
-      "En vida y bienestar trabajamos pólizas individuales, familiares y empresariales, con beneficios de ahorro, inversión y medicina prepagada según tu perfil.",
-  },
-  {
-    keywords: ["generales", "hogar", "empresa", "patrimonio", "vehículo", "auto"],
-    response:
-      "Los seguros generales protegen tu patrimonio: hogar, vehículos, pymes y grandes empresas. Evaluamos riesgos y diseñamos coberturas a la medida.",
-  },
-  {
-    keywords: ["bicicleta", "ciclista", "bike", "mtb"],
-    response:
-      "Tenemos programas especiales para ciclistas: cobertura por robo, accidentes personales, responsabilidad civil y asistencia 24/7. Podemos cotizar desde planes básicos hasta full.",
-  },
-  {
-    keywords: ["contact", "agenda", "whatsapp", "llamar", "asesor"],
-    response:
-      "Con gusto te conecta un asesor. Escríbenos por WhatsApp al +57 320 865 4369 o déjanos tus datos en /contacto para llamarte sin costo.",
-  },
-];
-
-const fallbackResponse =
-  "Soy el asistente virtual de ABP Agencia de Seguros. Puedo orientarte sobre ARL, seguros de vida, seguros generales y programas para ciclistas. También puedo vincularte con un asesor al +57 320 865 4369 o en /contacto.";
-
-const buildReply = (message) => {
-  const normalized = normalizeText(message);
-
-  if (!normalized) {
-    return "¿Podrías contarme un poco más sobre lo que necesitas?";
-  }
-
-  const matches = knowledgeBase.filter((entry) => includesAny(normalized, entry.keywords));
-
-  if (matches.length) {
-    return matches
-      .map((entry) => entry.response)
-      .join("\n\n");
-  }
-
-  return fallbackResponse;
 };

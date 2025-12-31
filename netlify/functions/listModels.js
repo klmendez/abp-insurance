@@ -1,26 +1,16 @@
-// netlify/functions/listModels.js
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+import OpenAI from "openai";
 
-// netlify/functions/listModels.js
-exports.handler = async () => {
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+export const handler = async () => {
   try {
-    const res = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models",
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.GEMINI_API_KEY}`,
-        },
-      }
-    );
-
-    const data = await res.json();
-
+    const models = await openai.models.list();
+    const names = models.data.map((m) => m.id).slice(0, 30);
     return {
       statusCode: 200,
-      body: JSON.stringify(data),
+      body: JSON.stringify({ models: names }),
     };
-  } catch (error) {
-    console.error(error);
-    return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
+  } catch (e) {
+    return { statusCode: 500, body: JSON.stringify({ error: e.message }) };
   }
 };
