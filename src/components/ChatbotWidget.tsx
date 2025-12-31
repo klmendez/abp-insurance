@@ -576,6 +576,7 @@ export const ChatbotWidget = () => {
   });
   const [bikeDraft, setBikeDraft] = useState<BikeDraft>({});
   const [hasUnread, setHasUnread] = useState(false);
+  const [showIntroBubble, setShowIntroBubble] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -588,6 +589,7 @@ export const ChatbotWidget = () => {
   useEffect(() => {
     if (isOpen) {
       setHasUnread(false);
+      setShowIntroBubble(false);
       return;
     }
 
@@ -596,6 +598,15 @@ export const ChatbotWidget = () => {
       setHasUnread(true);
     }
   }, [isOpen, messages]);
+
+  useEffect(() => {
+    if (isOpen || !showIntroBubble) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => setShowIntroBubble(false), 8000);
+    return () => window.clearTimeout(timer);
+  }, [isOpen, showIntroBubble]);
 
   const activeFlow = DEFAULT_FLOWS[step];
 
@@ -1094,128 +1105,144 @@ export const ChatbotWidget = () => {
   };
 
   return (
-    <div className="fixed bottom-10 right-5 z-50 font-sans">
-      {isOpen && (
-        <div className="mb-4 flex h-[520px] w-[360px] flex-col overflow-hidden rounded-2xl border bg-white shadow-2xl">
-          <header className="flex items-center justify-between bg-[#102545] p-4 text-white">
-            <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white">
-                <img src={logoV} alt="ABP" className="h-7 w-7 object-contain" />
-              </span>
-              <div>
-                <p className="text-sm font-semibold text-amber-400">Asistente ABP</p>
-                <p className="text-[0.7rem] text-white/70">
-                  Explora el portafolio, simula primas o deja tus datos.
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="rounded-full p-1 transition hover:bg-white/20"
-              aria-label="Cerrar asistente ABP"
-            >
-              <FiX />
-            </button>
-          </header>
-
-          <div
-            ref={scrollRef}
-            className="flex-1 overflow-y-auto bg-gray-50 px-4 py-3 text-sm text-slate-700"
-          >
-            {messages.map((message, index) => (
-              <div
-                key={`${index}-${message.role}`}
-                className={`mb-3 flex ${
-                  message.role === "user" ? "justify-end" : "justify-start"
-                }`}
-              >
-                <div
-                  className={`max-w-[85%] rounded-xl px-3 py-2 shadow ${
-                    message.role === "user"
-                      ? "bg-blue-600 text-white"
-                      : "border border-[#102545]/20 bg-[#102545] text-white"
-                  }`}
-                >
-                  {message.content.split("\n").map((line, lineIndex) => (
-                    <p
-                      key={lineIndex}
-                      className={[
-                        "whitespace-pre-wrap leading-relaxed",
-                        message.role === "assistant" ? "text-white" : "text-white",
-                      ].join(" ")}
-                    >
-                      {line}
-                    </p>
-                  ))}
-
-                  {message.role === "assistant" && message.choices && (
-                    <div className="mt-3 flex flex-col gap-2">
-                      {message.choices.map((choice) => (
-                        <button
-                          key={choice.value}
-                          onClick={() => handleChoiceClick(choice)}
-                          className="rounded-full border border-white/30 bg-white/10 px-3 py-1 text-[0.75rem] font-semibold text-white transition hover:bg-white/20"
-                        >
-                          {choice.label}
-                        </button>
-                      ))}
-                      <p className="text-[0.7rem] text-white/70">
-                        También puedes escribir la opción manualmente.
-                      </p>
-                    </div>
-                  )}
+    <div className="pointer-events-none fixed bottom-4 left-4 right-4 z-50 font-sans sm:bottom-10 sm:left-auto sm:right-5 sm:w-auto">
+      <div className="pointer-events-auto ml-auto flex w-full max-w-[420px] flex-col items-end gap-3 sm:max-w-none sm:gap-4">
+        {isOpen && (
+          <div className="flex h-[72vh] max-h-[640px] w-full flex-col overflow-hidden rounded-2xl border bg-white shadow-2xl sm:h-[520px] sm:max-h-none sm:w-[360px]">
+            <header className="flex items-center justify-between bg-[#102545] p-4 text-white">
+              <div className="flex items-center gap-3">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white">
+                  <img src={logoV} alt="ABP" className="h-7 w-7 object-contain" />
+                </span>
+                <div>
+                  <p className="text-sm font-semibold text-amber-400">Asistente ABP</p>
+                  <p className="text-[0.7rem] text-white/70">
+                    Explora el portafolio, simula primas o deja tus datos.
+                  </p>
                 </div>
               </div>
-            ))}
+              <button
+                onClick={() => setIsOpen(false)}
+                className="rounded-full p-1 transition hover:bg-white/20"
+                aria-label="Cerrar asistente ABP"
+              >
+                <FiX />
+              </button>
+            </header>
 
-            {loading && (
-              <div className="text-xs italic text-gray-400">
-                ABP está analizando tu consulta…
+            <div
+              ref={scrollRef}
+              className="flex-1 overflow-y-auto bg-gray-50 px-4 py-3 text-sm text-slate-700"
+            >
+              {messages.map((message, index) => (
+                <div
+                  key={`${index}-${message.role}`}
+                  className={`mb-3 flex ${
+                    message.role === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`max-w-[85%] rounded-xl px-3 py-2 shadow ${
+                      message.role === "user"
+                        ? "bg-blue-600 text-white"
+                        : "border border-[#102545]/20 bg-[#102545] text-white"
+                    }`}
+                  >
+                    {message.content.split("\n").map((line, lineIndex) => (
+                      <p
+                        key={lineIndex}
+                        className={[
+                          "whitespace-pre-wrap leading-relaxed",
+                          message.role === "assistant" ? "text-white" : "text-white",
+                        ].join(" ")}
+                      >
+                        {line}
+                      </p>
+                    ))}
+
+                    {message.role === "assistant" && message.choices && (
+                      <div className="mt-3 flex flex-col gap-2">
+                        {message.choices.map((choice) => (
+                          <button
+                            key={choice.value}
+                            onClick={() => handleChoiceClick(choice)}
+                            className="rounded-full border border-white/30 bg-white/10 px-3 py-1 text-[0.75rem] font-semibold text-white transition hover:bg-white/20"
+                          >
+                            {choice.label}
+                          </button>
+                        ))}
+                        <p className="text-[0.7rem] text-white/70">
+                          También puedes escribir la opción manualmente.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+
+              {loading && (
+                <div className="text-xs italic text-gray-400">
+                  ABP está analizando tu consulta…
+                </div>
+              )}
+            </div>
+
+            {activeFlow?.followUp && (
+              <div className="border-t border-[#102545]/20 bg-[#102545] px-4 py-2 text-[0.72rem] text-white/85">
+                {activeFlow.followUp}
               </div>
             )}
-          </div>
 
-          {activeFlow?.followUp && (
-            <div className="border-t border-[#102545]/20 bg-[#102545] px-4 py-2 text-[0.72rem] text-white/85">
-              {activeFlow.followUp}
+            <div className="flex gap-2 border-t p-3">
+              <input
+                className="flex-1 rounded-lg bg-gray-100 px-3 py-2 text-sm outline-none ring-blue-500 focus:ring-1"
+                placeholder="Escribe tu mensaje o usa una opción…"
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                onKeyDown={(event) => event.key === "Enter" && handleChat()}
+                disabled={loading}
+              />
+              <button
+                onClick={handleChat}
+                className="rounded-lg bg-[#102545] p-2 text-white transition hover:bg-[#0b1b36] disabled:opacity-60"
+                disabled={loading}
+                aria-label="Enviar"
+              >
+                <FiSend />
+              </button>
             </div>
-          )}
-
-          <div className="flex gap-2 border-t p-3">
-            <input
-              className="flex-1 rounded-lg bg-gray-100 px-3 py-2 text-sm outline-none ring-blue-500 focus:ring-1"
-              placeholder="Escribe tu mensaje o usa una opción…"
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-              onKeyDown={(event) => event.key === "Enter" && handleChat()}
-              disabled={loading}
-            />
-            <button
-              onClick={handleChat}
-              className="rounded-lg bg-[#102545] p-2 text-white transition hover:bg-[#0b1b36] disabled:opacity-60"
-              disabled={loading}
-              aria-label="Enviar"
-            >
-              <FiSend />
-            </button>
           </div>
-        </div>
-      )}
-
-      <button
-        onClick={() => setIsOpen((prev) => !prev)}
-        className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[#102545] text-2xl text-white shadow-lg transition hover:scale-105"
-        aria-label={isOpen ? "Minimizar asistente ABP" : "Abrir asistente ABP"}
-      >
-        {hasUnread && !isOpen && (
-          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-400 text-[0.65rem] font-bold text-[#102545]">
-            •
-          </span>
         )}
-        <FiMessageCircle />
-      </button>
+
+        {!isOpen && showIntroBubble && (
+          <button
+            type="button"
+            onClick={() => setShowIntroBubble(false)}
+            className="relative max-w-xs rounded-2xl border border-white/60 bg-white/95 px-4 py-3 text-left text-xs font-semibold text-[#102545] shadow-lg transition hover:translate-y-[-2px]"
+          >
+            Hola, soy tu asistente.
+            <span className="absolute -bottom-1 right-5 h-3 w-3 rotate-45 border-b border-r border-white/60 bg-white" />
+          </button>
+        )}
+
+        <button
+          onClick={() => {
+            setIsOpen((prev) => !prev);
+            setShowIntroBubble(false);
+          }}
+          className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[#102545] text-2xl text-white shadow-lg transition hover:scale-105"
+          aria-label={isOpen ? "Minimizar asistente ABP" : "Abrir asistente ABP"}
+        >
+          {hasUnread && !isOpen && (
+            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-400 text-[0.6rem] font-semibold text-[#102545]">
+              1
+            </span>
+          )}
+          {isOpen ? <FiX /> : <FiMessageCircle />}
+        </button>
+      </div>
     </div>
   );
-};
+}
 
 export default ChatbotWidget;
