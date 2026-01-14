@@ -1218,10 +1218,11 @@ export const ChatbotWidget = () => {
           <button
             type="button"
             onClick={() => setShowIntroBubble(false)}
-            className="relative max-w-xs rounded-2xl border border-white/60 bg-white/95 px-4 py-3 text-left text-xs font-semibold text-[#102545] shadow-lg transition hover:translate-y-[-2px]"
+            className="relative flex w-full max-w-[280px] items-center gap-2 rounded-2xl border border-white/70 bg-white/95 px-4 py-3 text-left text-xs font-semibold text-[#102545] shadow-lg transition hover:translate-y-[-2px] sm:max-w-xs"
           >
-            Hola, soy tu asistente.
-            <span className="absolute -bottom-1 right-5 h-3 w-3 rotate-45 border-b border-r border-white/60 bg-white" />
+            <span role="img" aria-hidden className="text-lg">🤖</span>
+            <span className="flex-1 leading-snug">Hola, soy tu asistente virtual. ¡Haz clic y conversemos!</span>
+            <span className="pointer-events-none absolute -bottom-1 right-6 h-3 w-3 rotate-45 border-b border-r border-white/70 bg-white" />
           </button>
         )}
 
