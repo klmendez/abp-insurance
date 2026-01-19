@@ -76,11 +76,9 @@ export const InsuranceNamesCarouselSection: FC = () => {
 
   return (
     <section className="relative overflow-hidden bg-white py-16 text-[#0d1f33]">
-      {/* Fondo suave */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(17,56,98,0.08),transparent_60%),radial-gradient(circle_at_80%_80%,rgba(238,199,124,0.20),transparent_60%)]" />
 
       <div className="relative mx-auto flex max-w-6xl flex-col gap-10 px-5 sm:px-6">
-        {/* Encabezado */}
         <FadeInWhenVisible className="text-center">
           <span className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-[#0d1f33]/60">
             Líneas de seguros
@@ -96,15 +94,12 @@ export const InsuranceNamesCarouselSection: FC = () => {
           </p>
         </FadeInWhenVisible>
 
-        {/* Carrusel */}
         <FadeInWhenVisible>
           <div className="relative">
-            {/* Fades laterales */}
             <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white via-white/85 to-transparent" />
             <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white via-white/85 to-transparent" />
 
             <div className="flex items-center justify-center gap-2 sm:gap-4">
-              {/* ← Botón anterior (hover dorado, texto azul) */}
               <button
                 type="button"
                 onClick={handlePrev}
@@ -119,7 +114,6 @@ export const InsuranceNamesCarouselSection: FC = () => {
                 <FiChevronLeft className="h-4 w-4" />
               </button>
 
-              {/* Opciones */}
               <div className="relative w-full min-w-0 max-w-full overflow-hidden px-2 sm:px-3">
                 <AnimatePresence initial={false} mode="wait">
                   <motion.ul
@@ -139,11 +133,7 @@ export const InsuranceNamesCarouselSection: FC = () => {
                           className={`
                             flex min-w-[140px] max-w-[220px] justify-center 
                             transition-all duration-300
-                            ${
-                              isActive
-                                ? "opacity-100 scale-100"
-                                : "opacity-60 scale-95"
-                            }
+                            ${isActive ? "opacity-100 scale-100" : "opacity-60 scale-95"}
                           `}
                         >
                           <motion.a
@@ -153,11 +143,7 @@ export const InsuranceNamesCarouselSection: FC = () => {
                               w-full px-5 py-3 text-center uppercase 
                               text-[0.72rem] font-semibold tracking-[0.22em]
                               border-b-2 transition-all
-                              ${
-                                isActive
-                                  ? "border-[#d4af37] text-[#153b71]"
-                                  : "border-transparent text-[#0d1f33]/70"
-                              }
+                              ${isActive ? "border-[#d4af37] text-[#153b71]" : "border-transparent text-[#0d1f33]/70"}
                               hover:text-[#d4af37]
                             `}
                           >
@@ -170,7 +156,6 @@ export const InsuranceNamesCarouselSection: FC = () => {
                 </AnimatePresence>
               </div>
 
-              {/* → Botón siguiente (hover dorado, texto azul) */}
               <button
                 type="button"
                 onClick={handleNext}
@@ -188,14 +173,20 @@ export const InsuranceNamesCarouselSection: FC = () => {
           </div>
         </FadeInWhenVisible>
 
-        {/* Descripción dinámica */}
         <FadeInWhenVisible>
           <motion.div
             key={activeLine.label}
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35 }}
-            className="text-center text-sm text-[#0d1f33]/70 max-w-xl mx-auto leading-relaxed"
+            className="
+              text-center
+              max-w-2xl mx-auto
+              leading-relaxed
+              text-[clamp(1.05rem,1.35vw,1.35rem)]
+              font-medium
+              text-[#0d1f33]/80
+            "
           >
             {activeLine.description}
           </motion.div>

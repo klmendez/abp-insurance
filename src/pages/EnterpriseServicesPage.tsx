@@ -2,6 +2,13 @@
 import { EnterpriseServicesSection } from "../sections/portafolio/EnterpriseServicesSection";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 
+import {
+  FiTrendingUp,
+  FiFileText,
+  FiClipboard,
+  FiUserCheck,
+} from "react-icons/fi";
+
 import serviciosEmpresarialesImg from "../assets/complementarios/servicios-empresariales1.jpg";
 
 const WHATSAPP_NUMBER = "573135707125";
@@ -71,7 +78,7 @@ export const EnterpriseServicesPage = () => {
         >
           <FadeInWhenVisible className="text-center w-full">
             <h1 className="font-semibold text-white leading-tight text-[clamp(1.8rem,3.2vw,2.7rem)]">
-              Línea E · Servicios complementarios
+              Servicios complementarios
             </h1>
 
             <p className="mt-4 text-white/90 mx-auto max-w-3xl text-[clamp(0.9rem,1.2vw,1.05rem)]">
@@ -269,11 +276,7 @@ export const EnterpriseServicesPage = () => {
 
                 {/* ICON */}
                 <div className="h-16 w-16 rounded-full bg-[#e1ecff] flex items-center justify-center order-1 sm:order-2 ml-auto">
-                  <img
-                    src="/icons/reinversion.png"
-                    className="h-10 w-10 opacity-90"
-                    alt="Reinversión"
-                  />
+                  <FiTrendingUp className="h-10 w-10 opacity-90 text-[#1f3258]" aria-label="Reinversión" />
                 </div>
               </div>
             </div>
@@ -296,11 +299,7 @@ export const EnterpriseServicesPage = () => {
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-8">
                 {/* ICON IZQUIERDA */}
                 <div className="h-16 w-16 rounded-full bg-[#e1ecff] flex items-center justify-center order-1">
-                  <img
-                    src="/icons/juridica.png"
-                    className="h-10 w-10 opacity-90"
-                    alt="Asesoría jurídica"
-                  />
+                  <FiFileText className="h-10 w-10 opacity-90 text-[#1f3258]" aria-label="Asesoría jurídica" />
                 </div>
 
                 {/* TEXTO */}
@@ -400,11 +399,7 @@ export const EnterpriseServicesPage = () => {
 
                 {/* ICON DERECHA */}
                 <div className="h-16 w-16 rounded-full bg-[#e1ecff] flex items-center justify-center order-1 sm:order-2 ml-auto">
-                  <img
-                    src="/icons/logistica.png"
-                    className="h-10 w-10 opacity-90"
-                    alt="Logística"
-                  />
+<FiClipboard className="h-10 w-10 opacity-90 text-[#1f3258]" aria-label="Logística" />
                 </div>
               </div>
             </div>
@@ -427,11 +422,7 @@ export const EnterpriseServicesPage = () => {
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-8">
                 {/* ICON IZQUIERDA */}
                 <div className="h-16 w-16 rounded-full bg-[#e1ecff] flex items-center justify-center order-1">
-                  <img
-                    src="/icons/profesional.png"
-                    className="h-10 w-10 opacity-90"
-                    alt="Apoyo profesional"
-                  />
+                  <FiUserCheck className="h-10 w-10 opacity-90 text-[#1f3258]" aria-label="Apoyo profesional" />
                 </div>
 
                 {/* TEXTO */}

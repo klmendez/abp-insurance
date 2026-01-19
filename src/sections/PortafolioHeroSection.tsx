@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
+import { FiPhoneCall } from "react-icons/fi";
 
 import riesgosLaboralesImg from "../assets/laborales/trabajadores.jpg";
 import vidaImg from "../assets/vida/vida1.jpg";
@@ -53,7 +54,6 @@ export const PortafolioHeroSection = () => {
   const [index, setIndex] = useState(0);
   const active = slides[index];
 
-  // autoplay
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
@@ -61,6 +61,12 @@ export const PortafolioHeroSection = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  const phones = [
+    "+573208654369",
+    "+573005687950",
+    "+573185170013",
+  ];
 
   return (
     <section
@@ -72,33 +78,28 @@ export const PortafolioHeroSection = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* OVERLAYS */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#020617]/90 via-[#020617]/70 to-[#d4a43b]/55 opacity-55 sm:opacity-100" />
       <div className="pointer-events-none absolute inset-0 opacity-15 sm:opacity-25 mix-blend-soft-light">
         <div className="h-full w-full bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.18),transparent_70%),radial-gradient(circle_at_80%_80%,rgba(255,215,130,0.22),transparent_70%)]" />
       </div>
 
-      {/* CONTENIDO */}
       <div className="relative z-10 mx-auto max-w-6xl h-full px-4 sm:px-6 lg:px-8 flex items-center">
         <FadeInWhenVisible className="max-w-xl">
-          {/* TÍTULO */}
           <h1 className="font-bold leading-tight text-white text-[clamp(1.8rem,3.2vw,2.7rem)]">
             Portafolio ABP
           </h1>
 
-          {/* SUBTÍTULO */}
           <p className="mt-4 text-white/90 text-[clamp(0.9rem,1.2vw,1rem)]">
             Explora las líneas de protección que hemos diseñado para personas,
             empresas y sectores especiales.
           </p>
 
-          {/* BLOQUE DINÁMICO */}
           <motion.div
             key={active.id}
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="mt-8 space-y-5"
+            className="mt-8 space-y-6"
           >
             <p className="font-medium text-[clamp(1rem,1.6vw,1.125rem)]">
               <span className="font-semibold text-[#f5c068]">
@@ -106,12 +107,10 @@ export const PortafolioHeroSection = () => {
               </span>
             </p>
 
-            {/* BOTÓN – MISMO DEL HERO ANTERIOR */}
             <a
               href={active.anchor}
               className="
-                btn-modern
-                inline-flex
+                btn-modern inline-flex
                 !bg-abp-gold !text-[#030712]
                 px-6 py-2.5
                 text-[clamp(0.7rem,0.8vw,0.8rem)]
@@ -119,11 +118,64 @@ export const PortafolioHeroSection = () => {
             >
               Conocer esta solución
             </a>
+
+            {/* TELÉFONOS */}
+            <div className="pt-4 space-y-3">
+              <div className="flex items-center gap-2 text-abp-gold font-semibold text-[clamp(0.85rem,1vw,1rem)]">
+                <FiPhoneCall />
+                <span>Llámanos</span>
+              </div>
+
+              <div
+                className="
+                  w-full sm:w-fit
+                  overflow-hidden
+                  bg-white/10
+                  ring-1 ring-white/20
+                  backdrop-blur-sm
+                  rounded-2xl
+                "
+              >
+                <div className="grid grid-cols-1 divide-y divide-white/15">
+                  {phones.map((num) => (
+                    <div key={num} className="flex items-stretch">
+                      <a
+                        href={`tel:${num}`}
+                        className="
+                          flex-1 px-4 py-2
+                          inline-flex items-center justify-center
+                          text-white/95 font-medium
+                          text-[clamp(0.8rem,0.9vw,1rem)]
+                          hover:bg-white/10 transition
+                        "
+                      >
+                        ({num.replace("+57", "+57 ")})
+                      </a>
+
+                      <button
+                        type="button"
+                        onClick={() => navigator.clipboard?.writeText(num)}
+                        className="
+                          hidden sm:inline-flex
+                          w-8 h-8
+                          items-center justify-center
+                          text-[0.6rem] font-semibold
+                          text-white/80 hover:text-white
+                          hover:bg-white/10 transition
+                        "
+                        aria-label="Copiar número"
+                      >
+                        Copiar
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </motion.div>
         </FadeInWhenVisible>
       </div>
 
-      {/* INDICADORES DE CARRUSEL */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
         {slides.map((_, i) => (
           <button

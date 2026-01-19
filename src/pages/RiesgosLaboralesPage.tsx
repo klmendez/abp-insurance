@@ -22,7 +22,7 @@ export const RiesgosLaboralesPage = () => {
         <div className="relative mx-auto max-w-6xl px-6">
           <FadeInWhenVisible className="space-y-6 text-center lg:max-w-3xl lg:text-left">
             <span className="inline-flex items-center justify-center rounded-full bg-white/10 px-4 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.3em] text-white/85">
-              Línea A · Riesgos laborales
+             Riesgos laborales
             </span>
 
             <h1 className="text-3xl font-semibold text-white sm:text-4xl lg:text-[2.6rem]">

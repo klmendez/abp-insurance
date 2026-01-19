@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { FiChevronDown, FiMenu, FiX } from "react-icons/fi";
-import logoV from "../assets/Logo profesional parz.png";
+import logoV from "../assets/Logo profesional.webp";
 import { CustomButton } from "./CustomButton";
 
 type NavChild = {
@@ -368,7 +368,7 @@ export const Navbar = () => {
           >
             <span
               className="
-                relative flex h-[72px] w-[72px] items-center justify-center rounded-full bg-slate-200
+                relative flex h-[68px] w-[68px] items-center justify-center rounded-full bg-slate-200
                 transition-all duration-200
                 group-hover:ring-2 group-hover:ring-[#254561]/25
                 group-hover:shadow-[0_0_18px_rgba(37,69,97,0.25)]
@@ -384,7 +384,7 @@ export const Navbar = () => {
               <img
                 src={logoV}
                 alt="Agencia de Seguros"
-                className="relative h-[68px] w-auto"
+                className="relative h-[54px] w-auto"
               />
             </span>
           </a>

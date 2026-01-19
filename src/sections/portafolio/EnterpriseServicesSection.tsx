@@ -49,9 +49,6 @@ export const EnterpriseServicesSection = () => {
       <div className="mx-auto max-w-6xl px-6 space-y-16">
         {/* CABECERA LÍNEA E */}
         <FadeInWhenVisible className="space-y-6 text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.35em] text-abp-blue/80">
-            Línea E · Servicios complementarios
-          </span>
 
           <div className="mx-auto max-w-3xl space-y-4">
             <h2 className="text-4xl font-display leading-snug text-abp-blue">

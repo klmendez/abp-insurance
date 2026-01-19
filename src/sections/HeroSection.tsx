@@ -1,5 +1,5 @@
-import desktopBackground from "../bg/13.png";
-import mobileBackground from "../bg/mobile1.png";
+import desktopBackground from "../bg/13.webp";
+import mobileBackground from "../bg/mobile1.webp";
 import { FiPhoneCall } from "react-icons/fi";
 import React, { useEffect, useState } from "react";
 
@@ -113,11 +113,11 @@ export const HeroSection = () => {
                   bg-white/10
                   ring-1 ring-white/20
                   backdrop-blur-sm
-                  rounded-2xl sm:rounded-full
+                  rounded-2xl 
                 "
               >
-                <div className="grid grid-cols-1 sm:grid-cols-2 divide-y divide-white/15 sm:divide-y-0 sm:divide-x sm:divide-white/15">
-                  {["+573208654369", "+573005687950"].map((num) => (
+                <div className="grid grid-cols-1 sm:grid-cols-1 divide-y divide-white/15 sm:divide-y-0 sm:divide-x sm:divide-white/15">
+                  {["+573208654369", "+573005687950",  "+573185170013"].map((num) => (
                     <div key={num} className="flex items-stretch">
                       <a
                         href={`tel:${num}`}

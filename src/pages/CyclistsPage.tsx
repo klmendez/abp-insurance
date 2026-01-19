@@ -6,11 +6,14 @@ import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { FiArrowRight } from "react-icons/fi";
 
 export const CyclistsPage = () => {
+  const whatsappUrl =
+    "https://api.whatsapp.com/send?phone=573208654369&text=Hola%2C%20quiero%20hablar%20sobre%20seguro%20ABP%20para%20mi%20bici.";
+
   return (
     <>
       <CyclistsHeroSection />
 
-      {/* Intro / Productos */}
+      {/* PRODUCTOS */}
       <section id="productos" className="bg-white py-16 text-slate-900">
         <div className="mx-auto max-w-4xl px-6">
           <FadeInWhenVisible className="space-y-6 text-center">
@@ -30,7 +33,7 @@ export const CyclistsPage = () => {
             <div className="flex flex-wrap justify-center gap-3">
               <a
                 href="#calculadora"
-                className="inline-flex items-center gap-2 rounded-full bg-abp-blue px-6 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.26em] text-white shadow-sm transition hover:bg-abp-blue/90"
+                className="btn-modern inline-flex items-center gap-2 !bg-abp-gold !text-[#1f2a44]"
               >
                 Ir a la calculadora
                 <FiArrowRight className="size-4" />
@@ -38,7 +41,7 @@ export const CyclistsPage = () => {
 
               <a
                 href="#contacto"
-                className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-6 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.26em] text-abp-blue transition hover:border-slate-400 hover:bg-slate-50"
+                className="btn-modern inline-flex items-center gap-2 !bg-white !text-[#1f2a44] ring-1 ring-slate-300 hover:!bg-slate-50"
               >
                 Solicitar asesoría
               </a>
@@ -86,14 +89,21 @@ export const CyclistsPage = () => {
         </div>
       </section>
 
-      {/* Contacto */}
+      {/* CONTACTO */}
       <section
         id="contacto"
-        className="bg-gradient-to-br from-abp-navy via-abp-blue to-abp-midnight py-24 text-white"
+        className="
+          bg-gradient-to-br
+          from-[#0b1324]
+          via-[#111c33]
+          to-[#0e1a2f]
+          py-24
+          text-white
+        "
       >
         <div className="mx-auto max-w-5xl px-6">
           <FadeInWhenVisible className="max-w-3xl">
-            <span className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-white/70">
+            <span className="text-[0.65rem] font-semibold uppercase tracking-[0.32em] text-white/65">
               Agenda tu asesoría para ciclistas
             </span>
 
@@ -101,34 +111,30 @@ export const CyclistsPage = () => {
               Cuéntanos cómo montas, qué bici tienes y a qué eventos asistes.
             </h2>
 
-            <p className="mt-4 text-sm leading-relaxed text-white/75">
+            <p className="mt-4 text-sm leading-relaxed text-white/70">
               Armamos juntos la mejor combinación de seguros para que tu única preocupación sea
               disfrutar la ruta. También podemos enviarte una propuesta por WhatsApp o correo.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">
               <a
-                href="mailto:abpseguros@gmail.com"
-                className="inline-flex items-center gap-2 rounded-full bg-white/90 px-5 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.26em] text-abp-blue transition hover:bg-white"
+                href="/contacto"
+                className="btn-modern inline-flex items-center gap-2 !bg-abp-gold !text-[#1f2a44]"
               >
                 Escribir a ABP
                 <FiArrowRight className="size-4" />
               </a>
 
               <a
-                href="https://wa.me/573102885625"
+                href={whatsappUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-white/40 px-5 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-white/85 transition hover:border-white hover:text-white"
+                className="btn-modern inline-flex items-center gap-2 !bg-white/90 !text-[#1f2a44] ring-1 ring-white/50 hover:!bg-white"
               >
                 WhatsApp
               </a>
             </div>
           </FadeInWhenVisible>
-
-          <p className="mt-10 text-center text-xs text-white/50">
-            © 2025 ABP Agencia de Seguros Ltda. · Portafolio ciclistas
-          </p>
         </div>
       </section>
     </>

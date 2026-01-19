@@ -129,14 +129,13 @@ export const ServicesSection = () => {
   const activeService = services[activeServiceIndex];
   const activeDetail = activeService.details[activeDetailIndex];
 
-  const activeInitial = activeService.title.charAt(0); // A / B / P
+  const activeInitial = activeService.title.charAt(0);
 
   return (
     <section
       id="portafolio"
       className="relative overflow-hidden bg-gradient-to-br from-[#050b1a] via-[#0e2238] to-[#113862] py-16 sm:py-20 md:py-24 text-white"
     >
-      {/* Fondos suaves */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.10),transparent_55%),radial-gradient(circle_at_bottom_right,rgba(19,118,255,0.18),transparent_60%)]" />
         <div className="absolute -right-28 top-16 h-64 w-64 rounded-full bg-[#1e5bb3]/30 blur-3xl" />
@@ -144,7 +143,6 @@ export const ServicesSection = () => {
       </div>
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
-        {/* MODELO */}
         <div className="mb-6 flex items-center justify-center lg:justify-start">
           <span className="text-sm md:text-base font-semibold uppercase tracking-[0.35em] text-white/80">
             MODELO ESTRATEGICO
@@ -152,12 +150,11 @@ export const ServicesSection = () => {
         </div>
 
         <div className="grid gap-8 lg:grid-cols-[0.38fr_1.62fr] lg:items-start">
-          {/* ───────────────────── COLUMNA IZQUIERDA ───────────────────── */}
           <div className="flex flex-col items-center lg:items-start gap-5">
-            {/* MOBILE: solo círculos */}
             <div className="flex md:hidden items-center justify-center gap-4">
               {services.map((service, index) => {
                 const isActive = index === activeServiceIndex;
+
                 return (
                   <button
                     key={service.title}
@@ -169,6 +166,10 @@ export const ServicesSection = () => {
                   >
                     <motion.span
                       whileTap={{ scale: 0.95 }}
+                      whileHover={{
+                        filter: "brightness(1.12)",
+                        boxShadow: "0 0 18px rgba(245,192,104,0.35)",
+                      }}
                       className={`flex size-12 items-center justify-center rounded-full border text-lg font-semibold transition
                         ${
                           isActive
@@ -183,7 +184,6 @@ export const ServicesSection = () => {
               })}
             </div>
 
-            {/* Etiqueta móvil */}
             <div className="mt-3 text-center md:hidden">
               <p className="text-xs uppercase tracking-widest text-abp-gold">
                 Sección seleccionada
@@ -193,7 +193,6 @@ export const ServicesSection = () => {
               </p>
             </div>
 
-            {/* DESKTOP: círculo + etiqueta detrás, saliendo hacia la derecha */}
             <div className="hidden md:flex flex-col gap-6">
               {services.map((service, index) => {
                 const isActive = index === activeServiceIndex;
@@ -208,9 +207,13 @@ export const ServicesSection = () => {
                     className="flex items-center"
                   >
                     <div className="relative flex items-center">
-                      {/* Círculo con letra */}
                       <motion.span
-                        whileHover={{ scale: 1.05 }}
+                        whileHover={{
+                          scale: 1.06,
+                          filter: "brightness(1.12)",
+                          boxShadow: "0 0 22px rgba(245,192,104,0.30)",
+                        }}
+                        transition={{ duration: 0.18 }}
                         className={`relative z-10 flex size-20 items-center justify-center rounded-full border text-2xl font-bold transition
                           ${
                             isActive
@@ -221,7 +224,6 @@ export const ServicesSection = () => {
                         {service.title.charAt(0)}
                       </motion.span>
 
-                      {/* Etiqueta, detrás y alineada */}
                       {isActive && (
                         <motion.div
                           initial={{ opacity: 0, x: 8 }}
@@ -251,7 +253,6 @@ export const ServicesSection = () => {
             </div>
           </div>
 
-          {/* ───────────────────── PANEL DE DETALLE ───────────────────── */}
           <AnimatePresence mode="wait">
             <motion.div
               key={activeService.title}
@@ -261,7 +262,6 @@ export const ServicesSection = () => {
               transition={{ duration: 0.25 }}
               className="rounded-xl border border-slate-200 bg-white px-5 py-6 md:px-7 md:py-8 text-slate-900"
             >
-              {/* ENCABEZADO con letra A/B/P */}
               <div className="flex items-start gap-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#f7e7b0] bg-gradient-to-br from-[#f7e7b0] via-[#e6c768] to-[#d4af37] text-[#152746] font-bold">
                   {activeInitial}
@@ -276,7 +276,6 @@ export const ServicesSection = () => {
                 </div>
               </div>
 
-              {/* TABS con rayita dorada */}
               <div className="mt-5 flex flex-wrap gap-4 border-b pb-2">
                 {activeService.details.map((detail, idx) => {
                   const selected = idx === activeDetailIndex;
@@ -297,7 +296,6 @@ export const ServicesSection = () => {
                 })}
               </div>
 
-              {/* CONTENIDO */}
               <motion.div
                 key={activeDetail.heading}
                 initial={{ opacity: 0, y: 6 }}
@@ -337,7 +335,6 @@ export const ServicesSection = () => {
                 </div>
               </motion.div>
 
-              {/* CTA (igual estilo Hero en desktop y mobile) */}
               <div className="mt-7">
                 <Link
                   to={activeService.cta.to}

@@ -83,7 +83,6 @@ const formatCurrency = (value: number) =>
     maximumFractionDigits: 0,
   }).format(Math.round(value));
 
-/** Permite pegar "15.000.000" / "15,000,000" / "15000000" sin romperse */
 const parseCopInput = (raw: string) => {
   const cleaned = raw.replace(/[^\d]/g, "");
   if (!cleaned) return NaN;
@@ -93,7 +92,7 @@ const parseCopInput = (raw: string) => {
 export const CyclistsCalculatorSection = () => {
   const [form, setForm] = useState({
     productType: productOptions[0].value,
-    coverageRaw: "", // <- guardamos string para permitir pegado con separadores
+    coverageRaw: "",
     profile: profileOptions[0].value,
   });
 
@@ -111,6 +110,16 @@ export const CyclistsCalculatorSection = () => {
       }
   >(null);
 
+  const [lead, setLead] = useState({
+    name: "",
+    phone: "",
+    email: "",
+  });
+
+  const [leadError, setLeadError] = useState<string | null>(null);
+  const [leadSent, setLeadSent] = useState(false);
+  const [sending, setSending] = useState(false);
+
   const selectedProduct = useMemo(
     () => productOptions.find((o) => o.value === form.productType) ?? productOptions[0],
     [form.productType],
@@ -126,12 +135,16 @@ export const CyclistsCalculatorSection = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
     setError(null);
     setResult(null);
+    setLeadSent(false);
+    setLeadError(null);
   };
 
   const handleCoverageChange = (event: ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, coverageRaw: event.target.value }));
     setError(null);
     setResult(null);
+    setLeadSent(false);
+    setLeadError(null);
   };
 
   const handleCalculate = (event: FormEvent<HTMLFormElement>) => {
@@ -149,8 +162,7 @@ export const CyclistsCalculatorSection = () => {
     const wasAdjustedToMin = coverageEntered < selectedProduct.minCoverage;
 
     const baseAnnual = coverageUsed * selectedProduct.baseRate;
-    const adjustedAnnual =
-      baseAnnual * selectedProfile.multiplier + selectedProduct.serviceFee;
+    const adjustedAnnual = baseAnnual * selectedProfile.multiplier + selectedProduct.serviceFee;
 
     const monthly = adjustedAnnual / 12;
 
@@ -163,7 +175,81 @@ export const CyclistsCalculatorSection = () => {
       profile: selectedProfile,
       wasAdjustedToMin,
     });
+
     setError(null);
+    setLeadSent(false);
+    setLeadError(null);
+  };
+
+  const handleLeadChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setLead((prev) => ({ ...prev, [name]: value }));
+    setLeadError(null);
+    setLeadSent(false);
+  };
+
+  const isValidEmail = (value: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+
+  const handleSendLead = async () => {
+    const name = lead.name.trim();
+    const phone = lead.phone.trim();
+    const email = lead.email.trim();
+
+    if (!name) {
+      setLeadError("Por favor ingresa tu nombre.");
+      return;
+    }
+    if (!phone || phone.replace(/[^\d]/g, "").length < 7) {
+      setLeadError("Por favor ingresa un número de teléfono válido.");
+      return;
+    }
+    if (!email || !isValidEmail(email)) {
+      setLeadError("Por favor ingresa un correo válido.");
+      return;
+    }
+    if (!result) {
+      setLeadError("Primero genera un resultado para poder enviarlo.");
+      return;
+    }
+
+    try {
+      setSending(true);
+
+      const formData = new FormData();
+      formData.append("Nombre", name);
+      formData.append("Teléfono", phone);
+      formData.append("Email", email);
+
+      formData.append("Producto", result.product.label);
+      formData.append("Perfil", result.profile.label);
+      formData.append("Valor ingresado", formatCurrency(result.coverageEntered));
+      formData.append("Cobertura usada", formatCurrency(result.coverageUsed));
+      formData.append("Prima mensual estimada", formatCurrency(result.monthly));
+      formData.append("Prima anual estimada", formatCurrency(result.annual));
+      formData.append("Ajustado al mínimo", result.wasAdjustedToMin ? "Sí" : "No");
+
+      formData.append("_subject", "Nuevo lead – Simulador Ciclistas (ABP)");
+      formData.append("_template", "table");
+      formData.append("_captcha", "false");
+
+      const response = await fetch("https://formsubmit.co/klmendez@unimayor.edu.co", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Error enviando el formulario");
+      }
+
+      setLeadSent(true);
+      setLeadError(null);
+      setLead({ name: "", phone: "", email: "" });
+    } catch (err) {
+      setLeadError("Ocurrió un error al enviar. Intenta nuevamente.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -183,7 +269,6 @@ export const CyclistsCalculatorSection = () => {
         </FadeInWhenVisible>
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start">
-          {/* Panel calculadora */}
           <FadeInWhenVisible className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="inline-flex items-center gap-2 rounded-full bg-abp-blue/10 px-4 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-abp-blue">
@@ -257,7 +342,7 @@ export const CyclistsCalculatorSection = () => {
 
               <button
                 type="submit"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-abp-blue px-6 py-3 text-[0.75rem] font-semibold uppercase tracking-[0.26em] text-white shadow-sm transition hover:bg-abp-blue/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-abp-blue/30"
+                className="btn-modern inline-flex items-center justify-center gap-2 !bg-abp-gold !text-[#1f2a44]"
               >
                 Calcular prima estimada
                 <FiArrowRight className="size-4" />
@@ -314,9 +399,7 @@ export const CyclistsCalculatorSection = () => {
                     </p>
                     <p>
                       Perfil:{" "}
-                      <span className="font-semibold text-slate-800">
-                        {result.profile.label}
-                      </span>
+                      <span className="font-semibold text-slate-800">{result.profile.label}</span>
                     </p>
                   </div>
 
@@ -324,12 +407,69 @@ export const CyclistsCalculatorSection = () => {
                     Referencia informativa. La prima final puede variar según aseguradora,
                     deducibles y coberturas adicionales.
                   </p>
+
+                  <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-5">
+                    <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-slate-500">
+                      Enviar estos datos a un asesor
+                    </p>
+
+                    <div className="mt-3 grid gap-3">
+                      <input
+                        name="name"
+                        value={lead.name}
+                        onChange={handleLeadChange}
+                        placeholder="Nombre completo"
+                        className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-abp-blue focus:ring-2 focus:ring-abp-blue/15"
+                      />
+                      <input
+                        name="phone"
+                        value={lead.phone}
+                        onChange={handleLeadChange}
+                        placeholder="Número de contacto"
+                        inputMode="tel"
+                        className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-abp-blue focus:ring-2 focus:ring-abp-blue/15"
+                      />
+                      <input
+                        name="email"
+                        value={lead.email}
+                        onChange={handleLeadChange}
+                        placeholder="Correo (Gmail o cualquier email)"
+                        inputMode="email"
+                        className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-abp-blue focus:ring-2 focus:ring-abp-blue/15"
+                      />
+
+                      {leadError && (
+                        <p className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs text-rose-700">
+                          {leadError}
+                        </p>
+                      )}
+
+                      {leadSent && (
+                        <p className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-xs text-emerald-700">
+                          ¡Listo! Recibimos tus datos. Un asesor ABP te contactará pronto.
+                        </p>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={handleSendLead}
+                        disabled={sending}
+                        className="btn-modern inline-flex items-center justify-center gap-2 !bg-abp-gold !text-[#1f2a44] disabled:opacity-60"
+                      >
+                        {sending ? "Enviando..." : "Enviar datos"}
+                        <FiArrowRight className="size-4" />
+                      </button>
+                    </div>
+
+                    <p className="mt-3 text-xs text-slate-500">
+                      Al enviar, también compartimos el resultado de tu simulación.
+                    </p>
+                  </div>
                 </div>
               )}
             </form>
           </FadeInWhenVisible>
 
-          {/* Tips */}
           <FadeInWhenVisible className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <div className="flex items-center gap-3">
               <div className="flex size-12 items-center justify-center rounded-full bg-abp-blue/10 text-abp-blue">

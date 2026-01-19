@@ -57,10 +57,6 @@ export const SegurosVidaSection: FC = () => {
         {/* HERO */}
         <FadeInWhenVisible className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
-            <span className="inline-flex rounded-full bg-white/80 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#4b5563]">
-              Línea B · Seguros de Vida
-            </span>
-
             <h2 className="mt-3 text-3xl font-semibold sm:text-4xl text-[#102545]">
               Seguros de Vida
             </h2>

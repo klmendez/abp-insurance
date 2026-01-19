@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiPhoneCall } from "react-icons/fi";
 import ciclistaHero from "@/assets/especiales/ciclista1.jpg";
 
 export const CyclistsHeroSection = () => {
+  const phones = ["+573208654369", "+573005687950", "+573185170013"];
+
   return (
     <section
       id="inicio"
-      className="relative overflow-hidden py-24 text-white"
+      className="relative min-h-[100svh] overflow-hidden text-white flex items-center"
       style={{
         backgroundImage: `url(${ciclistaHero})`,
         backgroundSize: "cover",
@@ -15,59 +17,64 @@ export const CyclistsHeroSection = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#020b16] via-[#08263d] to-[#1d4768] opacity-90" />
+      {/* Overlays */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#020b16] via-[#061c2e] to-[#0e2a3f] opacity-90" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.12),transparent_60%)]" />
 
-      <div className="relative mx-auto grid max-w-6xl gap-14 px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center">
-        <FadeInWhenVisible className="space-y-7 text-center lg:text-left">
-          <span className="inline-flex items-center justify-center rounded-full bg-white/10 px-4 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.26em] text-white/85 ring-1 ring-white/20">
-            Protección integral para ciclistas y recicladores
+      <div className="relative mx-auto w-full max-w-6xl px-6">
+        <FadeInWhenVisible className="flex flex-col items-center lg:items-start gap-8 text-center lg:text-left">
+          {/* Eyebrow */}
+          <span className="inline-flex items-center justify-center rounded-full bg-white/10 px-4 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.26em] text-white/80 ring-1 ring-white/20">
+            Seguros para ciclistas y recicladores
           </span>
 
-          <div className="space-y-5">
-            <h1 className="text-4xl font-semibold leading-tight text-white md:text-[3rem]">
-              Tu bici, tu ruta y tu bienestar con un solo plan ABP.
-            </h1>
-            <p className="mx-auto max-w-xl text-base text-white/85 lg:mx-0">
-              Conecta coberturas de vida, accidentes y bicicleta en un portafolio flexible.
-              Calcula un valor referencial y agenda una asesoría para ajustar el plan según tu
-              estilo de movilidad.
-            </p>
-          </div>
+          {/* Título */}
+          <h1 className="font-semibold leading-tight text-white text-[clamp(1.3rem,2.4vw,2.4rem)] max-w-2xl">
+            Tu bici, tu ruta y tu bienestar  
+            <br className="hidden sm:block" />
+            con un solo plan ABP.
+          </h1>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+          {/* BOTONES */}
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
             <a
               href="#calculadora"
-              className="inline-flex items-center gap-2 rounded-full bg-[#facc6b] px-6 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[#0b1625] shadow-lg transition hover:bg-[#ffd88b]"
+              className="btn-modern inline-flex items-center gap-2 !bg-abp-gold !text-[#1f2a44]"
             >
               Calcular mi prima
               <FiArrowRight className="size-4" />
             </a>
+
             <Link
               to="/contacto"
-              className="inline-flex items-center gap-2 rounded-full border border-[#facc6b]/70 bg-[#facc6b]/10 px-6 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.26em] text-white transition hover:bg-[#facc6b]/25"
+              className="btn-modern inline-flex items-center gap-2 !bg-white/90 !text-[#1f2a44] ring-1 ring-white/60 hover:!bg-white"
             >
               Hablar con un asesor
             </Link>
           </div>
 
-          <ul className="mx-auto grid max-w-xl gap-3 text-left text-sm text-white/80 lg:mx-0">
-            <li className="flex items-start gap-3">
-              <span className="mt-1 inline-block size-2 rounded-full bg-[#facc6b]" />
-              Valores modularles según tu uso: bici urbana, entrenamientos o envíos en ciudad.
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="mt-1 inline-block size-2 rounded-full bg-[#facc6b]" />
-              Coberturas combinables con asistencias, responsabilidad civil y viajes.
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="mt-1 inline-block size-2 rounded-full bg-[#facc6b]" />
-              Acompañamiento ABP desde la cotización, gestión de siniestros y renovación.
-            </li>
-          </ul>
-        </FadeInWhenVisible>
+          {/* TELÉFONOS */}
+          <div className="flex flex-col items-center lg:items-start gap-3 pt-2">
+            <div className="flex items-center gap-2 font-semibold text-abp-gold text-sm">
+              <FiPhoneCall className="text-lg" />
+              <span>Llámanos</span>
+            </div>
 
-        <div className="hidden lg:block" />
+            <div className="overflow-hidden rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur-sm">
+              <div className="grid grid-cols-1 divide-y divide-white/15">
+                {phones.map((num) => (
+                  <a
+                    key={num}
+                    href={`tel:${num}`}
+                    className="px-4 py-2 text-white/90 text-sm hover:bg-white/10 transition"
+                  >
+                    ({num.replace("+57", "+57 ")})
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </FadeInWhenVisible>
       </div>
     </section>
   );

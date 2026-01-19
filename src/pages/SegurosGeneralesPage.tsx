@@ -3,6 +3,13 @@ import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { SegurosGeneralesSection } from "@/sections/portafolio/SegurosGeneralesSection";
 import generalesHeroImg from "@/assets/generales/generales1.webp";
 
+const segurosGeneralesDefinidos = [
+  "Responsabilidad civil general, contractual y extracontractual.",
+  "Pólizas de cumplimiento exigidas en contratos con entidades públicas y privadas.",
+  "Seguros de automóviles y flotas operativas.",
+  "Seguros todo riesgo para instalaciones, equipos, armamento autorizado y bienes asegurables",
+];
+
 export const SegurosGeneralesPage = () => {
   return (
     <>
@@ -21,7 +28,7 @@ export const SegurosGeneralesPage = () => {
         <div className="relative mx-auto max-w-6xl px-6">
           <FadeInWhenVisible className="space-y-6 text-center lg:max-w-3xl lg:text-left">
             <span className="inline-flex items-center justify-center rounded-full bg-white/10 px-4 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.3em] text-white/85">
-              Línea D · Seguros generales
+              Seguros generales
             </span>
 
             <h1 className="text-3xl font-semibold text-white sm:text-4xl lg:text-[2.6rem]">
@@ -44,24 +51,80 @@ export const SegurosGeneralesPage = () => {
           </FadeInWhenVisible>
         </div>
       </section>
+<section className="bg-[#0d1f33] py-16 text-white">
+  <div className="mx-auto max-w-6xl px-6">
+    <FadeInWhenVisible className="space-y-10 text-center">
+      {/* TÍTULO */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold text-white sm:text-3xl">
+  Líneas de seguros generales
+</h2>
 
+        <p className="mx-auto max-w-3xl text-sm text-white/80 sm:text-base">
+          Coberturas diseñadas para proteger responsabilidad, contratos, activos y operación.
+        </p>
+      </div>
+
+      {/* TARJETAS */}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {/* RESPONSABILIDAD CIVIL */}
+        <div className="group rounded-2xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:bg-white/10">
+          <h3 className="text-base font-semibold text-white">
+            Seguro de Responsabilidad Civil
+          </h3>
+          <p className="mt-3 text-sm leading-relaxed text-white/80">
+            Ampara daños a terceros derivados de responsabilidad civil general,
+            contractual y extracontractual, protegiendo el patrimonio frente a reclamaciones.
+          </p>
+        </div>
+
+        {/* CUMPLIMIENTO */}
+        <div className="group rounded-2xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:bg-white/10">
+          <h3 className="text-base font-semibold text-white">
+            Pólizas de Cumplimiento
+          </h3>
+          <p className="mt-3 text-sm leading-relaxed text-white/80">
+            Garantizan el cumplimiento de obligaciones contractuales exigidas
+            en contratos con entidades públicas y privadas.
+          </p>
+        </div>
+
+        {/* AUTOMÓVILES */}
+        <div className="group rounded-2xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:bg-white/10">
+          <h3 className="text-base font-semibold text-white">
+            Seguros de Automóviles y Flotas
+          </h3>
+          <p className="mt-3 text-sm leading-relaxed text-white/80">
+            Protección integral para vehículos particulares y flotas operativas,
+            con amparos por daños, pérdida, responsabilidad civil y asistencia.
+          </p>
+        </div>
+
+        {/* TODO RIESGO */}
+        <div className="group rounded-2xl border border-white/10 bg-white/5 p-6 text-left transition-all duration-300 hover:-translate-y-1 hover:bg-white/10">
+          <h3 className="text-base font-semibold text-white">
+            Seguro Todo Riesgo
+          </h3>
+          <p className="mt-3 text-sm leading-relaxed text-white/80">
+            Cubre instalaciones, equipos, armamento autorizado y demás bienes asegurables
+            frente a pérdidas, daños y eventos imprevistos.
+          </p>
+        </div>
+      </div>
+
+     
+      <div>
+        <Link to="/contacto" className="btn-modern">
+          Solicitar asesoría en seguros generales
+        </Link>
+      </div>
+    </FadeInWhenVisible>
+  </div>
+      </section>
       <SegurosGeneralesSection />
 
-      <section className="bg-[#0d1f33] py-16 text-white">
-        <div className="mx-auto max-w-5xl space-y-6 px-6 text-center">
-          <FadeInWhenVisible className="space-y-4">
-            <h2 className="text-2xl font-semibold text-white sm:text-3xl">
-              Programas ajustados a cada riesgo
-            </h2>
-            <p className="mx-auto max-w-3xl text-sm text-white/80 sm:text-base">
-              Analizamos tu operación, priorizamos riesgos críticos y construimos un portafolio integral que combina pólizas empresariales, personales y sectoriales.
-            </p>
-            <Link to="/contacto" className="btn-modern">
-              Construir mi programa con ABP
-            </Link>
-          </FadeInWhenVisible>
-        </div>
-      </section>
+      
+
     </>
   );
 };

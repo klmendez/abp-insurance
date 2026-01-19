@@ -64,7 +64,7 @@ export const RecicladoresPage = () => {
           <FadeInWhenVisible className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:items-center">
             <div className="space-y-6 text-center lg:text-left">
               <span className="inline-flex items-center justify-center rounded-full bg-white/10 px-4 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.3em] text-white/85">
-                Línea C · Seguros especiales
+                Seguros especiales
               </span>
 
               <h1 className="text-3xl font-semibold text-white sm:text-4xl lg:text-[2.6rem]">

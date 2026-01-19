@@ -78,9 +78,6 @@ export const SegurosRiesgosLaboralesSection: FC = () => {
           <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             {/* Texto */}
             <div className="text-center lg:text-left">
-              <span className="inline-flex items-center justify-center rounded-full bg-white/5 px-4 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-white ring-1 ring-white/20">
-                Línea A · Riesgos Laborales
-              </span>
 
               <h2 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">
                 Seguros de Riesgos Laborales
