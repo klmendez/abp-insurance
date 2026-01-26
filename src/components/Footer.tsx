@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import footerBg from "../bg/footer.png";
+import footerBg from "@/assets/bg/footer.png";
 
 const WHATSAPP_NUMBER = "573208654369";
 
@@ -68,8 +68,7 @@ export const Footer = () => {
                   </Link>
                 </div>
               </div>
-
-              {/* Contacto */}
+              
               <div className="space-y-3">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-abp-gold">
                   Contacto
@@ -81,8 +80,6 @@ export const Footer = () => {
                   >
                     apbsegurosltda@gmail.com
                   </a>
-
-                  {/* ✅ WhatsApp con api.whatsapp.com */}
                   <a
                     href={buildWhatsAppLink(
                       "Hola, quiero hablar sobre soluciones ABP para mi empresa y mi familia."
