@@ -4,13 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "index:docs": "node scripts/build-index.mjs",
-    "build": "npx tsc -b && vite build",
-    "preview": "vite preview",
-    "build:with-index": "npm run index:docs && npm run build",
-    "lint": "eslint \"src/**/*.{ts,tsx}\""
-  },
+  "dev": "vite",
+  "index:docs": "node scripts/build-index.mjs",
+  "build": "vite build",
+  "preview": "vite preview",
+  "build:with-index": "npm run index:docs && npm run build",
+  "lint": "eslint \"src/**/*.{ts,tsx}\"",
+  "typecheck": "tsc --noEmit"
+}
+,
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@heroicons/react": "^2.1.3",
