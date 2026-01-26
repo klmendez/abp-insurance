@@ -14,7 +14,7 @@ type TeamMember = {
 const mainTeam = [
   {
     name: "Maria Cecilia Arboleda Simmonds",
-    role: "Ejecutiva comercial",
+    role: "Diseñadora y Ejecutiva comercial",
     focus:
       "Acompaña a los clientes en procesos comerciales, análisis de necesidades y estructuración de propuestas empresariales.",
     image: MariaImg,

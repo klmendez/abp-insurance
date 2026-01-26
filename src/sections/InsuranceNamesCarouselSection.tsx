@@ -2,6 +2,7 @@ import { useMemo, useState, useEffect, type FC } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
+import { Link } from "react-router-dom";
 
 const insuranceLines = [
   {
@@ -42,6 +43,9 @@ const buildLoopedList = (list: readonly (typeof insuranceLines)[number][]) => [
 const loopedLines = buildLoopedList(insuranceLines);
 
 const AUTO_ADVANCE_MS = 5200;
+
+// ✅ Link animable con Framer Motion
+const MotionLink = motion(Link);
 
 export const InsuranceNamesCarouselSection: FC = () => {
   const [cursor, setCursor] = useState(VISIBLE_COUNT);
@@ -131,24 +135,28 @@ export const InsuranceNamesCarouselSection: FC = () => {
                         <li
                           key={item.label + index}
                           className={`
-                            flex min-w-[140px] max-w-[220px] justify-center 
+                            flex min-w-[140px] max-w-[220px] justify-center
                             transition-all duration-300
                             ${isActive ? "opacity-100 scale-100" : "opacity-60 scale-95"}
                           `}
                         >
-                          <motion.a
+                          <MotionLink
                             whileHover={{ scale: 1.14 }}
-                            href={item.href}
+                            to={item.href}
                             className={`
-                              w-full px-5 py-3 text-center uppercase 
+                              w-full px-5 py-3 text-center uppercase
                               text-[0.72rem] font-semibold tracking-[0.22em]
                               border-b-2 transition-all
-                              ${isActive ? "border-[#d4af37] text-[#153b71]" : "border-transparent text-[#0d1f33]/70"}
+                              ${
+                                isActive
+                                  ? "border-[#d4af37] text-[#153b71]"
+                                  : "border-transparent text-[#0d1f33]/70"
+                              }
                               hover:text-[#d4af37]
                             `}
                           >
                             {item.label}
-                          </motion.a>
+                          </MotionLink>
                         </li>
                       );
                     })}

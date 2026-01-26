@@ -40,10 +40,10 @@ export const AboutPage: FC = () => {
             className="
               relative
               mx-auto w-full max-w-7xl
-              px-5 sm:px-6
-              pt-24 sm:pt-32
+              px-10 sm:px-6
+pt-[96px] sm:pt-32
               min-h-[100svh]
-              flex items-center
+              flex items-start sm:items-center
             "
           >
             <div className="relative z-20 w-full max-w-xl mx-auto sm:mx-0">
@@ -56,7 +56,7 @@ export const AboutPage: FC = () => {
                     Sobre nosotros
                   </span>
 
-                  <h1 className="mx-auto sm:mx-0 max-w-[36rem] text-white font-semibold leading-tight text-balance text-[clamp(1.25rem,2vw,2.1rem)] text-center sm:text-left">
+                  <h1 className="mx-auto sm:mx-0 max-w-[24rem] text-white font-semibold leading-tight text-balance text-[clamp(1.25rem,2vw,2.1rem)] text-center sm:text-left">
                     Diseñamos coberturas a la medida para personas y empresas
                   </h1>
 
@@ -65,7 +65,7 @@ export const AboutPage: FC = () => {
                   </p>
                 </div>
 
-                <div className="mt-8 flex flex-col items-center sm:items-start gap-3">
+                <div className="mt-2 flex flex-col items-center sm:items-start gap-3">
                   <div className="flex items-center gap-2 font-semibold text-abp-gold text-[clamp(0.85rem,1vw,1rem)]">
                     <FiPhoneCall className="text-lg sm:text-xl" />
                     <span>Llama ya</span>
@@ -144,7 +144,7 @@ export const AboutPage: FC = () => {
                 draggable={false}
                 className="
                   select-none object-contain
-                  w-[95%]
+                  w-[80%]
                   max-w-none
 
                   max-h-[50svh]

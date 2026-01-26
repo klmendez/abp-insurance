@@ -7,14 +7,17 @@ const supportTeam = [
     role: "Ing. Industrial – Especialista en SSST",
     focus:
       "Diseña e implementa estrategias de seguridad y salud en el trabajo, garantizando cumplimiento normativo y bienestar en cada operación.",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
     name: "Angely C. Realpe A.",
     role: "Psicóloga – Especialista en Gerencia Educativa",
     focus:
       "Acompaña procesos de salud mental y rutas psicosociales, articulando programas educativos que fortalecen el clima laboral y la prevención.",
+    image: "https://randomuser.me/api/portraits/women/65.jpg",
   },
 ] as const;
+
 
 export const SupportTeamSection: FC = () => {
   return (
@@ -46,16 +49,15 @@ export const SupportTeamSection: FC = () => {
               className="flex flex-col items-center text-center"
             >
               {/* FOTO */}
-              <div className="mb-5 h-40 w-40 rounded-full bg-[#e1e9fb]">
-                {/* 
-                Si agregas fotos:
-                <img
-                  src="..."
-                  alt={member.name}
-                  className="h-full w-full rounded-full object-cover"
-                /> 
-                */}
-              </div>
+              <div className="mb-5 h-40 w-40 overflow-hidden rounded-full bg-[#e1e9fb]">
+  <img
+    src={member.image}
+    alt={member.name}
+    className="h-full w-full object-cover"
+    loading="lazy"
+  />
+</div>
+
 
               {/* INFO */}
               <h3 className="text-lg font-semibold text-[#1f3258]">

@@ -15,7 +15,7 @@ import { RiesgosLaboralesPage } from "./pages/RiesgosLaboralesPage";
 import { SegurosVidaPage } from "./pages/SegurosVidaPage";
 import { SegurosGeneralesPage } from "./pages/SegurosGeneralesPage";
 import { RecicladoresPage } from "./pages/RecicladoresPage";
-import logoFavicon from "./assets/Logo profesional parz.png";
+import logoFavicon from "./assets/Logo profesional.webp";
 
 const App = () => {
   useEffect(() => {

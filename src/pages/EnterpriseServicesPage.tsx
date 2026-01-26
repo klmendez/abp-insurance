@@ -466,10 +466,7 @@ export const EnterpriseServicesPage = () => {
         </div>
       </section>
 
-      {/* ================================== */}
-      {/* SECCIÓN ORIGINAL (aquí puede estar “Agendar una conversación”) */}
-      {/* ================================== */}
-      <EnterpriseServicesSection />
+     
     </>
   );
 };

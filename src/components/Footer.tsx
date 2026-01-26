@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import footerBg from "../bg/Footer copia.png";
+import footerBg from "../bg/all.png";
 
 export const Footer = () => {
   const year = new Date().getFullYear();
@@ -22,8 +22,8 @@ export const Footer = () => {
         className="
           absolute inset-0
           bg-gradient-to-b
-          from-black/75
-          via-black/65
+          from-black/90
+          via-black/70
           to-black/85
         "
         aria-hidden="true"
@@ -59,14 +59,12 @@ export const Footer = () => {
                     Portafolio
                   </Link>
                   <Link to="/servicios-empresariales" className={linkClass}>
-                    Servicios empresariales
+                    Servicios complementarios
                   </Link>
-                  <Link to="/ciclistas" className={linkClass}>
-                    Ciclistas
+                  <Link to="/portafolio#linea-seguros-especiales" className={linkClass}>
+                    Seguros Especiales
                   </Link>
-                  <Link to="/aliados" className={linkClass}>
-                    Aliados
-                  </Link>
+                  
                 </div>
               </div>
 
