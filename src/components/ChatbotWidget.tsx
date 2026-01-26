@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FiMessageCircle, FiSend, FiX } from "react-icons/fi";
 import docsIndexData from "../../netlify/functions/data/docs_index.json";
-import logoV from "../assets/Logo profesional parz.png";
+import logoV from "../assets/Logo profesional.webp";
 
 type Role = "user" | "assistant";
 

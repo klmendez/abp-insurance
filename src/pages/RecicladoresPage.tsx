@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
-import recicladoresHeroImg from "@/assets/especiales/Recicladores.jpeg";
+import recicladoresHeroImg from "@/assets/especiales/Recicladores.webp";
 
 const recicladoresBullets = [
   "Seguro especial para recicladores y recuperadores de oficio.",

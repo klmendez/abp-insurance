@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { SegurosRiesgosLaboralesSection } from "@/sections/portafolio/SegurosRiesgosLaboralesSection";
-import riesgosHeroImg from "@/assets/laborales/trabajadores2.jpg";
+import riesgosHeroImg from "@/assets/laborales/trabajadores2.webp";
 
 export const RiesgosLaboralesPage = () => {
   return (

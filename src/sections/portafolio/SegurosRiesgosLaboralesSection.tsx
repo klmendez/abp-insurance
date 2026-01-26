@@ -1,7 +1,7 @@
 import { type FC, useEffect, useState } from "react";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { FiCheckCircle } from "react-icons/fi";
-import trabajadoresImg from "@/assets/laborales/trabajadores2.jpg";
+import trabajadoresImg from "@/assets/laborales/trabajadores2.webp";
 import { CustomButton } from "@/components/CustomButton";
 
 const summaryHighlights = [

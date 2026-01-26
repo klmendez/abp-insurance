@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { SegurosVidaSection } from "@/sections/portafolio/SegurosVidaSection";
-import vidaHeroImg from "@/assets/vida/persona-familia.jpg";
+import vidaHeroImg from "@/assets/vida/persona-familia.webp";
 
 export const SegurosVidaPage = () => {
   return (

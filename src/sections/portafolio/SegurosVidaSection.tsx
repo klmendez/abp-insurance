@@ -1,6 +1,6 @@
 import { type FC, useState } from "react";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
-import familiaImg from "@/assets/vida/persona-familia.jpg";
+import familiaImg from "@/assets/vida/persona-familia.webp";
 import { CustomButton } from "@/components/CustomButton";
 
 const benefits = [
@@ -50,11 +50,9 @@ export const SegurosVidaSection: FC = () => {
       id="linea-seguros-vida"
       className="relative overflow-hidden bg-gradient-to-br from-[#f5f7ff] via-white to-[#e3ecf8] py-12 sm:py-14"
     >
-      {/* fondo suave */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(15,23,42,0.04),transparent_60%),radial-gradient(circle_at_80%_80%,rgba(59,130,246,0.09),transparent_60%)]" />
 
       <div className="relative mx-auto max-w-6xl px-6">
-        {/* HERO */}
         <FadeInWhenVisible className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <h2 className="mt-3 text-3xl font-semibold sm:text-4xl text-[#102545]">

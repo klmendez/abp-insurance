@@ -9,9 +9,9 @@ import {
   FiUserCheck,
 } from "react-icons/fi";
 
-import serviciosEmpresarialesImg from "../assets/complementarios/servicios-empresariales1.jpg";
+import serviciosEmpresarialesImg from "../assets/complementarios/servicios-empresariales1.webp";
 
-const WHATSAPP_NUMBER = "573135707125";
+const WHATSAPP_NUMBER = "573208654369";
 
 const buildWhatsAppLink = (text: string) =>
   `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(

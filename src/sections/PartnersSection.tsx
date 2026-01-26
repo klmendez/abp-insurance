@@ -2,11 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-import positivaLogo from "@/assets/aliados/logo-positiva-naranja.png";
-import axaLogo from "@/assets/aliados/axa.png";
-import segurosEstadoLogo from "@/assets/aliados/seguro_del_estado.png";
-import segurosMundialLogo from "@/assets/aliados/seguros_mundial.png";
-import previsoraLogo from "@/assets/aliados/Previsora.png";
+import positivaLogo from "@/assets/aliados/logo-positiva-naranja.webp";
+import axaLogo from "@/assets/aliados/axa.webp";
+import segurosEstadoLogo from "@/assets/aliados/seguro_del_estado.webp";
+import segurosMundialLogo from "@/assets/aliados/seguros_mundial.webp";
+import previsoraLogo from "@/assets/aliados/Previsora.webp";
 
 const partnerLogos = [
   { name: "Previsora", src: previsoraLogo },

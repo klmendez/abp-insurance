@@ -25,15 +25,13 @@ const benefitSlides = [
   },
 ];
 
-const WHATSAPP_NUMBER = "573135707125";
+const WHATSAPP_NUMBER = "573208654369";
 const buildWhatsAppLink = (text: string) =>
   `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(
     text
   )}`;
 
 const NAVBAR_OFFSET = 120;
-
-// ✅ Ruta destino (ajústala a la ruta real de tu app)
 const COMPLEMENTARIOS_ROUTE = "/servicios-empresariales";
 
 export const EnterpriseServicesSection = () => {

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { FiArrowRight, FiPhoneCall } from "react-icons/fi";
-import ciclistaHero from "@/assets/especiales/ciclista1.jpg";
+import ciclistaHero from "@/assets/especiales/ciclista1.webp";
 
 export const CyclistsHeroSection = () => {
   const phones = ["+573208654369", "+573005687950", "+573185170013"];

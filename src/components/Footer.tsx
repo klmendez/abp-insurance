@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import footerBg from "@/assets/bg/footer.png";
+import footerBg from "@/assets/bg/footer.webp";
 
 const WHATSAPP_NUMBER = "573208654369";
 

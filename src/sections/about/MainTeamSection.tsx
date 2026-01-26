@@ -1,8 +1,8 @@
 import { type FC } from "react";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
-import AndresImg from "@/assets/personas/Andres.jpeg";
-import LuisImg from "@/assets/personas/Luis.jpeg";
-import MariaImg from "@/assets/personas/Maria.jpeg";
+import AndresImg from "@/assets/personas/Andres.webp";
+import LuisImg from "@/assets/personas/Luis.webp";
+import MariaImg from "@/assets/personas/Maria.webp";
 
 type TeamMember = {
   name: string;

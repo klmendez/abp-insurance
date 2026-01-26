@@ -6,7 +6,7 @@ import { MainTeamSection } from "@/sections/about/MainTeamSection";
 import { SupportTeamSection } from "@/sections/about/SupportTeamSection";
 import { PartnersSection } from "@/sections/PartnersSection";
 
-import allImg from "../bg/all.png";
+import allImg from "../bg/all.webp";
 
 export const AboutPage: FC = () => {
   const phones = ["+573208654369", "+573005687950", "+573185170013"];
@@ -41,7 +41,7 @@ export const AboutPage: FC = () => {
               relative
               mx-auto w-full max-w-7xl
               px-10 sm:px-6
-pt-[96px] sm:pt-32
+              pt-[96px] sm:pt-32
               min-h-[100svh]
               flex items-start sm:items-center
             "

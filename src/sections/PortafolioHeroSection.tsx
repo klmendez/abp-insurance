@@ -4,11 +4,11 @@ import { motion } from "framer-motion";
 import { FadeInWhenVisible } from "@/components/FadeInWhenVisible";
 import { FiPhoneCall } from "react-icons/fi";
 
-import riesgosLaboralesImg from "../assets/laborales/trabajadores.jpg";
-import vidaImg from "../assets/vida/vida1.jpg";
-import generalesImg from "../assets/generales/generales1.jpg";
-import ciclista1 from "../assets/especiales/ciclista1.jpg";
-import serviciosEmpresarialesImg from "../assets/complementarios/servicios-empresariales1.jpg";
+import riesgosLaboralesImg from "../assets/laborales/trabajadores.webp";
+import vidaImg from "../assets/vida/vida1.webp";
+import generalesImg from "../assets/generales/generales1.webp";
+import ciclista1 from "../assets/especiales/ciclista1.webp";
+import serviciosEmpresarialesImg from "../assets/complementarios/servicios-empresariales1.webp";
 
 type Slide = {
   id: string;
