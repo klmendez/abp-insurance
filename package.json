@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "index:docs": "node scripts/build-index.mjs",
-    "build": "tsc -b && vite build",
+    "build": "npx tsc -b && vite build",
     "preview": "vite preview",
     "build:with-index": "npm run index:docs && npm run build",
     "lint": "eslint \"src/**/*.{ts,tsx}\""
@@ -38,7 +38,7 @@
     "eslint-plugin-tailwindcss": "^3.15.1",
     "postcss": "^8.4.39",
     "tailwindcss": "^3.4.4",
-    "typescript": "^5.4.5",
+    "typescript": "^5.9.3",
     "vite": "^6.4.1"
   }
 }
