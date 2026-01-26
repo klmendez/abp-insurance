@@ -29,7 +29,7 @@ const portfolioBlocks: PortfolioBlock[] = [
     description:
       "Acompañamos a las empresas en afiliación, prevención y atención de accidentes y enfermedades laborales, fortaleciendo tu gestión en SG-SST.",
     icon: FiActivity,
-    image: "/portafolio-arl.jpg", // cambia por tu imagen real
+    image: "/portafolio-arl.webp", // cambia por tu imagen real
     subcategories: [
       {
         label: "Gestión de afiliación",
@@ -70,7 +70,7 @@ const portfolioBlocks: PortfolioBlock[] = [
     description:
       "Soluciones de vida que protegen proyectos, responsabilidades y a quienes más importan: personas, familias y equipos de trabajo.",
     icon: FiUsers,
-    image: "/portafolio-vida.jpg",
+    image: "/portafolio-vida.webp",
     subcategories: [
       {
         label: "Vida personal",
@@ -101,7 +101,7 @@ const portfolioBlocks: PortfolioBlock[] = [
     description:
       "Protegemos activos, operación y proyectos de empresas, personas y sectores específicos con un portafolio de seguros generales.",
     icon: FiShield,
-    image: "/portafolio-generales.jpg",
+    image: "/portafolio-generales.webp",
     subcategories: [
       {
         label: "Empresas",
@@ -142,7 +142,7 @@ const portfolioBlocks: PortfolioBlock[] = [
     description:
       "Portafolio especializado para ciclistas recreativos, urbanos y deportivos: vida, accidentes, bicicleta y viajes a eventos y travesías.",
     icon: FiLayers,
-    image: "/portafolio-ciclistas.jpg",
+    image: "/portafolio-ciclistas.webp",
     subcategories: [
       {
         label: "Vida ciclista",

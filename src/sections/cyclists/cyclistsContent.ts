@@ -8,8 +8,13 @@ import {
   FiMapPin,
   FiShield,
   FiTrendingUp,
+  FiAward,
+  FiUser,
 } from "react-icons/fi";
 
+/* =========================
+   NAV
+========================= */
 export type CyclistNavLink = {
   label: string;
   href: string;
@@ -26,6 +31,11 @@ export const cyclistsNavLinks: CyclistNavLink[] = [
   { label: "Contáctanos", href: "#contacto", icon: FiMapPin },
 ];
 
+/* =========================
+   HERO
+   - Sin imágenes externas
+   - Visual por icono + gradiente
+========================= */
 export type HeroStat = {
   label: string;
   value: string;
@@ -37,9 +47,27 @@ export type CyclistHeroSlide = {
   title: string;
   description: string;
   highlight: string;
-  image: string;
+
+  /**
+   * NUEVO: reemplaza image
+   * Úsalo en el UI como “badge/icon” del slide.
+   */
+  visualIcon: IconType;
+
+  /**
+   * NUEVO: gradiente sugerido para background del slide o tarjeta.
+   * Úsalo o ignóralo según tu diseño.
+   */
+  gradient: string;
+
   ctaLabel: string;
+
+  /**
+   * RECOMENDACIÓN:
+   * Como tu sitio navega por secciones (#...), usamos anchors y no rutas tipo "/contacto".
+   */
   ctaTo: string;
+
   stats: HeroStat[];
 };
 
@@ -51,9 +79,10 @@ export const heroSlides: CyclistHeroSlide[] = [
     description:
       "Coberturas que acompañan tu bici en la ciudad: robos, accidentes y asistencias en vía para llegar siempre seguro.",
     highlight: "Combo Vida + Bicicleta + Traslados en ciudad",
-    image: "/persona.png",
+    visualIcon: FiCompass,
+    gradient: "from-slate-900/80 via-slate-800/60 to-slate-900/80",
     ctaLabel: "Quiero asesoría urbana",
-    ctaTo: "/contacto",
+    ctaTo: "#contacto",
     stats: [
       { label: "Cobertura robo", value: "Hasta 25 M" },
       { label: "Asistencias", value: "24/7" },
@@ -67,9 +96,10 @@ export const heroSlides: CyclistHeroSlide[] = [
     description:
       "Planes MTB que incluyen asistencia en montaña, rescate y protección de tu bici durante entrenamientos o travesías.",
     highlight: "Seguro de Accidentes + Bicicleta + Viaje",
-    image: "/persona.png",
+    visualIcon: FiActivity,
+    gradient: "from-emerald-950/70 via-slate-900/60 to-slate-900/80",
     ctaLabel: "Arma mi plan MTB",
-    ctaTo: "/contacto",
+    ctaTo: "#contacto",
     stats: [
       { label: "Eventos", value: "+120" },
       { label: "Traslados", value: "+180 km" },
@@ -83,9 +113,10 @@ export const heroSlides: CyclistHeroSlide[] = [
     description:
       "Declara tus eventos y recibe respaldo en viajes, responsabilidad civil y reembolso de inscripción por lesión.",
     highlight: "Seguro de Viaje + Responsabilidad Civil",
-    image: "/persona.png",
+    visualIcon: FiAward,
+    gradient: "from-indigo-950/70 via-slate-900/60 to-slate-900/80",
     ctaLabel: "Planifica tu temporada",
-    ctaTo: "/contacto",
+    ctaTo: "#contacto",
     stats: [
       { label: "Países", value: "+30" },
       { label: "Cobertura RC", value: "Hasta 200 k" },
@@ -94,6 +125,9 @@ export const heroSlides: CyclistHeroSlide[] = [
   },
 ];
 
+/* =========================
+   PRODUCTS
+========================= */
 export type ProductBlock = {
   id: string;
   badge: string;
@@ -152,6 +186,9 @@ export const productBlocks: ProductBlock[] = [
   },
 ];
 
+/* =========================
+   BUNDLES
+========================= */
 export type ProductBundle = {
   id: string;
   title: string;
@@ -199,6 +236,11 @@ export const productBundles: ProductBundle[] = [
   },
 ];
 
+/* =========================
+   TESTIMONIALS
+   - Sin avatars (sin imágenes externas)
+   - Visual por icono + etiqueta
+========================= */
 export type Testimonial = {
   id: string;
   name: string;
@@ -206,7 +248,17 @@ export type Testimonial = {
   discipline: string;
   message: string;
   highlight: string;
-  avatar?: string;
+
+  /**
+   * NUEVO: reemplaza avatar
+   * Úsalo como icono del testimonio o “chip”.
+   */
+  visualIcon?: IconType;
+
+  /**
+   * NUEVO: opcional, iniciales para un avatar de texto (si lo quieres en UI)
+   */
+  initials?: string;
 };
 
 export const testimonials: Testimonial[] = [
@@ -218,7 +270,8 @@ export const testimonials: Testimonial[] = [
     message:
       "Uso la bici para todo en Bogotá. Con ABP me siento tranquila: cubren robo, accidentes y hasta la asistencia cuando pincho en la noche.",
     highlight: "Recreativo / Urbano",
-    avatar: "/testimonial-laura.jpg",
+    visualIcon: FiUser,
+    initials: "LM",
   },
   {
     id: "andres",
@@ -228,7 +281,8 @@ export const testimonials: Testimonial[] = [
     message:
       "Entreno grupos de MTB cada semana. El plan trail me cubre en entrenos y travesías, y mis alumnos también acceden a coberturas flexibles.",
     highlight: "Trail & MTB",
-    avatar: "/testimonial-andres.jpg",
+    visualIcon: FiActivity,
+    initials: "AQ",
   },
   {
     id: "camila",
@@ -238,10 +292,14 @@ export const testimonials: Testimonial[] = [
     message:
       "Competí en tres países este año. ABP me ayudó a declarar las carreras y a tener respaldo en viaje y responsabilidad civil.",
     highlight: "Competencias",
-    avatar: "/testimonial-camila.jpg",
+    visualIcon: FiAward,
+    initials: "CR",
   },
 ];
 
+/* =========================
+   COMPARISON
+========================= */
 export type ComparisonFeature = {
   label: string;
   vida: string;
@@ -276,6 +334,9 @@ export const comparisonFeatures: ComparisonFeature[] = [
   },
 ];
 
+/* =========================
+   CALCULATOR HINTS
+========================= */
 export type CalculatorHint = {
   title: string;
   description: string;
@@ -299,6 +360,9 @@ export const calculatorHints: CalculatorHint[] = [
   },
 ];
 
+/* =========================
+   FAQ
+========================= */
 export const faqItems = [
   {
     question: "¿Puedo asegurar mi bici y también mi vida como ciclista?",
