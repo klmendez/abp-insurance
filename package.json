@@ -6,8 +6,8 @@
   "scripts": {
   "dev": "vite",
   "index:docs": "node scripts/build-index.mjs",
-  "build": "vite build",
-  "preview": "vite preview",
+"build": "node ./node_modules/vite/bin/vite.js build"
+,  "preview": "vite preview",
   "build:with-index": "npm run index:docs && npm run build",
   "lint": "eslint \"src/**/*.{ts,tsx}\"",
   "typecheck": "tsc --noEmit"
