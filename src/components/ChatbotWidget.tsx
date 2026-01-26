@@ -960,7 +960,7 @@ export const ChatbotWidget = () => {
           Fuente: "Chatbot ABP",
         };
 
-        await fetch("https://formsubmit.co/ajax/klmendez@unimayor.edu.co", {
+        await fetch("https://formsubmit.co/ajax/apbsegurosltda@gmail.com", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),

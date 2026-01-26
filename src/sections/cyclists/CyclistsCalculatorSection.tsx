@@ -233,7 +233,7 @@ export const CyclistsCalculatorSection = () => {
       formData.append("_template", "table");
       formData.append("_captcha", "false");
 
-      const response = await fetch("https://formsubmit.co/klmendez@unimayor.edu.co", {
+      const response = await fetch("https://formsubmit.co/apbsegurosltda@gmail.com", {
         method: "POST",
         body: formData,
       });

@@ -1,5 +1,12 @@
 import { Link } from "react-router-dom";
-import footerBg from "../bg/all.png";
+import footerBg from "../bg/footer.png";
+
+const WHATSAPP_NUMBER = "573208654369";
+
+const buildWhatsAppLink = (text: string) =>
+  `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(
+    text
+  )}`;
 
 export const Footer = () => {
   const year = new Date().getFullYear();
@@ -9,15 +16,11 @@ export const Footer = () => {
 
   return (
     <footer className="relative mt-16 text-white">
-
-      {/* Imagen de fondo */}
       <div
-        className="absolute inset-0 bg-cover bg-no-repeat bg-[center_70%]"
+        className="absolute inset-0 bg-cover bg-no-repeat bg-[center_100%]"
         style={{ backgroundImage: `url(${footerBg})` }}
         aria-hidden="true"
       />
-
-      {/* Overlay oscuro (SIN azul) */}
       <div
         className="
           absolute inset-0
@@ -31,11 +34,9 @@ export const Footer = () => {
 
       <div className="relative z-10">
 
-        {/* Contenido principal */}
         <div className="mx-auto max-w-6xl px-6 py-10 md:py-12">
           <div className="flex flex-col gap-10 md:flex-row md:justify-between">
-
-            {/* Marca */}
+   
             <div className="max-w-md space-y-3">
               <p className="text-sm md:text-base font-semibold tracking-[0.18em] uppercase text-abp-gold">
                 ABP AGENCIA DE SEGUROS LTDA.
@@ -46,9 +47,7 @@ export const Footer = () => {
               </p>
             </div>
 
-            {/* Navegación + contacto */}
             <div className="flex flex-wrap gap-10 text-sm md:gap-16">
-
               {/* Navegación */}
               <div className="space-y-3">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-abp-gold">
@@ -61,10 +60,12 @@ export const Footer = () => {
                   <Link to="/servicios-empresariales" className={linkClass}>
                     Servicios complementarios
                   </Link>
-                  <Link to="/portafolio#linea-seguros-especiales" className={linkClass}>
+                  <Link
+                    to="/portafolio#linea-seguros-especiales"
+                    className={linkClass}
+                  >
                     Seguros Especiales
                   </Link>
-                  
                 </div>
               </div>
 
@@ -74,23 +75,30 @@ export const Footer = () => {
                   Contacto
                 </p>
                 <div className="flex flex-col gap-1.5">
-                  <a href="mailto:abpseguros@gmail.com" className={linkClass}>
-                    abpseguros@gmail.com
-                  </a>
                   <a
-                    href="https://wa.me/57"
+                    href="mailto:apbsegurosltda@gmail.com"
+                    className={linkClass}
+                  >
+                    apbsegurosltda@gmail.com
+                  </a>
+
+                  {/* ✅ WhatsApp con api.whatsapp.com */}
+                  <a
+                    href={buildWhatsAppLink(
+                      "Hola, quiero hablar sobre soluciones ABP para mi empresa y mi familia."
+                    )}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={linkClass}
                   >
                     WhatsApp · Asesoría sin costo
                   </a>
+
                   <a href="#contacto" className={linkClass}>
                     Formulario de contacto
                   </a>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -111,7 +119,6 @@ export const Footer = () => {
             </div>
           </div>
         </div>
-
       </div>
     </footer>
   );

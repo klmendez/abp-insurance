@@ -16,7 +16,6 @@ export const ContactSection = () => {
   return (
     <section id="contacto" className="bg-[#f4f6ff] py-16">
       <div className="mx-auto max-w-6xl px-6">
-        {/* HEADER GENERAL */}
         <FadeInWhenVisible className="mx-auto max-w-3xl text-center">
           <span className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-abp-blue/80">
             Contacto
@@ -31,7 +30,6 @@ export const ContactSection = () => {
         </FadeInWhenVisible>
 
         <div className="mt-10 grid gap-10 lg:grid-cols-[0.9fr,1.1fr] items-start">
-          {/* COLUMNA IZQUIERDA */}
           <FadeInWhenVisible className="rounded-2xl border border-abp-blue/15 bg-white/90 px-6 py-6 shadow-sm md:px-7 md:py-7">
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.26em] text-abp-blue/80">
               Atención directa
@@ -43,8 +41,6 @@ export const ContactSection = () => {
               Podemos asesorarte en seguros de vida, riesgos laborales, seguros
               generales y portafolios especializados para ciclistas.
             </p>
-
-            {/* LÍNEAS DIRECTAS */}
             <div className="mt-5 space-y-3 text-sm text-abp-blue">
               <div className="flex items-center gap-3">
                 <FiPhoneCall className="h-5 w-5 text-abp-gold" />
@@ -78,13 +74,9 @@ export const ContactSection = () => {
                 <a
                   href="mailto:apbsegurosltda@gmail.com"
                   className="hover:text-abp-blue/80 break-all"
-                >
-                  apbsegurosltda@gmail.com
-                </a>
+                >apbsegurosltda@gmail.com</a>
               </div>
             </div>
-
-            {/* UBICACIÓN */}
             <div className="mt-5 border-t border-abp-blue/10 pt-4 text-sm text-slate-700">
               <div className="flex items-start gap-3">
                 <FiMapPin className="mt-0.5 h-5 w-5 text-abp-gold" />
@@ -94,20 +86,16 @@ export const ContactSection = () => {
                 </p>
               </div>
             </div>
-
             <p className="mt-4 text-[0.8rem] text-slate-600">
               También podemos coordinar una reunión virtual o una visita a tu
               empresa para revisar tu situación actual.
             </p>
           </FadeInWhenVisible>
-
-          {/* COLUMNA DERECHA: FORMULARIO */}
           <FadeInWhenVisible className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white px-6 py-7 shadow-md md:px-8 md:py-8">
             <div
               className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(37,99,235,0.12),_transparent_60%)]"
               aria-hidden
             />
-
             <header className="space-y-2">
               <p className="text-sm font-semibold text-abp-blue">
                 Envíanos un mensaje
@@ -116,14 +104,11 @@ export const ContactSection = () => {
                 Déjanos tus datos y una breve descripción de lo que necesitas.
               </p>
             </header>
-
-            {/* FORMULARIO: ENVÍO VIA FORMSUBMIT */}
             <form
-              action="https://formsubmit.co/klmendez@unimayor.edu.co"
+              action="https://formsubmit.co/apbsegurosltda@gmail.com"
               method="POST"
               className="mt-6 grid gap-5 md:grid-cols-2"
             >
-              {/* Configuración de FormSubmit */}
               <input
                 type="hidden"
                 name="_subject"
