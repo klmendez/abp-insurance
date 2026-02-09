@@ -1,4 +1,4 @@
-// src/pages/CyclistsPage.tsx
+
 import { CyclistsHeroSection } from "@/sections/cyclists/CyclistsHeroSection";
 import { CyclistsCalculatorSection } from "@/sections/cyclists/CyclistsCalculatorSection";
 import { faqItems } from "@/sections/cyclists/cyclistsContent";

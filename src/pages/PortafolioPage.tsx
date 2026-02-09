@@ -46,8 +46,7 @@ export const PortafolioPage = () => {
       <SegurosGeneralesSection />
       
       <EnterpriseServicesSection />
-      {/* Aquí puedes añadir un pequeño hero específico si quieres */}
-      {/* El proceso ABP también encaja bien aquí */}
+    
       <ProcessSection />
     </>
   );
