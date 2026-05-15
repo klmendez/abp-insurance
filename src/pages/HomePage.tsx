@@ -1,4 +1,3 @@
-// src/pages/HomePage.tsx
 import { HeroSection } from "../sections/HeroSection";
 import { PrimaryCallToActionSection } from "../sections/PrimaryCallToActionSection";
 import { InsuranceNamesCarouselSection } from "../sections/InsuranceNamesCarouselSection";
@@ -7,6 +6,7 @@ import { ContactSection } from "../sections/ContactSection";
 import { ServicesSection } from "../sections/ServicesSection";
 import { PartnersSection } from "../sections/PartnersSection";
 import { ComplexityComparisonSection } from "../sections/ComplexityComparisonSection";
+import { SegurosGeneralesSections } from "../sections/SegurosGeneralesSections";
 
 export const HomePage = () => {
   return (
@@ -14,6 +14,7 @@ export const HomePage = () => {
       <HeroSection />
       <InsuranceNamesCarouselSection />
       <ServicesSection />
+      <SegurosGeneralesSections />
 
       <PartnersSection />
       <ComplexityComparisonSection />
