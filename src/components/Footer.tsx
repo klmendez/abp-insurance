@@ -15,7 +15,7 @@ export const Footer = () => {
     "text-white/80 no-underline visited:text-white/80 hover:text-abp-gold focus:text-abp-gold active:text-abp-gold transition";
 
   return (
-    <footer className="relative mt-16 text-white">
+    <footer className="relative text-white">
       <div
         className="absolute inset-0 bg-cover bg-no-repeat bg-[center_100%]"
         style={{ backgroundImage: `url(${footerBg})` }}
