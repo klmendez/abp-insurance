@@ -8,15 +8,30 @@ import InsuredPeopleTable from "@/components/InsuredPeopleTable";
 import {
   FiLogOut,
   FiShield,
-  FiFileText,
-  FiBell,
-  FiCalendar,
   FiCheckCircle,
   FiHeart,
   FiTruck,
   FiBriefcase,
   FiActivity,
+  FiMessageCircle,
 } from "react-icons/fi";
+
+function normalizePolicyType(raw: string | null | undefined): string {
+  if (!raw) return "NINGUNA";
+  const clean = raw.trim().toUpperCase().replace(/\s+/g, "_");
+  const map: Record<string, string> = {
+    VIDA_GRUPO: "VIDA_GRUPO",
+    "VIDA GRUPO": "VIDA_GRUPO",
+    VIDA_INDIVIDUAL: "VIDA_INDIVIDUAL",
+    "VIDA INDIVIDUAL": "VIDA_INDIVIDUAL",
+    SALUD: "SALUD",
+    GENERALES: "GENERALES",
+    ARL: "ARL",
+    PENSIONES: "PENSIONES",
+    NINGUNA: "NINGUNA",
+  };
+  return map[clean] || map[raw.trim()] || "NINGUNA";
+}
 
 export const ClientDashboardPage = () => {
   const navigate = useNavigate();
@@ -28,22 +43,84 @@ export const ClientDashboardPage = () => {
 
   const loadData = async (u: User) => {
     try {
+      // 1. Read user document for policyType
       const userRef = doc(db, "users", u.uid);
       const userSnap = await getDoc(userRef);
-      const pType = userSnap.exists() ? userSnap.data().policyType || "NINGUNA" : "NINGUNA";
+      let pType = "NINGUNA";
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        console.log("[ABP DEBUG] users/{uid} data:", userData);
+        const possibleFields = ["policyType", "assignedPolicyType", "tipoPoliza", "tipoDePoliza", "ramo", "branch"];
+        for (const field of possibleFields) {
+          if (userData[field]) {
+            pType = normalizePolicyType(userData[field]);
+            console.log(`[ABP DEBUG] Found policyType in users/{uid}.${field} = ${userData[field]} -> ${pType}`);
+            break;
+          }
+        }
+        if (pType === "NINGUNA") {
+          console.log("[ABP DEBUG] No policyType field found in users/{uid}. Fields:", Object.keys(userData));
+        }
+      } else {
+        console.log("[ABP DEBUG] users/{uid} document does not exist for", u.uid);
+      }
+
+      // 2. Try reading from company membership as fallback
+      if (pType === "NINGUNA") {
+        try {
+          const membershipRef = doc(db, "companies", "abp", "memberships", u.uid);
+          const membershipSnap = await getDoc(membershipRef);
+          if (membershipSnap.exists()) {
+            const memData = membershipSnap.data();
+            console.log("[ABP DEBUG] memberships/{uid} data:", memData);
+            const possibleMemFields = ["policyType", "assignedPolicyType", "tipoPoliza", "tipoDePoliza", "ramo", "branch"];
+            for (const field of possibleMemFields) {
+              if (memData[field]) {
+                pType = normalizePolicyType(memData[field]);
+                console.log(`[ABP DEBUG] Found policyType in memberships/{uid}.${field} = ${memData[field]} -> ${pType}`);
+                break;
+              }
+            }
+            if (pType === "NINGUNA") {
+              console.log("[ABP DEBUG] No policyType field found in memberships/{uid}. Fields:", Object.keys(memData));
+            }
+          } else {
+            console.log("[ABP DEBUG] memberships/{uid} document does not exist for", u.uid);
+          }
+        } catch (err) {
+          console.log("[ABP DEBUG] Error reading memberships/{uid}:", err);
+        }
+      }
+
+      // 3. Query only the collection allowed by the current Firestore rules.
+      // Prefer the stable Auth UID and use the email only for legacy records.
+      const qUid = query(collection(db, "clientPolicies"), where("clientUid", "==", u.uid));
+      const snapUid = await getDocs(qUid);
+      const allPols = snapUid.docs.map((d) => ({ id: d.id, ...d.data() } as any));
+
+      setPolicies(allPols);
+      console.log("[ABP DEBUG] Total unique policies found:", allPols.length, allPols.map(p => ({ id: p.id, policyType: p.policyType, clientUid: p.clientUid, clientEmail: p.clientEmail })));
+
+      // 4. Derive policy type from found policies if still missing
+      if (pType === "NINGUNA" && allPols.length > 0) {
+        const polPolicyType = allPols[0].policyType || allPols[0].tipoPoliza || allPols[0].ramo || allPols[0].branch;
+        if (polPolicyType) {
+          pType = normalizePolicyType(polPolicyType);
+          console.log("[ABP DEBUG] Derived policyType from clientPolicies:", polPolicyType, "->", pType);
+        }
+      }
+
+      console.log("[ABP DEBUG] Final policyType:", pType);
       setPolicyType(pType);
 
-      if (pType === "VIDA_GRUPO" || pType === "VIDA_INDIVIDUAL") {
-        const q = query(collection(db, "clientPolicies"), where("clientUid", "==", u.uid));
-        const snap = await getDocs(q);
-        const pols = snap.docs.map((d) => ({ id: d.id, ...d.data() } as any));
-        setPolicies(pols);
-        if (pols.length > 0) {
-          const first = pols[0];
-          const insCol = collection(db, "clientPolicies", first.id, "insuredPeople");
-          const insSnap = await getDocs(insCol);
-          setInsuredPeople(insSnap.docs.map((d) => ({ id: d.id, ...d.data() })));
-        }
+      // 5. Load insured people for VIDA policies
+      if ((pType === "VIDA_GRUPO" || pType === "VIDA_INDIVIDUAL") && allPols.length > 0) {
+        const first = allPols[0];
+        const insCol = collection(db, "clientPolicies", first.id, "insuredPeople");
+        const insSnap = await getDocs(insCol);
+        const people = insSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        console.log("[ABP DEBUG] Insured people count:", people.length);
+        setInsuredPeople(people);
       }
     } catch (e) {
       console.error(e);
@@ -235,67 +312,18 @@ export const ClientDashboardPage = () => {
           </section>
         )}
 
-        {/* Notificaciones */}
-        <section className="mb-10">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-slate-800 uppercase tracking-wider">Notificaciones</h2>
-            <span className="text-xs text-slate-400">2 nuevas</span>
-          </div>
-          <div className="divide-y divide-slate-200">
-            <div className="flex gap-3 py-4">
-              <FiBell className="h-4 w-4 text-abp-gold mt-0.5 shrink-0" />
-              <div>
-                <p className="text-sm text-slate-800">Recordatorio de pago</p>
-                <p className="text-xs text-slate-400 mt-0.5">Tu próxima cuota vence en 15 días.</p>
-              </div>
-            </div>
-            <div className="flex gap-3 py-4">
-              <FiCalendar className="h-4 w-4 text-abp-gold mt-0.5 shrink-0" />
-              <div>
-                <p className="text-sm text-slate-800">Renovación próxima</p>
-                <p className="text-xs text-slate-400 mt-0.5">Tu póliza vence el 31/12/2025.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Documentos */}
-        <section className="mb-10">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-slate-800 uppercase tracking-wider">Documentos</h2>
-          </div>
-          <div className="divide-y divide-slate-200">
-            {[
-              { name: `Certificado ${typeLabel}`, date: "20 jun 2025" },
-              { name: "Recibo Junio 2025", date: "15 jun 2025" },
-              { name: "Condiciones del seguro", date: "10 ene 2025" },
-            ].map((doc, i) => (
-              <button
-                key={i}
-                className="flex items-center justify-between w-full py-4 hover:bg-slate-100/50 transition text-left"
-              >
-                <div className="flex items-center gap-3">
-                  <FiFileText className="h-4 w-4 text-slate-400" />
-                  <span className="text-sm text-slate-700">{doc.name}</span>
-                </div>
-                <span className="text-xs text-slate-400">{doc.date}</span>
-              </button>
-            ))}
-          </div>
-        </section>
-
         {/* Acciones */}
         <section>
-          <h2 className="text-base font-semibold text-slate-800 uppercase tracking-wider mb-4">Acciones rápidas</h2>
-          <div className="flex flex-wrap gap-3">
-            <button className="text-sm text-slate-700 hover:text-abp-gold transition">Solicitar certificado</button>
-            <span className="text-slate-300">·</span>
-            <button className="text-sm text-slate-700 hover:text-abp-gold transition">Renovar póliza</button>
-            <span className="text-slate-300">·</span>
-            <button className="text-sm text-slate-700 hover:text-abp-gold transition">Agendar cita</button>
-            <span className="text-slate-300">·</span>
-            <button className="text-sm text-slate-700 hover:text-abp-gold transition">Contactar asesor</button>
-          </div>
+          <h2 className="text-base font-semibold text-slate-800 uppercase tracking-wider mb-4">Contacto</h2>
+          <a
+            href="https://wa.me/573135707125"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-700"
+          >
+            <FiMessageCircle className="h-4 w-4" />
+            Contactar asesor · 313 570 7125
+          </a>
         </section>
       </div>
     </div>

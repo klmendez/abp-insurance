@@ -19,6 +19,30 @@
   );
 }
 
+.insured-table-scroll-top {
+  scrollbar-width: auto;
+  scrollbar-color: #d4af37 #fff7df;
+}
+
+.insured-table-scroll-top::-webkit-scrollbar {
+  height: 14px;
+}
+
+.insured-table-scroll-top::-webkit-scrollbar-track {
+  background: #fff7df;
+  border-radius: 9999px;
+}
+
+.insured-table-scroll-top::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #b88a1d, #e3c45f);
+  border: 3px solid #fff7df;
+  border-radius: 9999px;
+}
+
+.insured-table-scroll-top::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #9c7215, #d4af37);
+}
+
 /* Puntos dorados: pocos, grandes, elegantes */
 .hero-gold-dots {
   background-image:

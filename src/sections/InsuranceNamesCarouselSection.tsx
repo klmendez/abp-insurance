@@ -45,7 +45,7 @@ const loopedLines = buildLoopedList(insuranceLines);
 const AUTO_ADVANCE_MS = 5200;
 
 // ✅ Link animable con Framer Motion
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 
 export const InsuranceNamesCarouselSection: FC = () => {
   const [cursor, setCursor] = useState(VISIBLE_COUNT);
