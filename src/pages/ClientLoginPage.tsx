@@ -1,160 +1,272 @@
-import { useState } from "react";
-import { FiUser, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+﻿import { useEffect, useState } from "react";
+import { FiUser, FiLock, FiEye, FiEyeOff, FiArrowLeft } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  browserLocalPersistence,
+  browserSessionPersistence,
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  setPersistence,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import logo from "@/assets/Logo profesional.webp";
 
 export const ClientLoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
+  const [reset, setReset] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const [notice, setNotice] = useState("");
+  useEffect(
+    () =>
+      onAuthStateChanged(auth, (user) => {
+        if (user) navigate("/cliente", { replace: true });
+      }),
+    [navigate],
+  );
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (isLoading) return;
     setError("");
+    setNotice("");
     setIsLoading(true);
-
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate("/cliente");
-    } catch (err: any) {
-      const code = err?.code || "";
-      if (code === "auth/invalid-credential" || code === "auth/wrong-password" || code === "auth/user-not-found") {
-        setError("Correo o contraseña incorrectos.");
-      } else if (code === "auth/invalid-email") {
-        setError("El correo electrónico no es válido.");
+      if (reset) {
+        await sendPasswordResetEmail(auth, email.trim());
+        setNotice(
+          "Si el correo tiene una cuenta asociada, recibirás un enlace para cambiar tu contraseña. Revisa también la carpeta de spam.",
+        );
       } else {
-        setError("Ocurrió un error al iniciar sesión. Intenta de nuevo.");
+        await setPersistence(
+          auth,
+          remember ? browserLocalPersistence : browserSessionPersistence,
+        );
+        await signInWithEmailAndPassword(auth, email.trim(), password);
+        navigate("/cliente", { replace: true });
       }
+    } catch (err) {
+      const code = (err as { code?: string }).code;
+      if (reset && code === "auth/user-not-found")
+        setNotice(
+          "Si el correo tiene una cuenta asociada, recibirás un enlace para cambiar tu contraseña. Revisa también la carpeta de spam.",
+        );
+      else if (
+        [
+          "auth/invalid-credential",
+          "auth/wrong-password",
+          "auth/user-not-found",
+        ].includes(code || "")
+      )
+        setError("Correo o contraseña incorrectos.");
+      else if (code === "auth/too-many-requests")
+        setError(
+          "Hubo varios intentos seguidos. Espera unos minutos e intenta de nuevo.",
+        );
+      else if (code === "auth/network-request-failed")
+        setError(
+          "No pudimos conectarnos. Revisa tu conexión e intenta nuevamente.",
+        );
+      else
+        setError(
+          reset
+            ? "No pudimos enviar el enlace. Revisa el correo e intenta nuevamente."
+            : "No pudimos iniciar sesión. Intenta nuevamente.",
+        );
     } finally {
       setIsLoading(false);
     }
   };
-
+  const switchMode = () => {
+    setReset((value) => !value);
+    setError("");
+    setNotice("");
+  };
+  const inputClass =
+    "w-full rounded-xl border border-slate-300 bg-white py-3 pl-10 pr-11 text-sm text-slate-900 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100";
   return (
-    <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-[#0b1021] via-[#112040] to-[#0c1a30] px-4 pt-12">
-      <div className="w-full max-w-md py-12">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-abp-gold/15 ring-1 ring-abp-gold/30">
-            <FiUser className="h-7 w-7 text-abp-gold" />
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-            Área de Clientes
+    <div className="flex min-h-screen flex-1 bg-[#f5f6fa]">
+      <section className="hidden w-[44%] flex-col justify-between bg-[#101c32] p-12 text-white lg:flex">
+        <Link to="/" className="flex items-center gap-3 text-white hover:text-white">
+          <img
+            src={logo}
+            alt="ABP Seguros"
+            className="h-14 w-14 rounded-xl bg-white object-contain p-1"
+          />
+          <span className="font-semibold">ABP Seguros</span>
+        </Link>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-abp-gold">
+            Tu portal de clientes
+          </p>
+          <h1 className="mt-5 max-w-md text-4xl font-semibold leading-tight text-white">
+            Tu tranquilidad,
+            <br />
+            en un solo lugar.
           </h1>
-          <p className="mt-2 text-sm text-white/60">
-            Ingresa a tu portal personal de ABP Seguros
+          <p className="mt-6 max-w-sm text-base leading-relaxed text-slate-300">
+            Consulta tus pólizas, mantén al día tus asegurados y gestiona tus
+            novedades con el acompañamiento de ABP.
           </p>
         </div>
-
-        {error && (
-          <div className="mb-5 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-            {error}
-          </div>
-        )}
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Email */}
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-1.5">
-              Correo electrónico
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FiUser className="h-4 w-4 text-white/40" />
-              </div>
-              <input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="tu@email.com"
-                className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/15 rounded-xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-abp-gold/50 focus:border-abp-gold/50 transition"
-              />
-            </div>
-          </div>
-
-          {/* Password */}
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-white/80 mb-1.5">
-              Contraseña
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FiLock className="h-4 w-4 text-white/40" />
-              </div>
-              <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full pl-10 pr-11 py-3 bg-white/5 border border-white/15 rounded-xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-abp-gold/50 focus:border-abp-gold/50 transition"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-white/40 hover:text-white/70 transition"
-                tabIndex={-1}
-              >
-                {showPassword ? <FiEyeOff className="h-4 w-4" /> : <FiEye className="h-4 w-4" />}
-              </button>
-            </div>
-          </div>
-
-          {/* Remember & Forgot */}
-          <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center gap-2 text-white/60 cursor-pointer hover:text-white/80 transition">
-              <input
-                type="checkbox"
-                className="h-4 w-4 rounded border-white/20 bg-white/5 text-abp-gold focus:ring-abp-gold/40"
-              />
-              Recordarme
-            </label>
-            <button type="button" className="text-abp-gold hover:text-abp-goldDark transition font-medium">
-              ¿Olvidaste tu contraseña?
-            </button>
-          </div>
-
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full py-3 px-4 bg-abp-gold hover:bg-abp-goldDark text-[#030712] font-semibold rounded-xl transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          >
-            {isLoading ? (
-              <>
-                <span className="h-5 w-5 border-2 border-[#030712]/30 border-t-[#030712] rounded-full animate-spin" />
-                Ingresando...
-              </>
-            ) : (
-              "Ingresar"
-            )}
-          </button>
-        </form>
-
-        {/* Footer */}
-        <div className="mt-8 text-center text-sm text-white/50">
-          ¿No tienes cuenta?{" "}
-          <button type="button" className="text-abp-gold hover:text-abp-goldDark font-medium transition">
-            Solicita acceso
-          </button>
-        </div>
-
-        {/* Back link */}
-        <div className="mt-6 text-center">
+        <p className="text-xs text-slate-400">
+          Acompañamiento cercano, en cada paso.
+        </p>
+      </section>
+      <div className="flex flex-1 items-center justify-center px-5 py-12">
+        <div className="w-full max-w-sm">
           <Link
             to="/"
-            className="text-sm text-white/40 hover:text-white/70 transition inline-flex items-center gap-1"
+            className="mb-10 inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900"
           >
-            ← Volver al inicio
+            <FiArrowLeft />
+            Volver al sitio web
           </Link>
+          <div className="mb-7">
+            <span className="inline-flex rounded-xl bg-amber-100 p-3 text-amber-700">
+              <FiUser className="h-6 w-6" />
+            </span>
+            <h2 className="mt-5 text-3xl font-semibold tracking-tight text-slate-900">
+              {reset ? "Recupera tu acceso" : "Bienvenido de nuevo"}
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-slate-500">
+              {reset
+                ? "Ingresa el correo de tu cuenta para recibir un enlace de recuperación."
+                : "Ingresa a tu espacio de ABP Seguros."}
+            </p>
+          </div>
+          {error && (
+            <p
+              role="alert"
+              className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+            >
+              {error}
+            </p>
+          )}
+          {notice && (
+            <p
+              role="status"
+              className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800"
+            >
+              {notice}
+            </p>
+          )}
+          <form onSubmit={handleSubmit}>
+            <fieldset disabled={isLoading} className="space-y-5">
+              <div>
+                <label
+                  htmlFor="email"
+                  className="mb-2 block text-sm font-medium text-slate-700"
+                >
+                  Correo electrónico
+                </label>
+                <div className="relative">
+                  <FiUser className="absolute left-3 top-3.5 text-slate-400" />
+                  <input
+                    id="email"
+                    type="email"
+                    autoComplete="username"
+                    required
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder="tu@empresa.com"
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+              {!reset && (
+                <>
+                  <div>
+                    <label
+                      htmlFor="password"
+                      className="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                      Contraseña
+                    </label>
+                    <div className="relative">
+                      <FiLock className="absolute left-3 top-3.5 text-slate-400" />
+                      <input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        autoComplete="current-password"
+                        required
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        className={inputClass}
+                      />
+                      <button
+                        type="button"
+                        aria-label={
+                          showPassword
+                            ? "Ocultar contraseña"
+                            : "Mostrar contraseña"
+                        }
+                        aria-pressed={showPassword}
+                        onClick={() => setShowPassword((value) => !value)}
+                        className="absolute right-3 top-3.5 text-slate-500"
+                      >
+                        {showPassword ? <FiEyeOff /> : <FiEye />}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap justify-between gap-3 text-xs">
+                    <label className="flex items-center gap-2 text-slate-600">
+                      <input
+                        type="checkbox"
+                        checked={remember}
+                        onChange={(event) => setRemember(event.target.checked)}
+                        className="h-4 w-4 accent-slate-900"
+                      />
+                      Recordarme
+                    </label>
+                    <button
+                      type="button"
+                      onClick={switchMode}
+                      className="font-medium text-slate-700 underline"
+                    >
+                      ¿Olvidaste tu contraseña?
+                    </button>
+                  </div>
+                </>
+              )}
+              <button
+                type="submit"
+                className="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50"
+              >
+                {isLoading
+                  ? "Procesando…"
+                  : reset
+                    ? "Enviar enlace de recuperación"
+                    : "Ingresar a mi portal"}
+              </button>
+            </fieldset>
+          </form>
+          {reset ? (
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={switchMode}
+              className="mt-6 w-full text-sm text-slate-600 underline"
+            >
+              Volver a iniciar sesión
+            </button>
+          ) : (
+            <p className="mt-8 text-center text-sm text-slate-500">
+              ¿Aún no tienes acceso?{" "}
+              <a
+                href="https://wa.me/573135707125"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-slate-800 underline hover:text-slate-600"
+              >
+                Solicítalo a tu asesor
+              </a>
+            </p>
+          )}
         </div>
       </div>
     </div>

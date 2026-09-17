@@ -1,32 +1,40 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+﻿import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  serverTimestamp,
+  where,
+  writeBatch,
+} from "firebase/firestore";
+import {
+  FiCheckCircle,
+  FiClock,
+  FiEdit2,
+  FiPlus,
+  FiRotateCcw,
+  FiSearch,
+  FiUserMinus,
+  FiUsers,
+  FiX,
+} from "react-icons/fi";
 import { db } from "@/lib/firebase";
 import {
-  doc,
-  updateDoc,
-  setDoc,
-  collection,
-  serverTimestamp,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
-import { FiEdit2, FiTrash2, FiSave, FiX, FiPlus, FiBell, FiUserPlus, FiCheckCircle } from "react-icons/fi";
-
-export interface InsuredPerson {
-  id: string;
-  reg?: string | number;
-  nombre: string;
-  cedula: string;
-  sexo?: string;
-  fechaNacimiento?: string;
-  edad?: string | number;
-  extraprima?: number;
-  valorMensual?: number;
-  observaciones?: string;
-  estado?: "ACTIVO" | "DESVINCULADO";
-  fechaVinculacion?: string;
-  fechaDesvinculacion?: string | null;
-}
+  calculateAge,
+  peopleForView,
+  calculateWithdrawalCharge,
+  createDataSignature,
+  dateIsInReportingPeriod,
+  formatCurrency,
+  localDate,
+  monthlyReportingPeriod,
+  restoredWithdrawal,
+  validatePerson,
+  type InsuredPerson,
+  type PortalView,
+} from "@/lib/clientPortal";
+export type { InsuredPerson } from "@/lib/clientPortal";
 
 interface Props {
   policyId: string;
@@ -35,90 +43,92 @@ interface Props {
   clientEmail: string | null;
   clientName: string | null;
   onChange: () => void;
+  view?: PortalView;
+  onNavigate?: (view: PortalView) => void;
+  onBusyChange?: (busy: boolean) => void;
 }
-
-function stripUndefined(obj?: Record<string, any>) {
-  if (!obj) return undefined;
-  const clean: Record<string, any> = {};
-  for (const [k, v] of Object.entries(obj)) {
-    if (v !== undefined) clean[k] = v;
-  }
-  return Object.keys(clean).length > 0 ? clean : undefined;
-}
-
-interface MonthlyConfirmation {
+interface Movement {
   id: string;
-  month: string;
-  monthKey: string;
-  totalMonthly: number;
-  activeInsuredCount: number;
+  action: string;
+  changeKind?: string;
+  personId?: string;
+  before?: Partial<InsuredPerson>;
+  after?: Partial<InsuredPerson>;
+  status?: string;
+  month?: string;
+  monthKey?: string;
+  totalMonthly?: number;
+  activeInsuredCount?: number;
   dataSignature?: string;
+  signatureVersion?: number;
   confirmedAtMs?: number;
-  createdAt?: Date | { toDate?: () => Date };
+  createdAt?: { toDate?: () => Date; toMillis?: () => number };
+  localTime?: number;
 }
-
-function createDataSignature(people: InsuredPerson[]): string {
-  const serialized = JSON.stringify(
-    [...people]
-      .sort((a, b) => a.id.localeCompare(b.id))
-      .map(({ id, reg, nombre, cedula, sexo, fechaNacimiento, edad, extraprima, valorMensual, observaciones, estado, fechaVinculacion, fechaDesvinculacion }) => ({
-        id, reg, nombre, cedula, sexo, fechaNacimiento, edad, extraprima,
-        valorMensual, observaciones, estado, fechaVinculacion, fechaDesvinculacion,
-      }))
+const fieldClass =
+  "mt-1.5 block w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100 disabled:bg-slate-50";
+const secondary =
+  "inline-flex items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-abp-blue transition hover:bg-blue-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-abp-blue disabled:cursor-not-allowed disabled:opacity-50";
+const primary =
+  "inline-flex items-center justify-center gap-2 rounded-lg bg-abp-blue px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-abp-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-abp-blue disabled:cursor-not-allowed disabled:opacity-50";
+const movementTime = (item: Movement) =>
+  item.createdAt?.toMillis?.() ?? item.confirmedAtMs ?? item.localTime ?? 0;
+const clean = (value: object) =>
+  Object.fromEntries(
+    Object.entries(value).filter(([, item]) => item !== undefined),
   );
-  let hash = 2166136261;
-  for (let index = 0; index < serialized.length; index += 1) {
-    hash ^= serialized.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return (hash >>> 0).toString(16);
-}
-
-function calculateAge(birthDate?: string): number | "" {
-  if (!birthDate) return "";
-  const [year, month, day] = birthDate.split("-").map(Number);
-  if (!year || !month || !day) return "";
-  const today = new Date();
-  let age = today.getFullYear() - year;
-  if (today.getMonth() + 1 < month || (today.getMonth() + 1 === month && today.getDate() < day)) {
-    age -= 1;
-  }
-  return age >= 0 ? age : "";
-}
-
-function formatConfirmationDate(value?: MonthlyConfirmation["createdAt"]): string {
-  const date = value instanceof Date ? value : value?.toDate?.();
-  return date
-    ? new Intl.DateTimeFormat("es-CO", { dateStyle: "medium", timeStyle: "short" }).format(date)
-    : "Fecha pendiente";
-}
-
-function createChangeNotification(
-  action: "update" | "delete" | "create",
-  clientUid: string,
-  clientEmail: string | null,
-  clientName: string | null,
-  policyId: string,
-  personId: string,
-  before?: Partial<InsuredPerson>,
-  after?: Partial<InsuredPerson>
-) {
-  const notifRef = doc(collection(db, "clientChangeNotifications"));
-  const payload: Record<string, any> = {
-    clientUid,
-    clientEmail: clientEmail ?? null,
-    clientName: clientName ?? null,
-    action,
-    personId,
-    policyId,
-    createdAt: serverTimestamp(),
-    status: "PENDING",
-  };
-  const cleanBefore = stripUndefined(before);
-  const cleanAfter = stripUndefined(after);
-  if (cleanBefore) payload.before = cleanBefore;
-  if (cleanAfter) payload.after = cleanAfter;
-  return setDoc(notifRef, payload);
+const initialPerson = (): Partial<InsuredPerson> => ({
+  nombre: "",
+  cedula: "",
+  sexo: "",
+  fechaNacimiento: "",
+  fechaVinculacion: localDate(),
+  observaciones: "COBRO",
+});
+function Dialog({
+  title,
+  children,
+  busy,
+  onClose,
+}: {
+  title: string;
+  children: ReactNode;
+  busy: boolean;
+  onClose: () => void;
+}) {
+  const ref = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const dialog = ref.current;
+    dialog?.showModal();
+    return () => dialog?.close();
+  }, []);
+  return (
+    <dialog
+      ref={ref}
+      onCancel={(event) => {
+        event.preventDefault();
+        if (!busy) onClose();
+      }}
+      aria-labelledby="person-dialog-title"
+      className="m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-2xl overflow-y-auto rounded-2xl bg-white p-0 text-slate-800 shadow-2xl backdrop:bg-slate-950/50"
+    >
+      <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5">
+        <h2 id="person-dialog-title" className="text-lg font-semibold">
+          {title}
+        </h2>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={onClose}
+          aria-label="Cerrar"
+          className="rounded-lg p-2 hover:bg-slate-100 disabled:opacity-50"
+        >
+          <FiX />
+        </button>
+      </div>
+      <div className="p-6">{children}</div>
+    </dialog>
+  );
 }
 
 export default function InsuredPeopleTable({
@@ -128,700 +138,1115 @@ export default function InsuredPeopleTable({
   clientEmail,
   clientName,
   onChange,
+  view = "people",
+  onNavigate,
+  onBusyChange,
 }: Props) {
-  const [localPeople, setLocalPeople] = useState<InsuredPerson[]>(people);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState<Partial<InsuredPerson>>({});
+  const [localPeople, setLocalPeople] = useState(people);
+  const [movements, setMovements] = useState<Movement[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
+  const [historyError, setHistoryError] = useState("");
+  const [historyRetry, setHistoryRetry] = useState(0);
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [historyLimit, setHistoryLimit] = useState(20);
+  const [editor, setEditor] = useState<{
+    id?: string;
+    sourceSignature?: string;
+    readOnly?: boolean;
+    form: Partial<InsuredPerson>;
+  } | null>(null);
+  const [operation, setOperation] = useState<{
+    kind: "withdraw" | "restore" | "undoCreate";
+    person: InsuredPerson;
+  } | null>(null);
+  const [withdrawalDate, setWithdrawalDate] = useState(localDate());
   const [saving, setSaving] = useState(false);
-  const [notification, setNotification] = useState("");
-  const [confirmingMonth, setConfirmingMonth] = useState(false);
-  const [monthlyConfirmations, setMonthlyConfirmations] = useState<MonthlyConfirmation[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [adding, setAdding] = useState(false);
-  const [personToUnlink, setPersonToUnlink] = useState<InsuredPerson | null>(null);
-  const [unlinkDate, setUnlinkDate] = useState(new Date().toISOString().slice(0, 10));
-  const [newPerson, setNewPerson] = useState<Partial<InsuredPerson>>({
-    nombre: "",
-    cedula: "",
-    sexo: "",
-    fechaNacimiento: "",
-    edad: "",
-    valorMensual: undefined,
-    observaciones: "COBRO",
-    fechaVinculacion: new Date().toISOString().slice(0, 10),
-  });
-  const topScrollRef = useRef<HTMLDivElement>(null);
-  const tableScrollRef = useRef<HTMLDivElement>(null);
-
-  const syncHorizontalScroll = (
-    source: HTMLDivElement,
-    target: HTMLDivElement | null
-  ) => {
-    if (target && target.scrollLeft !== source.scrollLeft) {
-      target.scrollLeft = source.scrollLeft;
-    }
-  };
-
+  const lock = useRef(false);
+  const [message, setMessage] = useState<{
+    text: string;
+    error?: boolean;
+  } | null>(null);
+  const [formError, setFormError] = useState("");
+  const [reviewed, setReviewed] = useState(false);
+  const [today, setToday] = useState(localDate());
+  const busy = saving || !!editor || !!operation;
+  useEffect(() => {
+    onBusyChange?.(busy);
+    return () => onBusyChange?.(false);
+  }, [busy, onBusyChange]);
   useEffect(() => {
     setLocalPeople(people);
   }, [people]);
-
-  const activePeople = useMemo(
-    () => localPeople.filter((person) => person.estado !== "DESVINCULADO"),
-    [localPeople]
-  );
-  const unlinkedPeople = useMemo(
-    () => localPeople.filter((person) => person.estado === "DESVINCULADO"),
-    [localPeople]
-  );
-  const linkedPeople = useMemo(
-    () => activePeople.filter((person) => Boolean(person.fechaVinculacion)),
-    [activePeople]
-  );
-  const totalMonthly = useMemo(
-    () => activePeople.reduce((total, person) => {
-      const value = Number(person.valorMensual ?? 0);
-      return total + (Number.isFinite(value) ? value : 0);
-    }, 0),
-    [activePeople]
-  );
-  const currentMonthName = new Intl.DateTimeFormat("es-CO", { month: "long" }).format(new Date());
-  const currentDate = new Date();
-  const currentMonthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}`;
-  const currentDataSignature = useMemo(() => createDataSignature(activePeople), [activePeople]);
-  const currentMonthConfirmations = monthlyConfirmations.filter((confirmation) => confirmation.monthKey === currentMonthKey);
-  const latestCurrentMonthConfirmation = currentMonthConfirmations[0];
-  const confirmedMonth = latestCurrentMonthConfirmation?.dataSignature === currentDataSignature;
-  const needsReconfirmation = currentMonthConfirmations.length > 0 && !confirmedMonth;
-
   useEffect(() => {
-    let mounted = true;
-    const loadMonthlyConfirmations = async () => {
-      try {
-        const confirmationsQuery = query(
-          collection(db, "clientChangeNotifications"),
-          where("clientUid", "==", clientUid)
-        );
-        const snapshot = await getDocs(confirmationsQuery);
-        if (!mounted) return;
-        const confirmations = snapshot.docs
-          .map((item) => ({ id: item.id, ...item.data() } as MonthlyConfirmation & { action?: string; policyId?: string }))
-          .filter((item) => item.action === "confirm_month" && item.policyId === policyId)
-          .sort((a, b) => {
-            const monthComparison = b.monthKey.localeCompare(a.monthKey);
-            return monthComparison !== 0 ? monthComparison : (b.confirmedAtMs ?? 0) - (a.confirmedAtMs ?? 0);
-          });
-        setMonthlyConfirmations(confirmations);
-      } catch (error) {
-        console.error("Error cargando confirmaciones mensuales:", error);
-      }
+    const timer = window.setInterval(() => setToday(localDate()), 30000);
+    return () => window.clearInterval(timer);
+  }, []);
+  useEffect(() => {
+    if (!busy) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
     };
-    loadMonthlyConfirmations();
-    return () => {
-      mounted = false;
-    };
-  }, [clientUid, policyId]);
-
-  const filteredPeople = useMemo(() => {
-    if (!searchTerm.trim()) return activePeople;
-    const q = searchTerm.trim().toLowerCase();
-    return activePeople.filter(
-      (p) =>
-        p.nombre?.toLowerCase().includes(q) ||
-        p.cedula?.toLowerCase().includes(q)
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [busy]);
+  useEffect(() => {
+    let active = true;
+    setHistoryLoading(true);
+    setHistoryError("");
+    const unsubscribe = onSnapshot(
+      query(
+        collection(db, "clientChangeNotifications"),
+        where("clientUid", "==", clientUid),
+      ),
+      (snapshot) => {
+        if (active) {
+          setMovements(
+            snapshot.docs
+              .filter((item) => item.data().policyId === policyId)
+              .map((item) => ({ ...item.data(), id: item.id }) as Movement)
+              .sort((a, b) => movementTime(b) - movementTime(a)),
+          );
+          setHistoryLoading(false);
+        }
+      },
+      () => {
+        if (active) {
+          setHistoryError(
+            "No pudimos cargar las novedades. Reintenta antes de confirmar el mes o deshacer movimientos.",
+          );
+          setHistoryLoading(false);
+        }
+      },
     );
-  }, [activePeople, searchTerm]);
-
-  const showNotif = (msg: string) => {
-    setNotification(msg);
-    setTimeout(() => setNotification(""), 4000);
-  };
-
-  const startEdit = (person: InsuredPerson) => {
-    setEditingId(person.id);
-    setEditForm({ ...person });
-  };
-
-  const cancelEdit = () => {
-    setEditingId(null);
-    setEditForm({});
-  };
-
-  const saveEdit = async (person: InsuredPerson) => {
-    setSaving(true);
-    try {
-      const ref = doc(db, "clientPolicies", policyId, "insuredPeople", person.id);
-      const before = { ...person };
-      const editableFields = {
-        reg: editForm.reg ?? "",
-        nombre: editForm.nombre ?? "",
-        cedula: editForm.cedula ?? "",
-        sexo: editForm.sexo ?? "",
-        fechaNacimiento: editForm.fechaNacimiento ?? "",
-        edad: editForm.edad ?? "",
-        extraprima: editForm.extraprima ?? 0,
-        valorMensual: editForm.valorMensual ?? 0,
-        observaciones: editForm.observaciones ?? "",
-      };
-      await updateDoc(ref, {
-        ...editableFields,
-        updatedAt: serverTimestamp(),
-      });
-      await createChangeNotification(
-        "update",
-        clientUid,
-        clientEmail,
-        clientName,
-        policyId,
-        person.id,
-        before,
-        editableFields
-      );
-      showNotif("Cambio guardado y notificado a tu asesor.");
-      cancelEdit();
-      onChange();
-    } catch (e) {
-      console.error(e);
-      showNotif("Error guardando cambios.");
-    } finally {
-      setSaving(false);
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, [clientUid, policyId, historyRetry]);
+  const activePeople = useMemo(
+    () => localPeople.filter((p) => p.estado !== "DESVINCULADO"),
+    [localPeople],
+  );
+  const total = activePeople.reduce(
+    (sum, p) =>
+      sum +
+      (Number.isFinite(Number(p.valorMensual)) ? Number(p.valorMensual) : 0),
+    0,
+  );
+  const missingAmounts = activePeople.filter(
+    (person) =>
+      person.valorMensual == null ||
+      !Number.isFinite(Number(person.valorMensual)) ||
+      Number(person.valorMensual) < 0,
+  ).length;
+  const reviewDate = new Date(`${today}T12:00:00`);
+  const reportingPeriod = monthlyReportingPeriod(reviewDate);
+  const monthKey = reportingPeriod.monthKey;
+  const month = new Intl.DateTimeFormat("es-CO", {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(`${today}T12:00:00`));
+  const monthName = new Intl.DateTimeFormat("es-CO", { month: "long" });
+  const periodDate = (value: string) =>
+    new Intl.DateTimeFormat("es-CO", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(new Date(`${value}T12:00:00`));
+  const reviewPeriod = `${periodDate(reportingPeriod.start)} al ${periodDate(reportingPeriod.end)}`;
+  const signature = useMemo(
+    () => createDataSignature(localPeople),
+    [localPeople],
+  );
+  const latestConfirmation = movements.find(
+    (item) => item.action === "confirm_month" && item.monthKey === monthKey,
+  );
+  const confirmed =
+    latestConfirmation?.signatureVersion === 2 &&
+    latestConfirmation.dataSignature === signature;
+  useEffect(() => {
+    setReviewed(false);
+  }, [signature, monthKey]);
+  useEffect(() => {
+    setSearch("");
+    setPage(1);
+    setHistoryLimit(20);
+  }, [view]);
+  const showingWithdrawn = view === "withdrawn";
+  const filtered = peopleForView(localPeople, showingWithdrawn ? "withdrawn" : "people", search);
+  const pages = Math.max(1, Math.ceil(filtered.length / 10));
+  const visiblePage = Math.min(page, pages);
+  const visiblePeople = filtered.slice(
+    (visiblePage - 1) * 10,
+    visiblePage * 10,
+  );
+  const close = () => {
+    if (!lock.current) {
+      setEditor(null);
+      setOperation(null);
+      setFormError("");
     }
   };
 
-  const confirmCurrentMonth = async () => {
-    setConfirmingMonth(true);
-    try {
-      const confirmationRef = doc(collection(db, "clientChangeNotifications"));
-      const confirmedAtMs = Date.now();
-      await setDoc(confirmationRef, {
-        clientUid,
-        clientEmail: clientEmail ?? null,
-        clientName: clientName ?? null,
-        policyId,
-        action: "confirm_month",
-        month: currentMonthName,
-        monthKey: currentMonthKey,
-        totalMonthly,
-        activeInsuredCount: activePeople.length,
-        dataSignature: currentDataSignature,
-        confirmedAtMs,
+  // Person data and its notification are committed together: either both succeed or neither changes.
+  const commitPerson = async (
+    action: string,
+    personId: string,
+    before: InsuredPerson | undefined,
+    after: Partial<InsuredPerson> | undefined,
+    changeKind?: string,
+  ) => {
+    const batch = writeBatch(db);
+    const personRef = doc(
+      db,
+      "clientPolicies",
+      policyId,
+      "insuredPeople",
+      personId,
+    );
+    const notificationRef = doc(collection(db, "clientChangeNotifications"));
+    if (!after) batch.delete(personRef);
+    else if (!before)
+      batch.set(personRef, {
+        ...clean(after),
         createdAt: serverTimestamp(),
-        status: "PENDING",
-      });
-      setMonthlyConfirmations((current) => [
-        {
-          id: confirmationRef.id,
-          month: currentMonthName,
-          monthKey: currentMonthKey,
-          totalMonthly,
-          activeInsuredCount: activePeople.length,
-          dataSignature: currentDataSignature,
-          confirmedAtMs,
-          createdAt: new Date(),
-        },
-        ...current,
-      ]);
-      showNotif(`Confirmación de ${currentMonthName} enviada a tu asesor.`);
-    } catch (error) {
-      console.error(error);
-      showNotif(`No fue posible confirmar el mes de ${currentMonthName}.`);
-    } finally {
-      setConfirmingMonth(false);
-    }
-  };
-
-  const addPerson = async () => {
-    if (!newPerson.nombre?.trim() || !newPerson.cedula?.trim() || !newPerson.fechaNacimiento || !newPerson.fechaVinculacion || newPerson.valorMensual === undefined) {
-      showNotif("Completa nombre, cédula, nacimiento, valor mensual y vinculación.");
-      return;
-    }
-    if (calculateAge(newPerson.fechaNacimiento) === "" || Number(newPerson.valorMensual) < 0) {
-      showNotif("Revisa la fecha de nacimiento y el valor mensual.");
-      return;
-    }
-
-    setSaving(true);
-    try {
-      const ref = doc(collection(db, "clientPolicies", policyId, "insuredPeople"));
-      const person: Omit<InsuredPerson, "id"> = {
-        nombre: newPerson.nombre.trim(),
-        cedula: newPerson.cedula.trim(),
-        sexo: newPerson.sexo || "",
-        fechaNacimiento: newPerson.fechaNacimiento,
-        edad: calculateAge(newPerson.fechaNacimiento),
-        valorMensual: Number(newPerson.valorMensual),
-        observaciones: newPerson.observaciones?.trim() || "COBRO",
-        fechaVinculacion: newPerson.fechaVinculacion,
-        fechaDesvinculacion: null,
-        estado: "ACTIVO",
-      };
-      await setDoc(ref, { ...person, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
-      await createChangeNotification(
-        "create",
-        clientUid,
-        clientEmail,
-        clientName,
-        policyId,
-        ref.id,
-        undefined,
-        person
-      );
-      setAdding(false);
-      setNewPerson({
-        nombre: "",
-        cedula: "",
-        sexo: "",
-        fechaNacimiento: "",
-        edad: "",
-        valorMensual: undefined,
-        observaciones: "COBRO",
-        fechaVinculacion: new Date().toISOString().slice(0, 10),
-      });
-      showNotif("Asegurado vinculado y cambio notificado a tu asesor.");
-      onChange();
-    } catch (e) {
-      console.error(e);
-      showNotif("Error vinculando al asegurado.");
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const deletePerson = async (person: InsuredPerson) => {
-    if (!unlinkDate) {
-      showNotif("Selecciona la fecha de desvinculación.");
-      return;
-    }
-    const today = new Date().toISOString().slice(0, 10);
-    if (unlinkDate > today || (person.fechaVinculacion && unlinkDate < person.fechaVinculacion)) {
-      showNotif("La fecha de desvinculación no es válida.");
-      return;
-    }
-    setSaving(true);
-    try {
-      const ref = doc(db, "clientPolicies", policyId, "insuredPeople", person.id);
-      const fechaDesvinculacion = unlinkDate;
-      const after: Partial<InsuredPerson> = {
-        ...person,
-        estado: "DESVINCULADO",
-        fechaDesvinculacion,
-      };
-      await updateDoc(ref, {
-        estado: "DESVINCULADO",
-        fechaDesvinculacion,
         updatedAt: serverTimestamp(),
       });
-      await createChangeNotification(
-        "delete",
+    else
+      batch.update(personRef, {
+        ...clean(after),
+        updatedAt: serverTimestamp(),
+      });
+    const movement = {
+      action,
+      personId,
+      reportingPeriodStart: reportingPeriod.start,
+      reportingPeriodEnd: reportingPeriod.end,
+      reportingMonthKey: reportingPeriod.monthKey,
+      ...(before ? { before: clean(before) } : {}),
+      ...(after ? { after: clean(after) } : {}),
+      ...(changeKind ? { changeKind } : {}),
+      status: "PENDING",
+    };
+    batch.set(notificationRef, {
+      ...movement,
+      policyId,
+      clientUid,
+      clientEmail,
+      clientName,
+      createdAt: serverTimestamp(),
+    });
+    await batch.commit();
+    setLocalPeople((current) =>
+      !after
+        ? current.filter((p) => p.id !== personId)
+        : current.some((person) => person.id === personId)
+          ? current.map((p) => (p.id === personId ? { ...p, ...after } : p))
+          : [...current, { ...after, id: personId } as InsuredPerson],
+    );
+    setMovements((current) => [
+      {
+        ...movement,
+        id: notificationRef.id,
+        localTime: Date.now(),
+      } as Movement,
+      ...current.filter((item) => item.id !== notificationRef.id),
+    ]);
+    onChange();
+  };
+  const savePerson = async () => {
+    if (!editor || editor.readOnly || lock.current) return;
+    const validation = validatePerson(editor.form, localPeople, editor.id);
+    if (validation) {
+      setFormError(validation);
+      return;
+    }
+    const currentPerson = localPeople.find((person) => person.id === editor.id);
+    if (
+      editor.id &&
+      (!currentPerson ||
+        currentPerson.estado === "DESVINCULADO" ||
+        createDataSignature([currentPerson]) !== editor.sourceSignature)
+    ) {
+      setFormError(
+        "Este registro cambió mientras lo editabas. Cierra el formulario y vuelve a abrirlo para revisar la versión actual.",
+      );
+      return;
+    }
+    lock.current = true;
+    setSaving(true);
+    setFormError("");
+    try {
+      const before = localPeople.find((p) => p.id === editor.id);
+      const fields = {
+        nombre: editor.form.nombre!.trim(),
+        cedula: editor.form.cedula!.trim(),
+        sexo: editor.form.sexo || "",
+        fechaNacimiento: editor.form.fechaNacimiento!,
+        edad: calculateAge(editor.form.fechaNacimiento, new Date(`${today}T12:00:00`)),
+        valorMensual: Number(editor.form.valorMensual),
+        extraprima: Number(editor.form.extraprima || 0),
+        reg: editor.form.reg ?? "",
+        observaciones: editor.form.observaciones?.trim() || "",
+        ...(!before ? { fechaVinculacion: editor.form.fechaVinculacion! } : {}),
+      };
+      const after = before
+        ? fields
+        : {
+            ...fields,
+            estado: "ACTIVO" as const,
+            fechaDesvinculacion: null,
+            tipoNovedad: "INGRESO" as const,
+            valorNovedad: fields.valorMensual,
+            diasNovedad: 30,
+          };
+      await commitPerson(
+        before ? "update" : "create",
+        before?.id ||
+          doc(collection(db, "clientPolicies", policyId, "insuredPeople")).id,
+        before,
+        after,
+      );
+      setEditor(null);
+      setMessage({
+        text: before
+          ? "Cambios guardados. La novedad quedó pendiente de revisión por tu asesor."
+          : "Asegurado vinculado. La novedad quedó pendiente de revisión por tu asesor.",
+      });
+    } catch {
+      setFormError(
+        "No se pudo guardar la operación. Revisa tu conexión e intenta nuevamente.",
+      );
+    } finally {
+      lock.current = false;
+      setSaving(false);
+    }
+  };
+  const applyOperation = async () => {
+    if (!operation || lock.current) return;
+    const { person, kind } = operation;
+    const currentPerson = localPeople.find((item) => item.id === person.id);
+    if (
+      !currentPerson ||
+      createDataSignature([currentPerson]) !== createDataSignature([person])
+    ) {
+      setFormError(
+        "El asegurado cambió mientras revisabas esta operación. Cierra y vuelve a abrir el registro.",
+      );
+      return;
+    }
+    if (
+      kind === "withdraw" &&
+      (calculateAge(withdrawalDate) === "" ||
+        !dateIsInReportingPeriod(withdrawalDate, reportingPeriod) ||
+        (person.fechaVinculacion && withdrawalDate < person.fechaVinculacion))
+    ) {
+      setFormError(
+        `Selecciona una fecha de retiro entre ${periodDate(reportingPeriod.start)} y ${periodDate(reportingPeriod.end)}.`,
+      );
+      return;
+    }
+    lock.current = true;
+    setSaving(true);
+    setFormError("");
+    try {
+      if (kind === "withdraw") {
+        const charge = calculateWithdrawalCharge(
+          Number(person.valorMensual || 0),
+          withdrawalDate,
+        );
+        await commitPerson("delete", person.id, person, {
+          estado: "DESVINCULADO",
+          fechaDesvinculacion: withdrawalDate,
+          tipoNovedad: "RETIRO",
+          valorNovedad: charge.amount,
+          diasNovedad: charge.days,
+          tipoNovedadAnterior: person.tipoNovedad ?? null,
+          valorNovedadAnterior: person.valorNovedad ?? null,
+          diasNovedadAnterior: person.diasNovedad ?? null,
+        });
+      } else if (kind === "restore") {
+        await commitPerson(
+          "update",
+          person.id,
+          person,
+          restoredWithdrawal(person),
+          "undo_delete",
+        );
+      } else
+        await commitPerson(
+          "update",
+          person.id,
+          person,
+          undefined,
+          "undo_create",
+        );
+      setOperation(null);
+      setMessage({
+        text: "Operación guardada. Puedes consultar la novedad y su estado en el historial.",
+      });
+    } catch {
+      setFormError("No se pudo guardar la operación. Intenta nuevamente.");
+    } finally {
+      lock.current = false;
+      setSaving(false);
+    }
+  };
+  const confirmMonth = async () => {
+    if (
+      lock.current ||
+      busy ||
+      !reviewed ||
+      missingAmounts > 0 ||
+      confirmed ||
+      historyLoading ||
+      historyError
+    )
+      return;
+    lock.current = true;
+    setSaving(true);
+    try {
+      const ref = doc(collection(db, "clientChangeNotifications"));
+      const item = {
+        action: "confirm_month",
+        month,
+        monthKey,
+        reportingPeriodStart: reportingPeriod.start,
+        reportingPeriodEnd: reportingPeriod.end,
+        totalMonthly: total,
+        activeInsuredCount: activePeople.length,
+        dataSignature: signature,
+        signatureVersion: 2,
+        confirmedAtMs: Date.now(),
+        status: "PENDING",
+      };
+      const batch = writeBatch(db);
+      batch.set(ref, {
+        ...item,
         clientUid,
         clientEmail,
         clientName,
         policyId,
-        person.id,
-        person,
-        after
-      );
-      showNotif("Asegurado desvinculado y cambio notificado a tu asesor.");
-      setPersonToUnlink(null);
-      onChange();
-    } catch (e) {
-      console.error(e);
-      showNotif("Error desvinculando al asegurado.");
+        createdAt: serverTimestamp(),
+      });
+      await batch.commit();
+      setMovements((current) => [
+        { ...item, id: ref.id },
+        ...current.filter((movement) => movement.id !== ref.id),
+      ]);
+      setReviewed(false);
+      setMessage({
+        text: `Confirmación de ${month} enviada. Pendiente de revisión por tu asesor.`,
+      });
+    } catch {
+      setMessage({
+        text: "No pudimos enviar la confirmación. Intenta nuevamente.",
+        error: true,
+      });
     } finally {
+      lock.current = false;
       setSaving(false);
     }
   };
+  const openOperation = (
+    kind: "withdraw" | "restore" | "undoCreate",
+    person: InsuredPerson,
+  ) => {
+    setFormError("");
+    setWithdrawalDate(
+      kind === "withdraw" ? reportingPeriod.end : localDate(),
+    );
+    setOperation({ kind, person });
+  };
+  const summaryStats = (
+    <div className="mb-8 grid divide-y divide-slate-200 border-b border-slate-200 sm:grid-cols-3 sm:divide-y-0 sm:divide-x">
+      {[
+        {
+          title: "Asegurados activos",
+          value: activePeople.length,
+          icon: FiUsers,
+        },
+        {
+          title: "Total mensual de activos",
+          value: formatCurrency(total),
+          icon: FiCheckCircle,
+        },
+        {
+          title: "Confirmación del mes",
+          value: historyLoading
+            ? "Consultando…"
+            : historyError
+              ? "Sin verificar"
+              : confirmed
+                ? "Enviada"
+                : latestConfirmation
+                  ? "Revisar cambios"
+                  : "Por confirmar",
+          icon: FiClock,
+        },
+      ].map((stat) => (
+        <div
+          key={stat.title}
+          className="min-w-0 py-5 sm:px-6 sm:first:pl-0 sm:last:pr-0"
+        >
+          <div className="flex items-center justify-between text-xs text-slate-500">
+            {stat.title}
+            <stat.icon className="h-4 w-4 text-amber-600" />
+          </div>
+          <p className="mt-4 text-2xl font-semibold tracking-tight text-slate-900">
+            {stat.value}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
-    <section className="mb-10">
-      {personToUnlink && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 px-4 backdrop-blur-sm">
-          <div role="dialog" aria-modal="true" aria-labelledby="unlink-title" className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
-            <div className="mb-5 flex items-start justify-between gap-4">
-              <div>
-                <h3 id="unlink-title" className="text-lg font-semibold text-slate-900">Desvincular asegurado</h3>
-                <p className="mt-1 text-sm text-slate-500">Indica la fecha en que <span className="font-medium text-slate-700">{personToUnlink.nombre}</span> fue desvinculado.</p>
-              </div>
-              <button onClick={() => setPersonToUnlink(null)} disabled={saving} className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600" aria-label="Cerrar">
-                <FiX className="h-5 w-5" />
-              </button>
-            </div>
-            <label className="block text-sm font-medium text-slate-700">
-              Fecha de desvinculación
+    <div>
+      {message && (
+        <div
+          role={message.error ? "alert" : "status"}
+          className={`mb-5 flex items-start justify-between gap-4 border-l-2 px-4 py-3 text-sm ${message.error ? "border-red-300 text-red-800" : "border-emerald-300 text-emerald-800"}`}
+        >
+          <span>{message.text}</span>
+          <button aria-label="Cerrar aviso" onClick={() => setMessage(null)}>
+            <FiX />
+          </button>
+        </div>
+      )}
+      {historyError && (
+        <div
+          role="alert"
+          className="mb-5 border-l-2 border-amber-300 px-4 py-3 text-sm text-amber-900"
+        >
+          {historyError}
+          <button
+            disabled={busy}
+            onClick={() => setHistoryRetry((value) => value + 1)}
+            className={`ml-3 ${secondary}`}
+          >
+            Reintentar
+          </button>
+        </div>
+      )}
+      <div
+        role="status"
+        className="mb-5 flex items-center gap-2 border-y border-blue-200 bg-blue-50 px-3 py-2.5 text-sm text-abp-blue"
+      >
+        <FiCheckCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
+        <p>
+          <strong>Plataforma habilitada para reportar novedades.</strong>{" "}
+          Periodo: {reviewPeriod}. Disponible hasta {periodDate(reportingPeriod.enabledUntil)}.
+        </p>
+      </div>
+      {view === "overview" && summaryStats}
+      {view === "overview" && (
+        <div>
+          <h2 className="text-lg font-semibold">Revisión de {reviewPeriod}</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">
+            Revisa quiénes continúan asegurados y registra los ingresos, retiros o cambios
+            de este periodo. Después, confirma la información de {month}, incluso si no hubo cambios.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+          <button className={primary} onClick={() => onNavigate?.("people")}>
+            <FiUsers /> Ver asegurados
+          </button>
+          <button className={secondary} onClick={() => onNavigate?.("history")}>
+            <FiClock /> Ver novedades
+          </button>
+          <button className={secondary} onClick={() => onNavigate?.("confirmation")}>
+            <FiCheckCircle /> Revisar y confirmar {monthName.format(reviewDate)}
+          </button>
+          </div>
+        </div>
+      )}
+      {(view === "people" || showingWithdrawn) && (
+        <section aria-label={showingWithdrawn ? "Listado de retirados" : "Listado de asegurados activos"} className="border-y border-slate-200">
+          <div className="flex flex-col gap-3 py-3 sm:flex-row sm:items-center">
+            <label className="relative block min-w-0 flex-1">
+              <span className="sr-only">Buscar por nombre o cédula</span>
+              <FiSearch className="absolute left-3 top-3 text-slate-400" />
               <input
-                type="date"
-                required
-                min={personToUnlink.fechaVinculacion || undefined}
-                max={new Date().toISOString().slice(0, 10)}
-                value={unlinkDate}
-                onChange={(event) => setUnlinkDate(event.target.value)}
-                className="mt-2 w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-red-400 focus:ring-2 focus:ring-red-100"
+                value={search}
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                  setPage(1);
+                }}
+                placeholder="Buscar por nombre o cédula"
+                className="w-full rounded-lg border border-slate-200 py-2.5 pl-10 pr-3 text-sm"
               />
             </label>
-            <div className="mt-6 flex gap-3">
-              <button onClick={() => setPersonToUnlink(null)} disabled={saving} className="flex-1 rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:opacity-50">Cancelar</button>
-              <button onClick={() => deletePerson(personToUnlink)} disabled={saving || !unlinkDate} className="flex-1 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50">
-                {saving ? "Desvinculando..." : "Confirmar"}
+            {!showingWithdrawn && (
+              <button
+                className={`${primary} shrink-0`}
+                disabled={busy || historyLoading}
+                onClick={() => {
+                  setFormError("");
+                  setEditor({ form: initialPerson() });
+                }}
+              >
+                <FiPlus /> Vincular asegurado
               </button>
-            </div>
+            )}
           </div>
-        </div>
-      )}
-      {notification ? (
-        <div className="mb-4 rounded-lg bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-700">
-          {notification}
-        </div>
-      ) : null}
-
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-        <div>
-          <h2 className="text-base font-semibold text-slate-800 uppercase tracking-wider">
-            Asegurados
-          </h2>
-          <span className="text-xs text-slate-400">{activePeople.length} activos</span>
-        </div>
-        <div className="flex w-full gap-2 sm:w-auto">
-          <input
-            type="text"
-            placeholder="Buscar por nombre o cédula..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="min-w-0 flex-1 border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-abp-gold sm:w-64"
-          />
-          <button
-            onClick={() => setAdding((value) => !value)}
-            className="inline-flex items-center gap-1 rounded-lg bg-abp-gold px-3 py-1.5 text-sm text-white"
-          >
-            {adding ? <FiX /> : <FiPlus />}
-            {adding ? "Cancelar" : "Agregar"}
-          </button>
-        </div>
-      </div>
-
-      {adding && (
-        <div className="mb-4 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-2 lg:grid-cols-4">
-          <input className="rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Nombre completo" value={newPerson.nombre ?? ""} onChange={(e) => setNewPerson((p) => ({ ...p, nombre: e.target.value }))} />
-          <input className="rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Cédula" value={newPerson.cedula ?? ""} onChange={(e) => setNewPerson((p) => ({ ...p, cedula: e.target.value }))} />
-          <select className="rounded-lg border border-slate-300 px-3 py-2 text-sm" value={newPerson.sexo ?? ""} onChange={(e) => setNewPerson((p) => ({ ...p, sexo: e.target.value }))}>
-            <option value="">Sexo</option>
-            <option value="M">M</option>
-            <option value="F">F</option>
-          </select>
-          <label className="text-xs text-slate-500">Fecha de nacimiento<input type="date" max={new Date().toISOString().slice(0, 10)} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700" value={newPerson.fechaNacimiento ?? ""} onChange={(e) => { const fechaNacimiento = e.target.value; setNewPerson((p) => ({ ...p, fechaNacimiento, edad: calculateAge(fechaNacimiento) })); }} /></label>
-          <label className="text-xs text-slate-500">Edad calculada<input readOnly className="mt-1 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-600" value={newPerson.edad ?? ""} placeholder="Automática" /></label>
-          <label className="text-xs text-slate-500">Valor mensual<input type="number" min="0" required className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700" value={newPerson.valorMensual ?? ""} onChange={(e) => setNewPerson((p) => ({ ...p, valorMensual: e.target.value === "" ? undefined : Number(e.target.value) }))} placeholder="0" /></label>
-          <label className="text-xs text-slate-500">Observaciones<input className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700" value={newPerson.observaciones ?? "COBRO"} onChange={(e) => setNewPerson((p) => ({ ...p, observaciones: e.target.value }))} /></label>
-          <label className="text-xs text-slate-500">Fecha de vinculación<input type="date" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700" value={newPerson.fechaVinculacion ?? ""} onChange={(e) => setNewPerson((p) => ({ ...p, fechaVinculacion: e.target.value }))} /></label>
-          <button onClick={addPerson} disabled={saving} className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50 sm:col-span-2 lg:col-span-4">
-            {saving ? "Guardando..." : "Vincular asegurado"}
-          </button>
-        </div>
-      )}
-
-      {activePeople.length === 0 ? (
-        <p className="text-sm text-slate-500 py-4">
-          No hay asegurados activos registrados.
-        </p>
-      ) : filteredPeople.length === 0 ? (
-        <p className="text-sm text-slate-500 py-4">
-          No hay resultados para "{searchTerm}".
-        </p>
-      ) : (
-        <div>
-          <div className="mb-2 flex items-center gap-2 text-xs font-medium text-amber-700">
-            <span className="h-1.5 w-1.5 rounded-full bg-abp-gold" />
-            Desplaza la tabla horizontalmente
-          </div>
-          <div
-            ref={topScrollRef}
-            onScroll={(event) => syncHorizontalScroll(event.currentTarget, tableScrollRef.current)}
-            className="insured-table-scroll-top mb-2 max-w-full overflow-x-auto rounded-lg border border-amber-200 bg-amber-50"
-            aria-label="Desplazamiento horizontal superior de la tabla"
-          >
-            <div className="h-px min-w-[1450px]" />
-          </div>
-          <div
-            ref={tableScrollRef}
-            onScroll={(event) => syncHorizontalScroll(event.currentTarget, topScrollRef.current)}
-            className="max-w-full overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm [scrollbar-color:#cbd5e1_transparent]"
-          >
-          <table className="w-full min-w-[1450px] border-separate border-spacing-0 text-sm [&_thead_th]:whitespace-nowrap [&_thead_th]:px-4 [&_thead_th]:py-3 [&_tbody_td]:border-b [&_tbody_td]:border-slate-100 [&_tbody_td]:px-4 [&_tbody_td]:py-3">
-            <thead className="sticky top-0 z-20">
-              <tr className="bg-slate-800 text-left text-xs font-semibold uppercase tracking-wider text-white">
-                <th className="sticky left-0 z-30 min-w-48 bg-slate-800 px-4 py-3 shadow-[8px_0_12px_-10px_rgba(15,23,42,0.8)]">Nombre</th>
-                <th className="py-2 pr-4">Cédula</th>
-                <th className="py-2 pr-4">Sexo</th>
-                <th className="py-2 pr-4">Fecha Nac.</th>
-                <th className="py-2 pr-4">Edad</th>
-                <th className="py-2 pr-4">Extraprima</th>
-                <th className="py-2 pr-4">Valor Mensual</th>
-                <th className="py-2 pr-4">Observaciones</th>
-                <th className="py-2 pr-4">Vinculación</th>
-                <th className="py-2 pr-4">Desvinculación</th>
-                <th className="py-2 pr-4">Estado</th>
-                <th className="sticky right-0 z-30 min-w-64 border-l border-slate-700 bg-slate-800 px-4 py-3 text-center shadow-[-8px_0_12px_-10px_rgba(15,23,42,0.8)]">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-200">
-              {filteredPeople.map((p) =>
-                editingId === p.id ? (
-                  <tr key={p.id} className="bg-amber-50/70 align-middle">
-                    <td className="sticky left-0 z-10 border-r border-amber-100 bg-amber-50 px-4 py-3 shadow-[8px_0_12px_-10px_rgba(15,23,42,0.35)]">
-                      <input
-                        className="w-32 border border-slate-300 rounded px-1 py-0.5 text-xs"
-                        value={editForm.nombre ?? ""}
-                        onChange={(e) => setEditForm((f) => ({ ...f, nombre: e.target.value }))}
-                      />
-                    </td>
-                    <td className="py-2 pr-4">
-                      <input
-                        className="w-24 border border-slate-300 rounded px-1 py-0.5 text-xs"
-                        value={editForm.cedula ?? ""}
-                        onChange={(e) => setEditForm((f) => ({ ...f, cedula: e.target.value }))}
-                      />
-                    </td>
-                    <td className="py-2 pr-4">
-                      <select
-                        className="border border-slate-300 rounded px-1 py-0.5 text-xs"
-                        value={editForm.sexo ?? ""}
-                        onChange={(e) => setEditForm((f) => ({ ...f, sexo: e.target.value }))}
-                      >
-                        <option value="">-</option>
-                        <option value="M">M</option>
-                        <option value="F">F</option>
-                      </select>
-                    </td>
-                    <td className="py-2 pr-4">
-                      <input
-                        type="date"
-                        className="border border-slate-300 rounded px-1 py-0.5 text-xs"
-                        value={editForm.fechaNacimiento ?? ""}
-                        onChange={(e) =>
-                          setEditForm((f) => ({ ...f, fechaNacimiento: e.target.value }))
-                        }
-                      />
-                    </td>
-                    <td className="py-2 pr-4">
-                      <input
-                        type="number"
-                        className="w-12 border border-slate-300 rounded px-1 py-0.5 text-xs"
-                        value={editForm.edad ?? ""}
-                        onChange={(e) => setEditForm((f) => ({ ...f, edad: e.target.value }))}
-                      />
-                    </td>
-                    <td className="py-2 pr-4">
-                      <input
-                        type="number"
-                        className="w-16 border border-slate-300 rounded px-1 py-0.5 text-xs"
-                        value={editForm.extraprima ?? ""}
-                        onChange={(e) =>
-                          setEditForm((f) => ({ ...f, extraprima: Number(e.target.value) }))
-                        }
-                      />
-                    </td>
-                    <td className="py-2 pr-4">
-                      <input
-                        type="number"
-                        className="w-20 border border-slate-300 rounded px-1 py-0.5 text-xs"
-                        value={editForm.valorMensual ?? ""}
-                        onChange={(e) =>
-                          setEditForm((f) => ({ ...f, valorMensual: Number(e.target.value) }))
-                        }
-                      />
-                    </td>
-                    <td className="py-2 pr-4">
-                      <input
-                        className="w-32 border border-slate-300 rounded px-1 py-0.5 text-xs"
-                        value={editForm.observaciones ?? ""}
-                        onChange={(e) =>
-                          setEditForm((f) => ({ ...f, observaciones: e.target.value }))
-                        }
-                      />
-                    </td>
-                    <td className="py-2 pr-4 text-xs text-slate-600">{p.fechaVinculacion || "—"}</td>
-                    <td className="py-2 pr-4 text-xs text-slate-600">{p.fechaDesvinculacion || "—"}</td>
-                    <td className="py-2 pr-4 text-xs text-slate-600">{p.estado || "ACTIVO"}</td>
-                    <td className="sticky right-0 z-10 border-l border-amber-100 bg-amber-50 px-4 py-2 text-right shadow-[-8px_0_12px_-10px_rgba(15,23,42,0.35)]">
-                      <div className="mx-auto grid w-60 grid-cols-2 gap-2">
-                        <button onClick={() => saveEdit(p)} disabled={saving} className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 text-xs font-medium text-emerald-700 transition hover:bg-emerald-100 disabled:opacity-50" title="Guardar">
-                          <FiSave className="h-3.5 w-3.5" /> Guardar
-                        </button>
-                        <button onClick={cancelEdit} className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-600 transition hover:bg-slate-100" title="Cancelar">
-                          <FiX className="h-3.5 w-3.5" /> Cancelar
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  <tr key={p.id} className="group bg-white align-middle transition odd:bg-slate-50/70 hover:bg-amber-50/60">
-                    <td className="sticky left-0 z-10 min-w-48 border-r border-slate-200 bg-white px-4 py-3 font-medium text-slate-700 shadow-[8px_0_12px_-10px_rgba(15,23,42,0.35)] transition group-odd:bg-slate-50 group-hover:bg-amber-50">{p.nombre}</td>
-                    <td className="py-2 pr-4 text-slate-600">{p.cedula}</td>
-                    <td className="py-2 pr-4 text-slate-600">{p.sexo}</td>
-                    <td className="py-2 pr-4 text-slate-600">{p.fechaNacimiento}</td>
-                    <td className="py-2 pr-4 text-slate-600">{p.edad}</td>
-                    <td className="py-2 pr-4 text-slate-600">{p.extraprima}</td>
-                    <td className="py-2 pr-4 text-slate-600">
-                      {p.valorMensual !== undefined && p.valorMensual !== null ? `$${Number(p.valorMensual).toLocaleString("es-CO")}` : ""}
-                    </td>
-                    <td className="py-2 pr-4 text-slate-600">{p.observaciones}</td>
-                    <td className="py-2 pr-4 text-slate-600">{p.fechaVinculacion || "—"}</td>
-                    <td className="py-2 pr-4 text-slate-600">{p.fechaDesvinculacion || "—"}</td>
-                    <td className="py-2 pr-4">
-                      <span className={p.estado === "DESVINCULADO" ? "text-xs font-medium text-slate-500" : "text-xs font-medium text-emerald-600"}>
-                        {p.estado || "ACTIVO"}
-                      </span>
-                    </td>
-                    <td className="sticky right-0 z-10 border-l border-slate-200 bg-white px-4 py-2 text-right shadow-[-8px_0_12px_-10px_rgba(15,23,42,0.35)] transition group-odd:bg-slate-50 group-hover:bg-amber-50">
-                      <div className="mx-auto grid w-60 grid-cols-2 gap-2">
-                      <button
-                        onClick={() => startEdit(p)}
-                        disabled={p.estado === "DESVINCULADO"}
-                        className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-2.5 text-xs font-medium text-amber-700 transition hover:border-amber-300 hover:bg-amber-100 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-400"
-                        title="Editar"
-                      >
-                        <FiEdit2 className="h-3.5 w-3.5" />
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => {
-                          setUnlinkDate(new Date().toISOString().slice(0, 10));
-                          setPersonToUnlink(p);
-                        }}
-                        disabled={p.estado === "DESVINCULADO"}
-                        className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-2.5 text-xs font-medium text-red-600 transition hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-400"
-                        title="Desvincular"
-                      >
-                        <FiTrash2 className="h-3.5 w-3.5" />
-                        {p.estado === "DESVINCULADO" ? "Desvinculado" : "Desvincular"}
-                      </button>
-                      </div>
-                    </td>
-                  </tr>
-                )
+          {visiblePeople.length === 0 ? (
+            <div className="py-8 text-center">
+              <FiUsers className="mx-auto mb-3 h-7 w-7 text-slate-300" />
+              <p className="text-sm text-slate-600">
+                {search
+                  ? "No encontramos asegurados con esa búsqueda."
+                  : showingWithdrawn ? "No hay asegurados retirados." : "No hay asegurados activos."}
+              </p>
+              {search && (
+                <button onClick={() => { setSearch(""); setPage(1); }} className={`mt-3 ${secondary}`}>
+                  Limpiar búsqueda
+                </button>
               )}
-            </tbody>
-            <tfoot>
-              <tr className="bg-slate-800 text-white">
-                <td colSpan={6} className="border-t-2 border-abp-gold px-4 py-4 text-right text-xs font-semibold uppercase tracking-wider">
-                  Total mensual asegurados activos
-                </td>
-                <td className="border-t-2 border-abp-gold px-4 py-4 text-sm font-bold text-amber-300">
-                  ${totalMonthly.toLocaleString("es-CO")}
-                </td>
-                <td colSpan={4} className="border-t-2 border-abp-gold px-4 py-4 text-xs text-slate-300">
-                  {activePeople.length} {activePeople.length === 1 ? "asegurado activo" : "asegurados activos"}
-                </td>
-                <td className="sticky right-0 z-10 border-l border-slate-700 border-t-2 border-t-abp-gold bg-slate-800 px-4 py-3 text-center shadow-[-8px_0_12px_-10px_rgba(15,23,42,0.8)]">
-                  <button
-                    onClick={confirmCurrentMonth}
-                    disabled={confirmingMonth || confirmedMonth}
-                    className="inline-flex h-9 w-60 items-center justify-center gap-2 rounded-lg bg-abp-gold px-3 text-xs font-semibold text-slate-900 transition hover:brightness-110 disabled:cursor-not-allowed disabled:bg-emerald-500 disabled:text-white"
-                  >
-                    <FiCheckCircle className="h-4 w-4" />
-                    {confirmedMonth
-                      ? `${currentMonthName} confirmado`
-                      : confirmingMonth
-                        ? "Confirmando..."
-                        : needsReconfirmation
-                          ? `Confirmar nuevamente ${currentMonthName}`
-                          : `Confirmar mes de ${currentMonthName}`}
-                  </button>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-        </div>
-      )}
-
-      {monthlyConfirmations.length > 0 && (
-        <section className="mt-8 overflow-hidden rounded-xl border border-blue-100 bg-white shadow-sm">
-          <div className="flex items-center justify-between border-b border-blue-100 bg-blue-50 px-5 py-4">
-            <div className="flex items-center gap-3">
-              <span className="rounded-full bg-blue-100 p-2 text-blue-600"><FiCheckCircle className="h-4 w-4" /></span>
-              <div>
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-blue-800">Notificaciones de confirmación</h3>
-                <p className="mt-0.5 text-xs text-blue-600">Confirmaciones mensuales enviadas al asesor</p>
-              </div>
             </div>
-            <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-blue-600 shadow-sm">{monthlyConfirmations.length}</span>
-          </div>
-          <div className="divide-y divide-slate-100">
-            {monthlyConfirmations.map((confirmation) => (
-              <article key={confirmation.id} className="grid gap-3 px-5 py-4 sm:grid-cols-[1fr_auto] sm:items-center">
-                <div>
-                  <p className="font-medium capitalize text-slate-800">Mes de {confirmation.month} confirmado</p>
-                  <p className="mt-1 text-xs text-slate-500">{formatConfirmationDate(confirmation.createdAt)}</p>
-                </div>
-                <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs sm:justify-end">
-                  <div><span className="block text-slate-400">Total mensual</span><span className="font-semibold text-blue-700">${Number(confirmation.totalMonthly ?? 0).toLocaleString("es-CO")}</span></div>
-                  <div><span className="block text-slate-400">Asegurados activos</span><span className="font-semibold text-slate-700">{confirmation.activeInsuredCount ?? 0}</span></div>
-                  <div><span className="block text-slate-400">Estado</span><span className="font-semibold text-emerald-600">CONFIRMADO</span></div>
-                </div>
-              </article>
-            ))}
+          ) : (
+            <div className="overflow-x-auto" role="region" aria-label={showingWithdrawn ? "Tabla de retirados" : "Tabla de asegurados activos"} tabIndex={0}>
+              <table className="w-full min-w-[680px] table-fixed text-left">
+                <caption className="sr-only">
+                  {showingWithdrawn ? "Asegurados retirados" : "Asegurados activos"}. La edad se calcula a la fecha de hoy.
+                </caption>
+                <thead className="border-y border-slate-100 bg-slate-50 text-xs text-slate-500">
+                  <tr>
+                    <th scope="col" className="px-3 py-2 font-medium">Asegurado</th>
+                    <th scope="col" className="w-28 px-3 py-2 text-right font-medium">Valor mensual</th>
+                    <th scope="col" className="w-24 px-3 py-2 font-medium">Estado</th>
+                    <th scope="col" className="w-60 px-3 py-2 text-right font-medium">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {visiblePeople.map((person) => {
+                    const age = calculateAge(person.fechaNacimiento, new Date(`${today}T12:00:00`));
+                    const date = showingWithdrawn ? person.fechaDesvinculacion : person.fechaVinculacion;
+                    const canWithdrawInPeriod =
+                      !person.fechaVinculacion ||
+                      person.fechaVinculacion <= reportingPeriod.end;
+                    return (
+                      <tr key={person.id} className="hover:bg-slate-50/60">
+                        <td className="px-3 py-2.5 align-middle">
+                          <p className="truncate text-sm font-semibold" title={person.nombre}>{person.nombre}</p>
+                          <p className="mt-0.5 text-xs text-slate-500">
+                            Cédula {person.cedula}{age !== "" && <span> · {age} años</span>}
+                          </p>
+                          {date?.trim() && (
+                            <p className="mt-0.5 text-xs text-slate-500">
+                              {showingWithdrawn ? "Retiro" : "Vinculación"}: {date}
+                            </p>
+                          )}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-2.5 text-right text-sm font-medium tabular-nums">
+                          {person.valorMensual == null || !Number.isFinite(Number(person.valorMensual))
+                            ? "Sin informar" : formatCurrency(Number(person.valorMensual))}
+                        </td>
+                        <td className="px-3 py-2.5">
+                          <span className={`rounded-full px-2 py-1 text-xs font-medium ${showingWithdrawn ? "bg-slate-100 text-slate-600" : "bg-emerald-50 text-emerald-700"}`}>
+                            {showingWithdrawn ? "Retirado" : "Activo"}
+                          </span>
+                        </td>
+                        <td className="px-3 py-2.5">
+                          <div className="flex items-center justify-end gap-2">
+                            {!showingWithdrawn ? (
+                              <>
+                                <button
+                                  disabled={busy}
+                                  aria-label={`Editar a ${person.nombre}`}
+                                  onClick={() => {
+                                    setFormError("");
+                                    setEditor({ id: person.id, sourceSignature: createDataSignature([person]), form: { ...person } });
+                                  }}
+                                  className="inline-flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-2 text-xs font-semibold text-abp-blue hover:bg-blue-100 disabled:opacity-50"
+                                >
+                                  <FiEdit2 /> Editar
+                                </button>
+                                <button
+                                  disabled={busy || historyLoading || !canWithdrawInPeriod}
+                                  aria-label={`Retirar a ${person.nombre}`}
+                                  title={
+                                    canWithdrawInPeriod
+                                      ? `Registrar retiro del periodo ${reviewPeriod}`
+                                      : "Este asegurado fue vinculado después del periodo habilitado"
+                                  }
+                                  onClick={() => openOperation("withdraw", person)}
+                                  className="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-2 text-xs font-semibold text-red-700 hover:bg-red-100 disabled:opacity-50"
+                                >
+                                  <FiUserMinus /> Retirar
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                <button
+                                  disabled={busy}
+                                  aria-label={`Ver datos de ${person.nombre}`}
+                                  onClick={() => { setFormError(""); setEditor({ id: person.id, form: { ...person }, readOnly: true }); }}
+                                  className="rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-2 text-xs font-semibold text-abp-blue hover:bg-blue-100 disabled:opacity-50"
+                                >Ver datos</button>
+                                <button
+                                  disabled={busy || historyLoading || !!historyError}
+                                  aria-label={`Deshacer retiro de ${person.nombre}`}
+                                  onClick={() => openOperation("restore", person)}
+                                  className="inline-flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-2 text-xs font-semibold text-abp-blue hover:bg-blue-100 disabled:opacity-50"
+                                >
+                                  <FiRotateCcw /> Deshacer retiro
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 py-3 text-xs text-slate-500">
+            <span>{filtered.length} {showingWithdrawn ? "retirados" : "activos"} · Página {visiblePage} de {pages}</span>
+            {pages > 1 && (
+              <div className="flex gap-2">
+                <button disabled={visiblePage === 1} onClick={() => setPage(visiblePage - 1)} className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 font-semibold text-abp-blue hover:bg-blue-100 disabled:opacity-40">Anterior</button>
+                <button disabled={visiblePage === pages} onClick={() => setPage(visiblePage + 1)} className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 font-semibold text-abp-blue hover:bg-blue-100 disabled:opacity-40">Siguiente</button>
+              </div>
+            )}
           </div>
         </section>
       )}
-
-      {linkedPeople.length > 0 && (
-        <section className="mt-8 overflow-hidden rounded-xl border border-emerald-100 bg-white shadow-sm">
-          <div className="flex items-center justify-between border-b border-emerald-100 bg-emerald-50 px-5 py-4">
-            <div className="flex items-center gap-3">
-              <span className="rounded-full bg-emerald-100 p-2 text-emerald-600"><FiUserPlus className="h-4 w-4" /></span>
-              <div>
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-emerald-800">Notificaciones de vinculación</h3>
-                <p className="mt-0.5 text-xs text-emerald-600">Historial de asegurados vinculados a la póliza</p>
+      {view === "history" && (
+        <section aria-label="Historial de movimientos" className="border-y border-slate-200">
+          <div className="flex flex-wrap items-center justify-between gap-2 py-3">
+            <p className="text-xs text-slate-500">Del más reciente al más antiguo</p>
+          </div>
+          {historyLoading ? (
+            <p role="status" className="py-6 text-sm text-slate-500">Cargando novedades…</p>
+          ) : movements.length === 0 ? (
+            <p className="py-6 text-sm text-slate-500">
+              {historyError ? "El historial no está disponible." : "Aún no hay novedades registradas para esta póliza."}
+            </p>
+          ) : (
+            <>
+              <div className="overflow-x-auto" role="region" aria-label="Tabla de novedades" tabIndex={0}>
+                <table className="w-full min-w-[680px] table-fixed text-left">
+                  <caption className="sr-only">Ingresos, actualizaciones, retiros y confirmaciones mensuales</caption>
+                  <thead className="border-y border-slate-100 bg-slate-50 text-xs text-slate-500">
+                    <tr>
+                      <th scope="col" className="px-3 py-2 font-medium">Movimiento</th>
+                      <th scope="col" className="w-36 px-3 py-2 font-medium">Fecha</th>
+                      <th scope="col" className="w-36 px-3 py-2 font-medium">Estado</th>
+                      <th scope="col" className="w-40 px-3 py-2 text-right font-medium">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {movements.slice(0, historyLimit).map((item) => {
+                      const kind = item.changeKind || item.action;
+                      const titles: Record<string, string> = {
+                        create: "Vinculación", update: "Actualización", delete: "Retiro",
+                        undo_delete: "Retiro deshecho", undo_create: "Ingreso deshecho",
+                        confirm_month: "Confirmación mensual",
+                      };
+                      const person = localPeople.find((p) => p.id === item.personId);
+                      const latest = movements.find((m) => m.personId === item.personId);
+                      const time = movementTime(item);
+                      const subject = item.action === "confirm_month" ? item.month : item.after?.nombre || item.before?.nombre || person?.nombre || "Asegurado";
+                      return (
+                        <tr key={item.id} className="hover:bg-slate-50/60">
+                          <td className="px-3 py-2.5">
+                            <p className="truncate text-sm font-semibold" title={`${titles[kind] || "Movimiento"} · ${subject || ""}`}>
+                              {titles[kind] || "Movimiento"} · {subject}
+                            </p>
+                            {item.action === "confirm_month" && (
+                              <p className="mt-0.5 text-xs text-slate-500">{item.activeInsuredCount ?? 0} activos · {formatCurrency(Number(item.totalMonthly || 0))}</p>
+                            )}
+                            {(kind === "create" || kind === "delete") && item.after?.valorNovedad != null && (
+                              <p className="mt-0.5 text-xs text-slate-500">
+                                {kind === "delete" ? "Cobro por retiro" : "Cobro de ingreso"}: {formatCurrency(item.after.valorNovedad)}
+                                {kind === "delete" && item.after.diasNovedad != null ? ` · ${item.after.diasNovedad} días` : ""}
+                              </p>
+                            )}
+                          </td>
+                          <td className="px-3 py-2.5 text-xs text-slate-600">
+                            {time ? new Intl.DateTimeFormat("es-CO", { dateStyle: "short", timeStyle: "short" }).format(new Date(time)) : "—"}
+                          </td>
+                          <td className="px-3 py-2.5 text-xs text-slate-600">
+                            {item.status === "PENDING" ? "Pendiente de revisión" : item.status || "Sin informar"}
+                          </td>
+                          <td className="px-3 py-2.5 text-right">
+                            {person && latest?.id === item.id && item.action === "create" && person.estado !== "DESVINCULADO" && (
+                              <button disabled={busy || !!historyError} onClick={() => openOperation("undoCreate", person)}
+                                aria-label={`Deshacer ingreso de ${person.nombre}`}
+                                className="inline-flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-2 text-xs font-semibold text-abp-blue hover:bg-blue-100 disabled:opacity-50">
+                                <FiRotateCcw /> Deshacer ingreso
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
-            </div>
-            <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-emerald-600 shadow-sm">{linkedPeople.length}</span>
-          </div>
-          <div className="divide-y divide-slate-100">
-            {linkedPeople.map((person) => (
-              <article key={person.id} className="grid gap-3 px-5 py-4 sm:grid-cols-[1fr_auto] sm:items-center">
-                <div>
-                  <p className="font-medium text-slate-800">{person.nombre}</p>
-                  <p className="mt-1 text-xs text-slate-500">Cédula: {person.cedula}</p>
-                </div>
-                <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs sm:justify-end">
-                  <div><span className="block text-slate-400">Fecha de vinculación</span><span className="font-semibold text-emerald-600">{person.fechaVinculacion}</span></div>
-                  <div><span className="block text-slate-400">Estado</span><span className="font-semibold text-emerald-600">ACTIVO</span></div>
-                </div>
-              </article>
-            ))}
-          </div>
+              <div className="flex items-center justify-between gap-3 border-t border-slate-100 py-3">
+                <p className="text-xs text-slate-500">{Math.min(historyLimit, movements.length)} de {movements.length} movimientos</p>
+                {historyLimit < movements.length && (
+                  <button className={secondary} onClick={() => setHistoryLimit((limit) => limit + 20)}>Ver más movimientos</button>
+                )}
+              </div>
+            </>
+          )}
         </section>
       )}
-
-      {unlinkedPeople.length > 0 && (
-        <section className="mt-8 overflow-hidden rounded-xl border border-red-100 bg-white shadow-sm">
-          <div className="flex items-center justify-between border-b border-red-100 bg-red-50 px-5 py-4">
-            <div className="flex items-center gap-3">
-              <span className="rounded-full bg-red-100 p-2 text-red-600"><FiBell className="h-4 w-4" /></span>
-              <div>
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-red-800">Notificaciones de desvinculación</h3>
-                <p className="mt-0.5 text-xs text-red-600">Historial de asegurados retirados de la póliza</p>
-              </div>
+      {view === "confirmation" && (
+        <section className="border-t border-slate-200 py-4">
+          <h2 className="text-lg font-semibold">
+            Revisión de {reviewPeriod}
+          </h2>
+          <p className="mt-2 text-sm font-medium text-slate-700">
+            Confirmación correspondiente a {month}.
+          </p>
+          <ol className="mt-3 list-decimal space-y-1 pl-5 text-sm text-slate-600">
+            <li>Revisa los activos en Asegurados y las salidas en Retirados.</li>
+            <li>Comprueba los cambios en Novedades y revisa el total de abajo.</li>
+            <li>Marca la casilla y envía la confirmación, incluso si no hubo cambios.</li>
+          </ol>
+          <dl className="mt-4 divide-y divide-slate-100 border-y border-slate-200 text-sm">
+            <div className="flex items-center justify-between gap-4 py-2.5">
+              <dt className="text-slate-600">Asegurados activos</dt>
+              <dd className="font-semibold tabular-nums">{activePeople.length}</dd>
             </div>
-            <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-red-600 shadow-sm">{unlinkedPeople.length}</span>
-          </div>
-          <div className="divide-y divide-slate-100">
-            {unlinkedPeople.map((person) => (
-              <article key={person.id} className="grid gap-3 px-5 py-4 sm:grid-cols-[1fr_auto] sm:items-center">
-                <div>
-                  <p className="font-medium text-slate-800">{person.nombre}</p>
-                  <p className="mt-1 text-xs text-slate-500">Cédula: {person.cedula}</p>
-                </div>
-                <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs sm:justify-end">
-                  <div><span className="block text-slate-400">Vinculación</span><span className="font-medium text-slate-700">{person.fechaVinculacion || "Sin información"}</span></div>
-                  <div><span className="block text-slate-400">Desvinculación</span><span className="font-semibold text-red-600">{person.fechaDesvinculacion || "Sin información"}</span></div>
-                  <div><span className="block text-slate-400">Estado</span><span className="font-semibold text-red-600">DESVINCULADO</span></div>
-                </div>
-              </article>
-            ))}
-          </div>
+            <div className="flex items-center justify-between gap-4 py-2.5">
+              <dt className="text-slate-600">Total mensual de activos</dt>
+              <dd className="font-semibold tabular-nums">{formatCurrency(total)}</dd>
+            </div>
+            <div className="flex items-center justify-between gap-4 py-2.5">
+              <dt className="text-slate-600">Estado de la confirmación</dt>
+              <dd className="font-medium">{historyLoading ? "Consultando…" : historyError ? "Sin verificar" : confirmed ? "Enviada" : latestConfirmation ? "Revisar cambios" : "Por confirmar"}</dd>
+            </div>
+          </dl>
+          <p className="mt-2 text-xs text-slate-500">
+            Este total corresponde a los activos. Los cobros de ingreso y retiro se consultan por separado en Novedades.
+          </p>
+          {missingAmounts > 0 && (
+            <p
+              role="alert"
+              className="mt-5 border-l-2 border-amber-300 px-4 py-3 text-sm text-amber-900"
+            >
+              Hay {missingAmounts} asegurados activos sin un valor mensual
+              válido. Completa sus datos antes de confirmar el total.
+            </p>
+          )}
+          {latestConfirmation && !confirmed && (
+            <p className="mt-5 border-l-2 border-amber-300 px-4 py-3 text-sm text-amber-900">
+              Hay una confirmación anterior. Revisa los datos actuales y vuelve
+              a confirmar para dejar constancia de esta versión.
+            </p>
+          )}
+          {confirmed ? (
+            <div
+              role="status"
+              className="mt-6 border-l-2 border-emerald-300 px-4 py-3 text-sm text-emerald-800"
+            >
+              La confirmación de los datos actuales ya fue enviada. Está
+              disponible en Novedades con su estado de revisión.
+            </div>
+          ) : (
+            <>
+              <label className="mt-4 flex items-start gap-3 py-2 text-sm leading-relaxed">
+                <input
+                  type="checkbox"
+                  checked={reviewed}
+                  onChange={(event) => setReviewed(event.target.checked)}
+                  disabled={
+                    historyLoading ||
+                    !!historyError ||
+                    saving ||
+                    missingAmounts > 0
+                  }
+                  className="mt-1 h-4 w-4 accent-slate-900"
+                />
+                <span>He revisado los cambios de {reviewPeriod} y confirmo para {month}{" "}
+                los {activePeople.length} asegurados activos y su total mensual de {formatCurrency(total)}.</span>
+              </label>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  className={secondary}
+                  onClick={() => onNavigate?.("people")}
+                  disabled={saving}
+                >
+                  Revisar asegurados
+                </button>
+                <button
+                  className={primary}
+                  onClick={confirmMonth}
+                  disabled={
+                    !reviewed ||
+                    busy ||
+                    historyLoading ||
+                    !!historyError ||
+                    missingAmounts > 0
+                  }
+                >
+                  <FiCheckCircle />
+                  {saving ? "Enviando…" : "Enviar confirmación"}
+                </button>
+              </div>
+            </>
+          )}
         </section>
       )}
-    </section>
+      {editor && (
+        <Dialog
+          title={editor.readOnly ? "Datos del asegurado" : editor.id ? "Editar asegurado" : "Vincular asegurado"}
+          busy={saving}
+          onClose={close}
+        >
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              void savePerson();
+            }}
+          >
+            <p className="mb-5 text-sm text-slate-500">
+              Los campos con * son obligatorios. La edad se calcula
+              automáticamente.
+            </p>
+            {formError && (
+              <p
+                role="alert"
+                className="mb-5 rounded-xl bg-red-50 p-3 text-sm text-red-800"
+              >
+                {formError}
+              </p>
+            )}
+            <fieldset disabled={saving || editor.readOnly} className="grid gap-4 sm:grid-cols-2">
+              {[
+                { key: "nombre", label: "Nombre completo *", required: true },
+                { key: "cedula", label: "Cédula *", required: true },
+                {
+                  key: "fechaNacimiento",
+                  label: "Fecha de nacimiento *",
+                  type: "date",
+                  required: true,
+                },
+                {
+                  key: "fechaVinculacion",
+                  label: `Fecha de vinculación${!editor.id || localPeople.find((person) => person.id === editor.id)?.fechaVinculacion ? " *" : ""}`,
+                  type: "date",
+                  required: !editor.id || !!localPeople.find((person) => person.id === editor.id)?.fechaVinculacion,
+                },
+                {
+                  key: "valorMensual",
+                  label: "Valor mensual (COP) *",
+                  type: "number",
+                  required: true,
+                },
+                { key: "extraprima", label: "Extraprima", type: "number" },
+                { key: "reg", label: "Registro" },
+              ].map((field) => (
+                <label
+                  key={field.key}
+                  className="text-xs font-medium text-slate-600"
+                >
+                  {field.label}
+                  <input
+                    autoFocus={field.key === "nombre"}
+                    type={field.type || "text"}
+                    required={field.required}
+                    readOnly={field.key === "fechaVinculacion" && !!editor.id}
+                    max={field.type === "date" ? today : undefined}
+                    min={field.type === "number" ? 0 : undefined}
+                    step={field.type === "number" ? "any" : undefined}
+                    value={String(
+                      editor.form[field.key as keyof InsuredPerson] ?? "",
+                    )}
+                    onChange={(event) => {
+                      const value =
+                        field.type === "number"
+                          ? event.target.value === ""
+                            ? undefined
+                            : Number(event.target.value)
+                          : event.target.value;
+                      setEditor(
+                        (current) =>
+                          current && {
+                            ...current,
+                            form: { ...current.form, [field.key]: value },
+                          },
+                      );
+                    }}
+                    className={fieldClass}
+                  />
+                  {field.key === "fechaVinculacion" && editor.id && (
+                    <span className="mt-1 block font-normal text-slate-500">
+                      La fecha original de vinculación se conserva al editar.
+                    </span>
+                  )}
+                </label>
+              ))}
+              <label className="text-xs font-medium text-slate-600">
+                Sexo
+                <select
+                  value={editor.form.sexo || ""}
+                  onChange={(event) =>
+                    setEditor({
+                      ...editor,
+                      form: { ...editor.form, sexo: event.target.value },
+                    })
+                  }
+                  className={fieldClass}
+                >
+                  <option value="">Sin informar</option>
+                  <option value="M">Masculino</option>
+                  <option value="F">Femenino</option>
+                </select>
+              </label>
+              <p className="self-center text-sm text-slate-500">
+                Edad a hoy:{" "}
+                <strong className="text-slate-800">
+                  {calculateAge(editor.form.fechaNacimiento, new Date(`${today}T12:00:00`)) === ""
+                    ? "Por calcular"
+                    : `${calculateAge(editor.form.fechaNacimiento, new Date(`${today}T12:00:00`))} años`}
+                </strong>
+              </p>
+              <label className="text-xs font-medium text-slate-600 sm:col-span-2">
+                Observaciones
+                <textarea
+                  value={editor.form.observaciones || ""}
+                  onChange={(event) =>
+                    setEditor({
+                      ...editor,
+                      form: {
+                        ...editor.form,
+                        observaciones: event.target.value,
+                      },
+                    })
+                  }
+                  rows={3}
+                  className={fieldClass}
+                />
+              </label>
+            </fieldset>
+            {!editor.id && (
+              <p className="mt-4 rounded-xl bg-amber-50 p-3 text-xs text-amber-900">
+                Cobro de ingreso por el mes completo:{" "}
+                {formatCurrency(Number(editor.form.valorMensual || 0))}, según
+                el valor mensual registrado. Según el corte de GRADESA, los
+                ingresos no se prorratean.
+              </p>
+            )}
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                disabled={saving}
+                onClick={close}
+                className={secondary}
+              >
+                {editor.readOnly ? "Cerrar" : "Cancelar"}
+              </button>
+              {!editor.readOnly && <button type="submit" disabled={saving} className={primary}>
+                {saving ? "Guardando…" : "Guardar asegurado"}
+              </button>}
+            </div>
+          </form>
+        </Dialog>
+      )}
+      {operation && (
+        <Dialog
+          title={
+            operation.kind === "withdraw"
+              ? "Retirar asegurado"
+              : operation.kind === "restore"
+                ? "Deshacer retiro"
+                : "Deshacer ingreso"
+          }
+          busy={saving}
+          onClose={close}
+        >
+          <p className="font-semibold">{operation.person.nombre}</p>
+          <p className="mt-1 text-sm text-slate-500">
+            Cédula {operation.person.cedula}
+          </p>
+          {formError && (
+            <p
+              role="alert"
+              className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-800"
+            >
+              {formError}
+            </p>
+          )}
+          {operation.kind === "withdraw" ? (
+            <>
+              <label className="mt-5 block text-sm font-medium">
+                Fecha de retiro
+                <input
+                  type="date"
+                  disabled={saving}
+                  value={withdrawalDate}
+                  min={
+                    operation.person.fechaVinculacion &&
+                    operation.person.fechaVinculacion > reportingPeriod.start
+                      ? operation.person.fechaVinculacion
+                      : reportingPeriod.start
+                  }
+                  max={reportingPeriod.end}
+                  onChange={(event) => setWithdrawalDate(event.target.value)}
+                  className={fieldClass}
+                />
+              </label>
+              <p className="mt-2 text-xs text-slate-500">
+                Solo se permiten retiros del periodo habilitado: {reviewPeriod}.
+              </p>
+              <div className="mt-4 rounded-xl bg-amber-50 p-4 text-sm text-amber-900">
+                Cobro por retiro:{" "}
+                <strong>
+                  {formatCurrency(
+                    calculateWithdrawalCharge(
+                      Number(operation.person.valorMensual || 0),
+                      withdrawalDate,
+                    ).amount,
+                  )}
+                </strong>
+                <p className="mt-2 text-xs">
+                  {
+                    calculateWithdrawalCharge(
+                      Number(operation.person.valorMensual || 0),
+                      withdrawalDate,
+                    ).days
+                  }{" "}
+                  días hasta el primer día del siguiente mes, sobre una base de
+                  30 días. Si el retiro es el día 1, el cobro es $0.
+                </p>
+              </div>
+            </>
+          ) : (
+            <p className="mt-5 text-sm leading-relaxed text-slate-600">
+              {operation.kind === "restore"
+                ? "El asegurado volverá a estar activo. El retiro anterior permanecerá en el historial y el cambio quedará registrado para tu asesor."
+                : "Esta acción elimina el registro del asegurado creado por ese ingreso. Úsala para corregir un ingreso por error; para una salida de la póliza, utiliza Retirar. El historial conservará ambos movimientos."}
+            </p>
+          )}
+          <div className="mt-6 flex justify-end gap-3">
+            <button disabled={saving} onClick={close} className={secondary}>
+              Cancelar
+            </button>
+            <button
+              disabled={
+                saving || (operation.kind === "withdraw" && !withdrawalDate)
+              }
+              onClick={applyOperation}
+              className={primary}
+            >
+              {saving
+                ? "Guardando…"
+                : operation.kind === "withdraw"
+                  ? "Confirmar retiro"
+                  : "Confirmar cambio"}
+            </button>
+          </div>
+        </Dialog>
+      )}
+    </div>
   );
 }

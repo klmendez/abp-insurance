@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
-import { ClientNavbar } from "./components/ClientNavbar";
 import { Footer } from "./components/Footer";
 import { FloatingWhatsappButton } from "./components/FloatingWhatsappButton";
 import { FloatingClientButton } from "./components/FloatingClientButton";
@@ -23,21 +22,37 @@ import logoFavicon from "./assets/Logo profesional.webp";
 
 function AppLayout() {
   const location = useLocation();
-  const isClientArea = location.pathname === "/cliente";
+  const isClientArea =
+    location.pathname === "/cliente" || location.pathname === "/login-clientes";
 
   return (
     <div className="flex flex-col min-h-screen">
-      {isClientArea ? <ClientNavbar /> : <Navbar />}
+      {!isClientArea && <Navbar />}
 
       <main className="flex-1 flex flex-col">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/portafolio" element={<PortafolioPage />} />
-          <Route path="/portafolio/riesgos-laborales" element={<RiesgosLaboralesPage />} />
-          <Route path="/portafolio/seguros-vida" element={<SegurosVidaPage />} />
-          <Route path="/portafolio/seguros-generales" element={<SegurosGeneralesPage />} />
-          <Route path="/portafolio/recicladores" element={<RecicladoresPage />} />
-          <Route path="/servicios-empresariales" element={<EnterpriseServicesPage />} />
+          <Route
+            path="/portafolio/riesgos-laborales"
+            element={<RiesgosLaboralesPage />}
+          />
+          <Route
+            path="/portafolio/seguros-vida"
+            element={<SegurosVidaPage />}
+          />
+          <Route
+            path="/portafolio/seguros-generales"
+            element={<SegurosGeneralesPage />}
+          />
+          <Route
+            path="/portafolio/recicladores"
+            element={<RecicladoresPage />}
+          />
+          <Route
+            path="/servicios-empresariales"
+            element={<EnterpriseServicesPage />}
+          />
           <Route path="/sobre-nosotros" element={<AboutPage />} />
           <Route path="/contacto" element={<ContactPage />} />
           <Route path="/ciclistas" element={<CyclistsPage />} />
@@ -57,7 +72,7 @@ function AppLayout() {
 const App = () => {
   useEffect(() => {
     const existingFavicon = document.querySelector(
-      "link[rel='icon']"
+      "link[rel='icon']",
     ) as HTMLLinkElement | null;
 
     if (existingFavicon) {
